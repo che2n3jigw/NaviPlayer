@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "com.che2n3jigw.android.naviplayer"
+    namespace = "com.che2n3jigw.naviplayer"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.che2n3jigw.android.naviplayer"
+        applicationId = "com.che2n3jigw.naviplayer"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
