@@ -30,3 +30,4 @@ rootProject.name = "Navi Player"
 include(":app")
 include(":core:model")
 include(":core:database")
+include(":core:network")
