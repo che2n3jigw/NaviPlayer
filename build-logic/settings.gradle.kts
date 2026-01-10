@@ -1,6 +1,5 @@
 pluginManagement {
     repositories {
-        includeBuild("build-logic")
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -24,13 +23,13 @@ dependencyResolutionManagement {
         maven {
             url = uri("https://jitpack.io")
         }
+        versionCatalogs {
+            create("libs") {
+                from(files("../gradle/libs.versions.toml"))
+            }
+        }
     }
 }
 
-rootProject.name = "naviplayer"
-include(":app")
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-include(":core:model")
-include(":core:database")
-include(":core:network")
+rootProject.name = "build-logic"
+include(":convention")

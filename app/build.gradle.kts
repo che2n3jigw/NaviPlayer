@@ -1,20 +1,12 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.naviplayer.android.application)
 }
 
 android {
     namespace = "com.che2n3jigw.naviplayer"
-    compileSdk {
-        version = release(36)
-    }
 
     defaultConfig {
         applicationId = "com.che2n3jigw.naviplayer"
-        minSdk = 24
-        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }
@@ -26,15 +18,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_1_8
         }
     }
 }
