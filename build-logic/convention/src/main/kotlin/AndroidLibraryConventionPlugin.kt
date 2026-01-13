@@ -42,11 +42,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 testOptions.targetSdk = 36
                 lint.targetSdk = 36
                 testOptions.animationsDisabled = true
-                // The resource prefix is derived from the module name,
-                // so resources inside ":core:module1" must be prefixed with "core_module1_"
-                resourcePrefix =
-                    path.split("""\W""".toRegex()).drop(1).distinct().joinToString(separator = "_")
-                        .lowercase() + "_"
             }
         }
     }
