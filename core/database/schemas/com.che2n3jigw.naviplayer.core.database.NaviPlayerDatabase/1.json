@@ -1,0 +1,56 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "3e3608e6fc2b40bc1709170874204590",
+    "entities": [
+      {
+        "tableName": "login_history",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`serverAddress` TEXT NOT NULL, `username` TEXT NOT NULL, `password` TEXT NOT NULL, `success` INTEGER NOT NULL, `time` INTEGER NOT NULL, PRIMARY KEY(`serverAddress`, `username`))",
+        "fields": [
+          {
+            "fieldPath": "serverAddress",
+            "columnName": "serverAddress",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "success",
+            "columnName": "success",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "serverAddress",
+            "username"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3e3608e6fc2b40bc1709170874204590')"
+    ]
+  }
+}

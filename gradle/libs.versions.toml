@@ -9,12 +9,16 @@ material = "1.13.0"
 androidDesugarJdkLibs = "2.1.5"
 hilt = "2.58"
 ksp = "2.3.4"
+room = "2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 baserecyclerviewadapterhelper4 = { module = "io.github.cymchad:BaseRecyclerViewAdapterHelper4", version.ref = "baserecyclerviewadapterhelper4" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
@@ -31,6 +35,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
 
 # Plugins defined by this project
 naviplayer-android-application = { id = "naviplayer.android.application" }
