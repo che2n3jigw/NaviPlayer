@@ -7,6 +7,8 @@ appcompat = "1.7.1"
 lifecycle = "2.10.0"
 material = "1.13.0"
 androidDesugarJdkLibs = "2.1.5"
+hilt = "2.58"
+ksp = "2.3.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -20,15 +22,20 @@ material = { group = "com.google.android.material", name = "material", version.r
 android-gradleApiPlugin = { group = "com.android.tools.build", name = "gradle-api", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 # Plugins defined by this project
 naviplayer-android-application = { id = "naviplayer.android.application" }
 naviplayer-android-library = { id = "naviplayer.android.library" }
 naviplayer-jvm-library = { id = "naviplayer.jvm.library" }
+naviplayer-hilt = { id = "naviplayer.hilt" }
 
 

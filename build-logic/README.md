@@ -8,11 +8,12 @@
 
 ### 约定插件
 
-`build-logic/convention/build.gradle.kts` 文件中注册了以下三个约定插件：
+`build-logic/convention/build.gradle.kts` 文件中注册了以下四个约定插件：
 
 *   **`androidApplication`**: 用于配置 Android 应用程序模块（例如 `app` 模块）的通用构建逻辑，如编译选项、ProGuard 规则等。
 *   **`androidLibrary`**: 用于配置 Android 库模块的通用构建逻辑。
 *   **`jvmLibrary`**: 用于配置纯 JVM 库模块的通用构建逻辑。
+*   **`hilt`**:  用于统一配置 Hilt 依赖注入。它会为模块应用 Hilt 插件并添加基础的 Hilt 依赖。
 
 ### 插件应用
 
@@ -90,7 +91,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
  *
  * Licensed under the MIT License (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+* You may obtain a copy of the License at
  *
  * https://opensource.org/licenses/MIT
  *
@@ -183,6 +184,68 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
     }
 }
 ```
+
+
+
+#### `HiltConventionPlugin.kt`
+
+```kotlin
+import com.android.build.gradle.api.AndroidBasePlugin
+import com.che2n3jigw.naviplayer.buildlogic.libs
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.dependencies
+
+/*
+ * Copyright (c) 2026 che2n3jigw.
+ *
+ * Licensed under the MIT License (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://opensource.org/licenses/MIT
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ *
+ */
+
+// 作者: che2n3jigw
+// 邮箱: che2n3jigw@163.com
+// 博客: che2n3jigw.github.io
+// 创建时间： 1/16/26
+
+/**
+ * Hilt Convention Plugin
+ */
+class HiltConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            apply(plugin = "com.google.devtools.ksp")
+
+            dependencies {
+                "ksp"(libs.findLibrary("hilt.compiler").get())
+            }
+
+            /** Add support for Android modules, based on [AndroidBasePlugin] */
+            pluginManager.withPlugin("com.android.base") {
+                apply(plugin = "dagger.hilt.android.plugin")
+                dependencies {
+                    "implementation"(libs.findLibrary("hilt.android").get())
+                }
+            }
+        }
+    }
+}
+
+```
+
+
 
 #### `KotlinAndroid.kt` (通用配置)
 

@@ -46,5 +46,9 @@ gradlePlugin {
             id = libs.plugins.naviplayer.jvm.library.get().pluginId
             implementationClass = "JvmLibraryConventionPlugin"
         }
+        register("hilt") {
+            id = libs.plugins.naviplayer.hilt.get().pluginId
+            implementationClass = "HiltConventionPlugin"
+        }
     }
 }
