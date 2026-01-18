@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.naviplayer.android.library)
+    alias(libs.plugins.naviplayer.hilt)
 }
 
 android {
@@ -7,4 +8,6 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.database)
+    implementation(libs.kotlinx.coroutines.core)
 }
