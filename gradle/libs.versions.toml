@@ -1,4 +1,5 @@
 [versions]
+activityKtx = "1.12.2"
 agp = "8.13.2"
 baserecyclerviewadapterhelper4 = "4.3.2"
 kotlin = "2.3.0"
@@ -13,6 +14,7 @@ ksp = "2.3.4"
 room = "2.8.4"
 
 [libraries]
+androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }

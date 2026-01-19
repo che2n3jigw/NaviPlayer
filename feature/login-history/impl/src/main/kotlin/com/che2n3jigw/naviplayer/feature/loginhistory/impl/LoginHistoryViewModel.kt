@@ -23,28 +23,22 @@
 package com.che2n3jigw.naviplayer.feature.loginhistory.impl
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import com.che2n3jigw.naviplayer.core.data.repository.LoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.model.LoginHistory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class LoginHistoryViewModel(repository: LoginHistoryRepository) : ViewModel() {
+@HiltViewModel
+class LoginHistoryViewModel @Inject constructor(
+    loginHistoryRepository: LoginHistoryRepository
+) : ViewModel() {
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val dataSource = LoginHistoryDataSource()
-                val repository = FakeLoginHistoryRepository(dataSource)
-                LoginHistoryViewModel(repository)
-            }
-        }
-    }
-
-    val uiState: StateFlow<LoginHistoryUiState> = repository.loginHistory.map {
+    val uiState: StateFlow<LoginHistoryUiState> = loginHistoryRepository.getLoginHistory().map {
         LoginHistoryUiState(history = it)
     }.stateIn(
         scope = viewModelScope,

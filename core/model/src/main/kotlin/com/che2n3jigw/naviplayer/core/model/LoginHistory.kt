@@ -19,11 +19,32 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 1/14/26
-package com.che2n3jigw.naviplayer.feature.loginhistory.impl
+// 创建时间： 1/18/26
+package com.che2n3jigw.naviplayer.core.model
 
-import kotlinx.coroutines.flow.Flow
-
-interface LoginHistoryRepository {
-    val loginHistory: Flow<List<LoginHistory>>
-}
+/**
+ * 登录历史
+ */
+data class LoginHistory(
+    /**
+     * 服务器地质
+     */
+    val server: String,
+    /**
+     * 账号
+     */
+    val username: String,
+    /**
+     * 密码
+     */
+    val password: String,
+    /**
+     * 登陆状态
+     */
+    val success: Boolean,
+    /**
+     * 时间
+     * 格式:2023-01-02T23:40:57.120Z
+     */
+    val time: String
+)

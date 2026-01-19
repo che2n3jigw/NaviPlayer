@@ -25,6 +25,7 @@ package com.che2n3jigw.naviplayer.feature.loginhistory.impl
 import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -32,27 +33,24 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.che2n3jigw.naviplayer.feature.loginhistory.impl.databinding.ActivityLoginHistoryBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
  * 登录历史页面
  */
+@AndroidEntryPoint
 class LoginHistoryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginHistoryBinding
-    private val viewmodel: LoginHistoryViewModel by lazy {
-        ViewModelProvider.create(
-            this, LoginHistoryViewModel.Factory, MutableCreationExtras()
-        )[LoginHistoryViewModel::class]
-    }
+
+    private val viewmodel: LoginHistoryViewModel by viewModels()
     private val adapter = LoginHistoryAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -23,6 +23,7 @@
 package com.che2n3jigw.naviplayer.core.database.model
 
 import androidx.room.Entity
+import com.che2n3jigw.naviplayer.core.model.LoginHistory
 import kotlin.time.Instant
 
 /**
@@ -38,4 +39,12 @@ data class LoginHistoryEntity(
     val password: String,
     val success: Boolean,
     val time: Instant
+)
+
+fun LoginHistoryEntity.asExternalModel() = LoginHistory(
+    server = serverAddress,
+    username = username,
+    password = password,
+    success = success,
+    time = time.toString()
 )

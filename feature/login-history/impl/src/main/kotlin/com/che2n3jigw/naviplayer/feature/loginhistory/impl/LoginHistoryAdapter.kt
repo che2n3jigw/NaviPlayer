@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
+import com.che2n3jigw.naviplayer.core.model.LoginHistory
 import com.che2n3jigw.naviplayer.feature.loginhistory.impl.databinding.ItemLoginHistoryBinding
 
 /**
@@ -39,7 +40,7 @@ class LoginHistoryAdapter : BaseQuickAdapter<LoginHistory, LoginHistoryAdapter.V
     }
 
     override fun onBindViewHolder(holder: VH, position: Int, item: LoginHistory?) {
-        holder.binding.tvServerAddress.text = item?.serverAddress ?: ""
+        holder.binding.tvServerAddress.text = item?.server ?: ""
 
         var statusRes = R.string.string_failed
         var stateColorRes = R.color.login_history_status_failed

@@ -36,6 +36,9 @@ interface LoginHistoryDao {
     @Upsert
     suspend fun upsertLoginHistory(entity: LoginHistoryEntity)
 
-    @Query(value = "DELETE FROM login_history WHERE serverAddress in (:addresses)")
-    suspend fun deleteLoginHistory(addresses: List<String>)
+    /**
+     * 根据复合主键 (serverAddress, username) 删除一个特定的登录历史记录。
+     */
+    @Query(value = "DELETE FROM login_history WHERE serverAddress = :serverAddress AND username = :username")
+    suspend fun deleteLoginHistory(serverAddress: String, username: String)
 }

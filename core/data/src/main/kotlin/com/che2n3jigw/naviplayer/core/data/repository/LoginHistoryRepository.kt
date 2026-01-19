@@ -22,14 +22,19 @@
 // 创建时间： 1/18/26
 package com.che2n3jigw.naviplayer.core.data.repository
 
-import com.che2n3jigw.naviplayer.core.database.model.LoginHistoryEntity
+import com.che2n3jigw.naviplayer.core.model.LoginHistory
 import kotlinx.coroutines.flow.Flow
 
 interface LoginHistoryRepository {
 
-    fun getLoginHistory(): Flow<List<LoginHistoryEntity>>
+    fun getLoginHistory(): Flow<List<LoginHistory>>
 
-    suspend fun upsertLoginHistory(entity: LoginHistoryEntity)
+    suspend fun upsertLoginHistory(
+        serverAddress: String,
+        username: String,
+        password: String,
+        success: Boolean
+    )
 
-    suspend fun deleteLoginHistory(addresses: List<String>)
+    suspend fun deleteLoginHistory(serverAddress: String, username: String)
 }
