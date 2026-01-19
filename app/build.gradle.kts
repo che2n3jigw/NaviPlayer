@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.naviplayer.android.application)
+    alias(libs.plugins.naviplayer.hilt)
 }
 
 android {
@@ -23,7 +24,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
+    implementation(projects.feature.loginHistory.impl)
 }
