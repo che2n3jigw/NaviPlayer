@@ -24,7 +24,9 @@ package com.che2n3jigw.naviplayer.feature.loginhistory.impl
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -67,7 +69,21 @@ class LoginHistoryActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.uiState.collect {
-                    adapter.submitList(it.history)
+                    when (it) {
+                        is LoginHistoryUiState.Success -> {
+                            adapter.submitList(it.history)
+                            if (it.inDeleteMode) {
+                                binding.ivDelete.visibility = View.GONE
+                                binding.tvCancel.visibility = View.VISIBLE
+                            } else {
+                                binding.ivDelete.visibility = View.VISIBLE
+                                binding.tvCancel.visibility = View.GONE
+                            }
+                        }
+
+                        is LoginHistoryUiState.Error -> {}
+                        LoginHistoryUiState.Loading -> {}
+                    }
                 }
             }
         }
@@ -81,6 +97,26 @@ class LoginHistoryActivity : AppCompatActivity() {
                 topMargin = insets.top
             }
             WindowInsetsCompat.CONSUMED
+        }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val currentState = viewmodel.uiState.value
+                if (currentState is LoginHistoryUiState.Success && currentState.inDeleteMode) {
+                    viewmodel.toggleDeleteMode()
+                } else {
+                    finish()
+                }
+            }
+        })
+
+        binding.ivDelete.setOnClickListener {
+            viewmodel.toggleDeleteMode()
+        }
+        binding.tvCancel.setOnClickListener {
+            viewmodel.toggleDeleteMode()
+        }
+        binding.ivBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 

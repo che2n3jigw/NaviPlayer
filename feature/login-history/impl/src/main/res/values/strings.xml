@@ -18,6 +18,7 @@
 
 <resources>
     <string name="string_login_history">登录历史</string>
-    <string name="string_success">Success</string>
-    <string name="string_failed">Failed</string>
+    <string name="string_success">成功</string>
+    <string name="string_failed">失败</string>
+    <string name="string_cancel">取消</string>
 </resources>
