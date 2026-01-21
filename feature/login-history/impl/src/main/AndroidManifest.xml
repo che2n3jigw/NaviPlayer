@@ -20,7 +20,6 @@
 
     <application>
         <activity
-            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:name=".LoginHistoryActivity"
             android:exported="true" />
     </application>

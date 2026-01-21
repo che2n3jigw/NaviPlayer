@@ -25,4 +25,5 @@ android {
 
 dependencies {
     implementation(projects.feature.loginHistory.impl)
+    implementation(projects.core.common)
 }
