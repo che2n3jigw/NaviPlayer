@@ -50,4 +50,16 @@
         <item name="cornerRadius">16dp</item>
     </style>
 
+    <!--内容标题样式-->
+    <style name="TextAppearance.NaviPlayer.Content.Title" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!--内容二级标题样式-->
+    <style name="TextAppearance.NaviPlayer.Content.SubTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

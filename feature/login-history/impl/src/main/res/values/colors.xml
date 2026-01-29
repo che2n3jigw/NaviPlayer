@@ -17,6 +17,6 @@
   -->
 
 <resources>
-    <color name="login_history_status_success">#22C55E</color>
-    <color name="login_history_status_failed">#F87171</color>
+    <color name="login_history_item_background">#2E1A33</color>
+    <color name="login_history_item_stroke">#CCCCCC</color>
 </resources>
