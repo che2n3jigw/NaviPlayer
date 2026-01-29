@@ -88,6 +88,9 @@ class LoginHistoryActivity : BaseActivity<ActivityLoginHistoryBinding>() {
         binding.ibBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        adapter.onItemCheckedChanged = { item, isChecked ->
+            viewmodel.toggleItemChecked(item, isChecked)
+        }
     }
 
     override fun subscribeUI() {
@@ -96,7 +99,8 @@ class LoginHistoryActivity : BaseActivity<ActivityLoginHistoryBinding>() {
                 viewmodel.uiState.collect {
                     when (it) {
                         is LoginHistoryUiState.Success -> {
-                            adapter.submitList(it.history)
+                            adapter.submitList(it.selectableLoginHistories)
+                            adapter.inDeleteMode = it.inDeleteMode
                             if (it.inDeleteMode) {
                                 binding.ibDelete.visibility = View.GONE
                                 binding.tvCancel.visibility = View.VISIBLE

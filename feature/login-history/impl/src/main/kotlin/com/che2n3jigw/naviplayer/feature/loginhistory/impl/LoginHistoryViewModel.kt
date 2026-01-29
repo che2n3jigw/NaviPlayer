@@ -25,12 +25,10 @@ package com.che2n3jigw.naviplayer.feature.loginhistory.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.LoginHistoryRepository
-import com.che2n3jigw.naviplayer.core.model.LoginHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -47,15 +45,25 @@ class LoginHistoryViewModel @Inject constructor(
     // 私有的、可变的StateFlow，用于跟踪删除模式的状态
     private val _inDeleteMode = MutableStateFlow(false)
 
+    //
+    private val _checkedItemIds = MutableStateFlow<Set<String>>(emptySet())
+
     val uiState: StateFlow<LoginHistoryUiState> = combine(
-        // 1. 从数据仓库获取登录历史列表的Flow
+        // 从数据仓库获取登录历史列表的Flow
         loginHistoryRepository.getLoginHistory(),
-        // 2. 获取表示“是否处于删除模式”的Flow
-        _inDeleteMode
-    ) { history, inDeleteMode ->
-        // 3. 将上述两个Flow的最新值合并。
-        //    无论哪个Flow发出新值，这里都会创建一个新的Success状态。
-        LoginHistoryUiState.Success(history, inDeleteMode)
+        // 获取表示“是否处于删除模式”的Flow
+        _inDeleteMode,
+        // 获取表示“已选择的项ID”的Flow
+        _checkedItemIds
+    ) { history, inDeleteMode, checkedItemIds ->
+        // 3. 合并上方数据
+        val selectableHistory = history.map { loginHistory ->
+            SelectableLoginHistory(
+                loginHistory = loginHistory,
+                isChecked = "${loginHistory.server}${loginHistory.username}" in checkedItemIds
+            )
+        }
+        LoginHistoryUiState.Success(selectableHistory, inDeleteMode)
     }
         // 4. 将Flow的类型从Flow<Success>向上转型为Flow<LoginHistoryUiState>
         //    这是为了让后续的onStart和catch可以发出不同类型的UiState（如Loading和Error）
@@ -84,6 +92,22 @@ class LoginHistoryViewModel @Inject constructor(
     fun toggleDeleteMode() {
         _inDeleteMode.update { !it }
     }
+
+    /**
+     * 更新item的选中状态
+     */
+    fun toggleItemChecked(item: SelectableLoginHistory, checked: Boolean) {
+        _checkedItemIds.update { currentIds ->
+            val newIds = currentIds.toMutableSet()
+            val id = "${item.loginHistory.server}${item.loginHistory.username}"
+            if (checked) {
+                newIds.add(id)
+            } else {
+                newIds.remove(id)
+            }
+            newIds
+        }
+    }
 }
 
 /**
@@ -97,11 +121,11 @@ sealed interface LoginHistoryUiState {
 
     /**
      * 成功加载历史记录。
-     * @param history 登录历史列表。
-     * @param inDeleteMode 是否处于删除模式。
+     * @param selectableLoginHistories       可选历史记录。
+     * @param inDeleteMode  是否处于删除模式。
      */
     data class Success(
-        val history: List<LoginHistory> = emptyList(),
+        val selectableLoginHistories: List<SelectableLoginHistory> = emptyList(),
         val inDeleteMode: Boolean = false
     ) : LoginHistoryUiState
 
