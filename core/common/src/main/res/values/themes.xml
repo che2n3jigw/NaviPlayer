@@ -1,16 +1,31 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.NaviPlayer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <!-- 应用的主色（Primary Color），通常用于 Toolbar、按钮等 -->
+        <item name="colorPrimary">@color/color_primary</item>
+
+        <!-- 主色上的文字或图标颜色，需与 colorPrimary 有足够对比度 -->
         <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+
+        <!-- 次要强调色（Secondary Color），用于高亮、FAB、选中状态等 -->
+        <item name="colorSecondary">@color/color_secondary</item>
+
+        <!-- 次要色上的文字或图标颜色 -->
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Surface（如 Card、Dialog、checkbox）上的前景颜色 -->
+        <item name="colorOnSurface">@color/color_secondary</item>
+
+        <!-- 水波纹颜色 -->
+        <item name="colorControlHighlight">@color/color_control_highlight</item>
+
+        <!-- 主要文本颜色，一般用于标题或正文 -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+
+        <!-- 次要文本颜色，一般用于说明性文字 -->
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/color_background</item>
     </style>
 </resources>
