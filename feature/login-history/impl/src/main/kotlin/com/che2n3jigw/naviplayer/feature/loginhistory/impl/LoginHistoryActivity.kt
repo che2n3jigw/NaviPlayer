@@ -79,13 +79,13 @@ class LoginHistoryActivity : BaseActivity<ActivityLoginHistoryBinding>() {
             }
         })
 
-        binding.ivDelete.setOnClickListener {
+        binding.ibDelete.setOnClickListener {
             viewmodel.toggleDeleteMode()
         }
         binding.tvCancel.setOnClickListener {
             viewmodel.toggleDeleteMode()
         }
-        binding.ivBack.setOnClickListener {
+        binding.ibBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
     }
@@ -98,11 +98,13 @@ class LoginHistoryActivity : BaseActivity<ActivityLoginHistoryBinding>() {
                         is LoginHistoryUiState.Success -> {
                             adapter.submitList(it.history)
                             if (it.inDeleteMode) {
-                                binding.ivDelete.visibility = View.GONE
+                                binding.ibDelete.visibility = View.GONE
                                 binding.tvCancel.visibility = View.VISIBLE
+                                binding.btnDelete.visibility = View.VISIBLE
                             } else {
-                                binding.ivDelete.visibility = View.VISIBLE
+                                binding.ibDelete.visibility = View.VISIBLE
                                 binding.tvCancel.visibility = View.GONE
+                                binding.btnDelete.visibility = View.GONE
                             }
                         }
 
