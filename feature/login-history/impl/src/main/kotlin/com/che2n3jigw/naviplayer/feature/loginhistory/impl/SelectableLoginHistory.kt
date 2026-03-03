@@ -31,7 +31,11 @@ data class SelectableLoginHistory(
      */
     val loginHistory: LoginHistory,
     /**
-     * 包含额外的UI状态
+     * 是否选中
      */
-    val isChecked: Boolean
+    var isChecked: Boolean = false,
+    /**
+     * 是否处于编辑模式（显示 Checkbox）
+     */
+    var isEditMode: Boolean = false
 )

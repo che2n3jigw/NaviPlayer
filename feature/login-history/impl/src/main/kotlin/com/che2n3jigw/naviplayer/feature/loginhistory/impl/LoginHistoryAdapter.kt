@@ -26,6 +26,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.che2n3jigw.naviplayer.feature.loginhistory.impl.LoginHistoryAdapter.VH
@@ -34,9 +35,41 @@ import com.che2n3jigw.naviplayer.feature.loginhistory.impl.databinding.ItemLogin
 /**
  * 登录历史列表适配器
  */
-class LoginHistoryAdapter : BaseQuickAdapter<SelectableLoginHistory, VH>() {
+class LoginHistoryAdapter : BaseQuickAdapter<SelectableLoginHistory, VH>(diffCallback = object :
+    DiffUtil.ItemCallback<SelectableLoginHistory>() {
+    override fun areItemsTheSame(
+        oldItem: SelectableLoginHistory,
+        newItem: SelectableLoginHistory
+    ): Boolean {
+        val old = oldItem.loginHistory
+        val new = newItem.loginHistory
+        return old.server == new.server && old.username == new.username
+    }
 
-    var inDeleteMode = false
+    override fun areContentsTheSame(
+        oldItem: SelectableLoginHistory,
+        newItem: SelectableLoginHistory
+    ): Boolean {
+        return oldItem.isChecked == newItem.isChecked && oldItem.isEditMode == newItem.isEditMode
+    }
+
+    override fun getChangePayload(
+        oldItem: SelectableLoginHistory,
+        newItem: SelectableLoginHistory
+    ): Any? {
+        return when {
+            oldItem.isChecked != newItem.isChecked -> PAYLOAD_CHECKED
+            oldItem.isEditMode != newItem.isEditMode -> PAYLOAD_MODE
+            else -> null
+        }
+    }
+}) {
+
+    companion object {
+        private const val PAYLOAD_CHECKED = "selected_state"
+        private const val PAYLOAD_MODE = "edit_mode"
+    }
+
     var onItemCheckedChanged: ((SelectableLoginHistory, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(context: Context, parent: ViewGroup, viewType: Int): VH {
@@ -45,9 +78,33 @@ class LoginHistoryAdapter : BaseQuickAdapter<SelectableLoginHistory, VH>() {
         return viewHolder
     }
 
+    override fun onBindViewHolder(
+        holder: VH,
+        position: Int,
+        item: SelectableLoginHistory?,
+        payloads: List<Any>
+    ) {
+        if (payloads.isNotEmpty()) {
+            payloads.forEach {
+                when (it) {
+                    PAYLOAD_CHECKED -> {
+                        holder.binding.cbDelete.isChecked = item?.isChecked ?: false
+                    }
+
+                    PAYLOAD_MODE -> {
+                        val edit = item?.isEditMode ?: false
+                        holder.binding.cbDelete.visibility = if (edit) View.VISIBLE else View.GONE
+                    }
+                }
+            }
+        } else {
+            super.onBindViewHolder(holder, position, item, payloads)
+        }
+    }
+
     override fun onBindViewHolder(holder: VH, position: Int, item: SelectableLoginHistory?) {
         if (item == null) return
-        holder.bind(item, inDeleteMode)
+        holder.bind(item)
     }
 
     class VH(
@@ -56,14 +113,12 @@ class LoginHistoryAdapter : BaseQuickAdapter<SelectableLoginHistory, VH>() {
         )
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(data: SelectableLoginHistory, inDeleteMode: Boolean) {
-            binding.cbDelete.visibility = if (inDeleteMode) View.VISIBLE else View.GONE
+        fun bind(data: SelectableLoginHistory) {
+            binding.cbDelete.visibility = if (data.isEditMode) View.VISIBLE else View.GONE
             binding.tvServerAddress.text = data.loginHistory.server
             binding.tvUsername.text = data.loginHistory.username
             binding.tvTime.text = data.loginHistory.time
-            if (binding.cbDelete.isChecked != data.isChecked) {
-                binding.cbDelete.isChecked = data.isChecked
-            }
+            binding.cbDelete.isChecked = data.isChecked
         }
 
         fun addListener(adapter: LoginHistoryAdapter) {
@@ -73,9 +128,7 @@ class LoginHistoryAdapter : BaseQuickAdapter<SelectableLoginHistory, VH>() {
                 val currentPosition = bindingAdapterPosition
                 if (currentPosition == RecyclerView.NO_POSITION) return@setOnCheckedChangeListener
                 adapter.getItem(currentPosition).let {
-                    if (it.isChecked != isChecked) {
-                        adapter.onItemCheckedChanged?.invoke(it, isChecked)
-                    }
+                    adapter.onItemCheckedChanged?.invoke(it, isChecked)
                 }
             }
         }

@@ -71,7 +71,7 @@ class LoginHistoryActivity : BaseActivity<ActivityLoginHistoryBinding>() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val currentState = viewmodel.uiState.value
-                if (currentState is LoginHistoryUiState.Success && currentState.inDeleteMode) {
+                if (currentState is LoginHistoryUiState.Success && currentState.isEditMode) {
                     viewmodel.toggleDeleteMode()
                 } else {
                     finish()
@@ -100,8 +100,7 @@ class LoginHistoryActivity : BaseActivity<ActivityLoginHistoryBinding>() {
                     when (it) {
                         is LoginHistoryUiState.Success -> {
                             adapter.submitList(it.selectableLoginHistories)
-                            adapter.inDeleteMode = it.inDeleteMode
-                            if (it.inDeleteMode) {
+                            if (it.isEditMode) {
                                 binding.ibDelete.visibility = View.GONE
                                 binding.tvCancel.visibility = View.VISIBLE
                                 binding.btnDelete.visibility = View.VISIBLE

@@ -42,28 +42,29 @@ class LoginHistoryViewModel @Inject constructor(
     loginHistoryRepository: LoginHistoryRepository
 ) : ViewModel() {
 
-    // 私有的、可变的StateFlow，用于跟踪删除模式的状态
-    private val _inDeleteMode = MutableStateFlow(false)
+    // 私有的、可变的StateFlow，用于跟踪编辑模式的状态
+    private val _inEditMode = MutableStateFlow(false)
 
-    //
+    // 用于记录列表的选中状态
     private val _checkedItemIds = MutableStateFlow<Set<String>>(emptySet())
 
     val uiState: StateFlow<LoginHistoryUiState> = combine(
         // 从数据仓库获取登录历史列表的Flow
         loginHistoryRepository.getLoginHistory(),
         // 获取表示“是否处于删除模式”的Flow
-        _inDeleteMode,
+        _inEditMode,
         // 获取表示“已选择的项ID”的Flow
         _checkedItemIds
-    ) { history, inDeleteMode, checkedItemIds ->
+    ) { history, isEditMode, checkedItemIds ->
         // 3. 合并上方数据
         val selectableHistory = history.map { loginHistory ->
             SelectableLoginHistory(
                 loginHistory = loginHistory,
-                isChecked = "${loginHistory.server}${loginHistory.username}" in checkedItemIds
+                isChecked = "${loginHistory.server}${loginHistory.username}" in checkedItemIds,
+                isEditMode = isEditMode
             )
         }
-        LoginHistoryUiState.Success(selectableHistory, inDeleteMode)
+        LoginHistoryUiState.Success(selectableHistory, isEditMode)
     }
         // 4. 将Flow的类型从Flow<Success>向上转型为Flow<LoginHistoryUiState>
         //    这是为了让后续的onStart和catch可以发出不同类型的UiState（如Loading和Error）
@@ -90,7 +91,7 @@ class LoginHistoryViewModel @Inject constructor(
      * 切换删除模式的开关状态
      */
     fun toggleDeleteMode() {
-        _inDeleteMode.update { !it }
+        _inEditMode.update { !it }
     }
 
     /**
@@ -121,12 +122,12 @@ sealed interface LoginHistoryUiState {
 
     /**
      * 成功加载历史记录。
-     * @param selectableLoginHistories       可选历史记录。
-     * @param inDeleteMode  是否处于删除模式。
+     * @param selectableLoginHistories          可选历史记录。
+     * @param isEditMode                        是否编辑状态
      */
     data class Success(
         val selectableLoginHistories: List<SelectableLoginHistory> = emptyList(),
-        val inDeleteMode: Boolean = false
+        val isEditMode: Boolean = false
     ) : LoginHistoryUiState
 
     /**
