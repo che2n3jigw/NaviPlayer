@@ -35,18 +35,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginHistoryViewModel @Inject constructor(
-    loginHistoryRepository: LoginHistoryRepository
+    private val loginHistoryRepository: LoginHistoryRepository
 ) : ViewModel() {
 
     // 私有的、可变的StateFlow，用于跟踪编辑模式的状态
     private val _inEditMode = MutableStateFlow(false)
 
     // 用于记录列表的选中状态
-    private val _checkedItemIds = MutableStateFlow<Set<String>>(emptySet())
+    private val _checkedItemIds = MutableStateFlow<Set<Pair<String, String>>>(emptySet())
 
     val uiState: StateFlow<LoginHistoryUiState> = combine(
         // 从数据仓库获取登录历史列表的Flow
@@ -60,7 +61,7 @@ class LoginHistoryViewModel @Inject constructor(
         val selectableHistory = history.map { loginHistory ->
             SelectableLoginHistory(
                 loginHistory = loginHistory,
-                isChecked = "${loginHistory.server}${loginHistory.username}" in checkedItemIds,
+                isChecked = Pair(loginHistory.server, loginHistory.username) in checkedItemIds,
                 isEditMode = isEditMode
             )
         }
@@ -100,13 +101,29 @@ class LoginHistoryViewModel @Inject constructor(
     fun toggleItemChecked(item: SelectableLoginHistory, checked: Boolean) {
         _checkedItemIds.update { currentIds ->
             val newIds = currentIds.toMutableSet()
-            val id = "${item.loginHistory.server}${item.loginHistory.username}"
+            val pair = Pair(item.loginHistory.server, item.loginHistory.username)
             if (checked) {
-                newIds.add(id)
+                newIds.add(pair)
             } else {
-                newIds.remove(id)
+                newIds.remove(pair)
             }
             newIds
+        }
+    }
+
+    /**
+     * 删除历史记录
+     */
+    fun deleteHistory() {
+        viewModelScope.launch {
+            _checkedItemIds.value.forEach {
+                loginHistoryRepository.deleteLoginHistory(it.first, it.second)
+            }
+            // 恢复默认状态
+            _checkedItemIds.update {
+                emptySet()
+            }
+            _inEditMode.update { false }
         }
     }
 }

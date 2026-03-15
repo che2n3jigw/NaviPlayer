@@ -91,6 +91,9 @@ class LoginHistoryActivity : BaseActivity<ActivityLoginHistoryBinding>() {
         adapter.onItemCheckedChanged = { item, isChecked ->
             viewmodel.toggleItemChecked(item, isChecked)
         }
+        binding.btnDelete.setOnClickListener {
+            viewmodel.deleteHistory()
+        }
     }
 
     override fun subscribeUI() {
