@@ -13,8 +13,6 @@ android {
 
 dependencies {
     implementation(libs.baserecyclerviewadapterhelper4)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity.ktx)
 
     // lifecycle
@@ -24,4 +22,7 @@ dependencies {
     implementation(projects.core.model)
     implementation(projects.core.data)
     implementation(projects.core.common)
+
+    implementation(projects.feature.login.api)
+    implementation(libs.androidx.navigation.fragment.ktx)
 }
