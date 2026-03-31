@@ -31,6 +31,6 @@ import javax.inject.Inject
 class LoginNavigatorImpl @Inject constructor() : LoginNavigator {
 
     override fun navigateToLogin(navController: NavController) {
-        navController.navigate(R.id.login_dest, CommonNavOptions.slideInOptions)
+        navController.navigate(R.id.login_dest, null, CommonNavOptions.slideInOptions)
     }
 }
