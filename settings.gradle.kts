@@ -31,12 +31,16 @@ rootProject.name = "naviplayer"
 include(":app")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+// core
 include(":core:model")
 include(":core:database")
 include(":core:network")
 include(":core:media")
 include(":core:data")
 include(":core:common")
+include(":core:navigation")
+
+// feature
 include(":feature:login:impl")
 include(":feature:login-history:impl")
 include(":feature:player:impl")
