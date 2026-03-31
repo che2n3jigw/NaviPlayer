@@ -41,6 +41,7 @@ include(":core:common")
 include(":core:navigation")
 
 // feature
+include(":feature:login:api")
 include(":feature:login:impl")
 include(":feature:login-history:impl")
 include(":feature:player:impl")
