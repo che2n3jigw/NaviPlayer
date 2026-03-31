@@ -21,9 +21,17 @@ android {
             )
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
     implementation(projects.feature.loginHistory.impl)
+    implementation(projects.feature.login.impl)
+
     implementation(projects.core.common)
+    implementation(projects.core.navigation)
+
+    implementation(libs.androidx.navigation.fragment.ktx)
 }
