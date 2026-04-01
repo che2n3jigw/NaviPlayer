@@ -3,7 +3,8 @@ plugins {
 }
 
 android {
-    namespace = "com.che2n3jigw.naviplayer.feature.setting.impl"
+    namespace = "com.che2n3jigw.naviplayer.feature.me.impl"
+
     buildFeatures {
         viewBinding = true
     }
