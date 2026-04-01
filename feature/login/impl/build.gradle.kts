@@ -16,6 +16,5 @@ dependencies {
     implementation(projects.core.navigation)
 
     implementation(projects.feature.login.api)
-    implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
 }

@@ -16,12 +16,14 @@
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login_graph"
     app:startDestination="@id/login_dest">
 
 
     <fragment
         android:id="@+id/login_dest"
+        tools:layout="@layout/fragment_login"
         android:name="com.che2n3jigw.naviplayer.feature.login.impl.LoginFragment"
         android:label="LoginFragment" />
 </navigation>
