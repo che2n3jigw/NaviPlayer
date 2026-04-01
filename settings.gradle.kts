@@ -39,6 +39,7 @@ include(":core:media")
 include(":core:data")
 include(":core:common")
 include(":core:navigation")
+include(":core:ui")
 
 // feature
 include(":feature:login:api")

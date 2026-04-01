@@ -12,15 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- *
  */
 
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 1/21/26
-package com.che2n3jigw.naviplayer.core.common
+package com.che2n3jigw.naviplayer.core.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
