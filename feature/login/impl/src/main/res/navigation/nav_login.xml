@@ -20,10 +20,13 @@
     android:id="@+id/login_graph"
     app:startDestination="@id/login_dest">
 
-
     <fragment
         android:id="@+id/login_dest"
-        tools:layout="@layout/fragment_login"
         android:name="com.che2n3jigw.naviplayer.feature.login.impl.LoginFragment"
-        android:label="LoginFragment" />
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+        <deepLink app:uri="android-app://com.che2n3jigw.naviplayer.feature.login.api/login" />
+
+    </fragment>
 </navigation>

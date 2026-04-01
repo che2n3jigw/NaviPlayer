@@ -17,26 +17,9 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/3/30 14:17
-package com.che2n3jigw.naviplayer
+// 创建时间： 2026/4/1 15:03
+package com.che2n3jigw.naviplayer.feature.login.api.navigation
 
-import com.che2n3jigw.naviplayer.core.ui.BaseActivity
-import com.che2n3jigw.naviplayer.databinding.ActivityMainBinding
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding>() {
-
-    override fun inflateBinding(): ActivityMainBinding {
-        return ActivityMainBinding.inflate(layoutInflater)
-    }
-
-    override fun initView() {
-    }
-
-    override fun initListener() {
-    }
-
-    override fun subscribeUI() {
-    }
+object LoginDeepLink {
+    const val LOGIN = "android-app://com.che2n3jigw.naviplayer.feature.login.api/login"
 }

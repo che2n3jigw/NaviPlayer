@@ -20,8 +20,11 @@
 // 创建时间： 2026/3/31 14:33
 package com.che2n3jigw.naviplayer.feature.login.impl
 
+import androidx.core.net.toUri
 import androidx.navigation.NavController
+import androidx.navigation.NavDeepLinkRequest
 import com.che2n3jigw.naviplayer.core.navigation.CommonNavOptions
+import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginDeepLink
 import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginNavigator
 import javax.inject.Inject
 
@@ -31,6 +34,9 @@ import javax.inject.Inject
 class LoginNavigatorImpl @Inject constructor() : LoginNavigator {
 
     override fun navigateToLogin(navController: NavController) {
-        navController.navigate(R.id.login_dest, null, CommonNavOptions.slideInOptions)
+        val request = NavDeepLinkRequest.Builder
+            .fromUri(LoginDeepLink.LOGIN.toUri())
+            .build()
+        navController.navigate(request, CommonNavOptions.slideInOptions)
     }
 }

@@ -34,7 +34,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.che2n3jigw.naviplayer.core.common.BaseActivity
+import com.che2n3jigw.naviplayer.core.ui.BaseActivity
 import com.che2n3jigw.naviplayer.feature.loginhistory.impl.databinding.ActivityLoginHistoryBinding
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint

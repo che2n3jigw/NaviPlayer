@@ -20,6 +20,7 @@
 // 创建时间： 2026/3/30 14:53
 package com.che2n3jigw.naviplayer.feature.loginhistory.impl
 
+import androidx.navigation.fragment.findNavController
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginNavigator
 import com.che2n3jigw.naviplayer.feature.loginhistory.impl.databinding.ActivityLoginHistoryBinding
@@ -36,7 +37,11 @@ class LoginHistoryFragment : BaseFragment<ActivityLoginHistoryBinding>() {
 
     override fun initView() {}
 
-    override fun initListener() {}
+    override fun initListener() {
+        binding.ibBack.setOnClickListener {
+            loginNavigator.navigateToLogin(findNavController())
+        }
+    }
 
     override fun subscribeUI() {}
 }

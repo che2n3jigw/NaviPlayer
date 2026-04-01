@@ -1,11 +1,7 @@
 plugins {
-    alias(libs.plugins.naviplayer.android.library)
+    alias(libs.plugins.naviplayer.android.feature.api)
 }
 
 android {
     namespace = "com.che2n3jigw.naviplayer.feature.login.api"
-}
-
-dependencies {
-    implementation(projects.core.navigation)
 }
