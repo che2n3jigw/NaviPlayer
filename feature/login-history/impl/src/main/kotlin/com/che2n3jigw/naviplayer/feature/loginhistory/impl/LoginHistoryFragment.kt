@@ -20,40 +20,23 @@
 // 创建时间： 2026/3/30 14:53
 package com.che2n3jigw.naviplayer.feature.loginhistory.impl
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginNavigator
 import com.che2n3jigw.naviplayer.feature.loginhistory.impl.databinding.ActivityLoginHistoryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginHistoryFragment : Fragment() {
-
-    private var _binding: ActivityLoginHistoryBinding? = null
-    private val binding get() = _binding!!
+class LoginHistoryFragment : BaseFragment<ActivityLoginHistoryBinding>() {
 
     @Inject
     lateinit var loginNavigator: LoginNavigator
 
-    override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View {
-        _binding = ActivityLoginHistoryBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    override fun inflateBinding() = ActivityLoginHistoryBinding.inflate(layoutInflater)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.ibBack.setOnClickListener {
-            loginNavigator.navigateToLogin(findNavController())
-        }
-    }
+    override fun initView() {}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun initListener() {}
+
+    override fun subscribeUI() {}
 }

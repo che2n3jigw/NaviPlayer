@@ -21,28 +21,19 @@
 package com.che2n3jigw.naviplayer.feature.login.impl
 
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.login.impl.databinding.FragmentLoginBinding
 
 /**
  * 登录页面
  */
-class LoginFragment : Fragment() {
+class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
-    private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
+    override fun inflateBinding() = FragmentLoginBinding.inflate(layoutInflater)
 
-    override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View {
-        _binding = FragmentLoginBinding.inflate(layoutInflater)
-        return binding.root
-    }
+    override fun initView() {}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    override fun initListener() {}
+
+    override fun subscribeUI() {}
 }
