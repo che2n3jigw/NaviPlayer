@@ -50,5 +50,9 @@ gradlePlugin {
             id = libs.plugins.naviplayer.hilt.get().pluginId
             implementationClass = "HiltConventionPlugin"
         }
+        register("androidFeatureApi") {
+            id = libs.plugins.naviplayer.android.feature.api.get().pluginId
+            implementationClass = "AndroidFeatureApiConventionPlugin"
+        }
     }
 }
