@@ -16,15 +16,10 @@
 
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/login_history_dest">
-
-    <include app:graph="@navigation/nav_login" />
-
-    <fragment
-        android:id="@+id/login_history_dest"
-        android:name="com.che2n3jigw.naviplayer.feature.loginhistory.impl.LoginHistoryFragment"
-        android:label="LoginHistoryFragment"
-        tools:layout="@layout/activity_login_history" />
-
+    android:id="@+id/main_graph"
+    android:label="MainGraph"
+    app:startDestination="@id/library_graph">
+    <include app:graph="@navigation/nav_library" />
+    <include app:graph="@navigation/nav_me" />
+    <include app:graph="@navigation/nav_setting" />
 </navigation>

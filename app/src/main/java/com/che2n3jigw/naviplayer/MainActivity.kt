@@ -20,6 +20,9 @@
 // 创建时间： 2026/3/30 14:17
 package com.che2n3jigw.naviplayer
 
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.che2n3jigw.naviplayer.core.ui.BaseActivity
 import com.che2n3jigw.naviplayer.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +34,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         return ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private var navController: NavController? = null
     override fun initView() {
+        val host =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = host.navController
+        navController?.let {
+            binding.bottomNavView.setupWithNavController(it)
+        }
     }
 
     override fun initListener() {

@@ -22,5 +22,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="我的页面" />
+        android:text="@string/me_title"/>
 </FrameLayout>

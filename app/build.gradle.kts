@@ -27,6 +27,10 @@ android {
 }
 
 dependencies {
+    implementation(projects.feature.library.impl)
+    implementation(projects.feature.me.impl)
+    implementation(projects.feature.setting.impl)
+
     implementation(projects.feature.loginHistory.impl)
     implementation(projects.feature.login.impl)
 
@@ -34,4 +38,5 @@ dependencies {
     implementation(projects.core.navigation)
 
     implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 }
