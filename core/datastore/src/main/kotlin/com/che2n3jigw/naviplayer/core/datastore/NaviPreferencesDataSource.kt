@@ -29,7 +29,7 @@ import javax.inject.Inject
  * 使用Jetpack DataStore管理用户偏好和会话状态的数据源
  */
 class NaviPreferencesDataSource @Inject constructor(
-    userPreferences: DataStore<UserPreferences>
+    private val userPreferences: DataStore<UserPreferences>
 ) {
     val userData = userPreferences.data.map {
         UserData(
@@ -39,4 +39,25 @@ class NaviPreferencesDataSource @Inject constructor(
             isLoggedIn = it.domain.isNotBlank() && it.username.isNotBlank() && it.password.isNotBlank()
         )
     }
+
+    suspend fun login(domain: String, username: String, password: String) {
+        userPreferences.updateData {
+            it.copy(
+                domain = domain,
+                username = username,
+                password = password
+            )
+        }
+    }
+
+    suspend fun logout() {
+        userPreferences.updateData {
+            it.copy(
+                domain = "",
+                username = "",
+                password = ""
+            )
+        }
+    }
+
 }
