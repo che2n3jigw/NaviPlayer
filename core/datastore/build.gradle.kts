@@ -9,7 +9,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.datastore)
+    api(libs.androidx.datastore)
+    api(projects.core.model)
+
     implementation(libs.kotlinx.serialization.json)
     implementation(projects.core.common)
 }

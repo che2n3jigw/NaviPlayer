@@ -17,14 +17,26 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/4/7 10:29
+// 创建时间： 2026/4/7 14:09
 package com.che2n3jigw.naviplayer.core.datastore
 
-import kotlinx.serialization.Serializable
+import UserData
+import androidx.datastore.core.DataStore
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-@Serializable
-data class UserPreferences(
-    var domain: String = "",
-    var username: String = "",
-    var password: String = ""
-)
+/**
+ * 使用Jetpack DataStore管理用户偏好和会话状态的数据源
+ */
+class NaviPreferencesDataSource @Inject constructor(
+    userPreferences: DataStore<UserPreferences>
+) {
+    val userData = userPreferences.data.map {
+        UserData(
+            domain = it.domain,
+            username = it.username,
+            password = it.password,
+            isLoggedIn = it.domain.isNotBlank() && it.username.isNotBlank() && it.password.isNotBlank()
+        )
+    }
+}

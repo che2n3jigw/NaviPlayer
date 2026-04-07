@@ -26,11 +26,12 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import java.io.InputStream
 import java.io.OutputStream
+import javax.inject.Inject
 
 /**
  * 使用Kotlin序列化技术的[UserPreferences]序列化器。
  */
-object UserPreferencesSerializer : Serializer<UserPreferences> {
+class UserPreferencesSerializer @Inject constructor() : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences
         get() = UserPreferences()
 
