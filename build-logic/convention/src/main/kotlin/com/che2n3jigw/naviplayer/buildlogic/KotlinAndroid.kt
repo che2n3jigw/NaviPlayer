@@ -48,7 +48,7 @@ internal fun Project.configureKotlinAndroid(
 
         defaultConfig {
             // 设置应用支持的最低 Android SDK 版本
-            minSdk = 23
+            minSdk = 24
         }
 
         compileOptions {
