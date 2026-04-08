@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(projects.core.database)
-    implementation(projects.core.model)
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(projects.core.common)
+    implementation(projects.core.datastore)
+    implementation(libs.android.open.subsonic.api)
 }

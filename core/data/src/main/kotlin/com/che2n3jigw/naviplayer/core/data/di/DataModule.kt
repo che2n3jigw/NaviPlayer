@@ -23,7 +23,9 @@
 package com.che2n3jigw.naviplayer.core.data.di
 
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultLoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.DefaultUserRepository
 import com.che2n3jigw.naviplayer.core.data.repository.LoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -37,4 +39,9 @@ abstract class DataModule {
     internal abstract fun bindsLoginHistoryRepository(
         defaultLoginHistoryRepository: DefaultLoginHistoryRepository
     ): LoginHistoryRepository
+
+    @Binds
+    internal abstract fun bindsUserRepository(
+        defaultUserRepository: DefaultUserRepository
+    ): UserRepository
 }
