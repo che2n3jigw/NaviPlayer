@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <color name="me_stat_item_border">#262626</color>
-    <color name="me_stat_item_bg">#101010</color>
-    <color name="me_stat_label_color">#ADAAAA</color>
+    <color name="me_outline_variant">#262626</color>
+    <color name="me_surface_container">#101010</color>
+    <color name="me_label_color">#ADAAAA</color>
 </resources>

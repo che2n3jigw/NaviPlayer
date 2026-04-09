@@ -18,7 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_stat_item"
+    android:background="@drawable/me_bg_rounded_container_16"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -40,7 +40,7 @@
         android:id="@+id/tv_stat_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/me_stat_label_color"
+        android:textColor="@color/me_label_color"
         android:textSize="11sp"
         tools:text="Albums" />
 
