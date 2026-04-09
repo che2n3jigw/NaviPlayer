@@ -58,7 +58,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             // 将 insets 传递给子类，由子类决定如何调整自己的布局。
             onApplyWindowInsets(insets)
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
 
         // 调用模板方法，由子类实现具体的初始化逻辑
