@@ -63,13 +63,12 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/me_bg_cover_overlay" />
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/ib_favorite_play"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_favorite_play"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_gravity="end"
                     android:layout_margin="32dp"
-                    android:background="@null"
                     android:src="@drawable/me_ic_favorite_play" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -105,13 +104,12 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/me_bg_recently_played" />
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/ib_recently_play"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_recently_play"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_gravity="end"
                     android:layout_margin="32dp"
-                    android:background="@null"
                     android:src="@drawable/me_ic_favorite_play" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -196,36 +194,35 @@
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/MePlayingCoverRoundedStyle" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/ib_next"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_next"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:background="@null"
             android:padding="12dp"
             android:src="@drawable/me_ic_next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/ib_play"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_play"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:background="@null"
             android:src="@drawable/me_ic_play"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_next"
+            app:layout_constraintEnd_toStartOf="@id/iv_next"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/ib_previous"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_previous"
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:background="@null"
             android:padding="12dp"
             android:src="@drawable/me_ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_play"
+            app:layout_constraintEnd_toStartOf="@id/iv_play"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -238,7 +235,7 @@
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@id/tv_singer"
-            app:layout_constraintEnd_toStartOf="@id/ib_previous"
+            app:layout_constraintEnd_toStartOf="@id/iv_previous"
             app:layout_constraintStart_toEndOf="@id/iv_cover_playing"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
@@ -253,7 +250,7 @@
             android:textColor="@color/text_primary"
             android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ib_previous"
+            app:layout_constraintEnd_toStartOf="@id/iv_previous"
             app:layout_constraintStart_toEndOf="@id/iv_cover_playing"
             app:layout_constraintTop_toBottomOf="@id/tv_sing_name" />
 

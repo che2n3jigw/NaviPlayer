@@ -24,12 +24,21 @@ import android.view.ViewGroup
 import androidx.core.graphics.Insets
 import androidx.core.view.updateLayoutParams
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
+import com.che2n3jigw.naviplayer.core.ui.util.ClickEffectUtil
 import com.che2n3jigw.naviplayer.feature.me.impl.databinding.FragmentMeBinding
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * 我的页面
  */
 class MeFragment : BaseFragment<FragmentMeBinding>() {
+
+    private val snackBar by lazy {
+        Snackbar.make(binding.root, "目前处于未登录状态", Snackbar.LENGTH_INDEFINITE).apply {
+            setAction("去登录") {}
+            setAnchorView(binding.nsvContent)
+        }
+    }
 
     override fun inflateBinding() = FragmentMeBinding.inflate(layoutInflater)
 
@@ -48,7 +57,23 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         binding.tvSinger.text = "singer"
     }
 
-    override fun initListener() {}
+    override fun initListener() {
+        ClickEffectUtil.applyScale(binding.ivAvatar)
+        ClickEffectUtil.applyScale(binding.ivFavoritePlay)
+        ClickEffectUtil.applyScale(binding.ivRecentlyPlay)
+        ClickEffectUtil.applyScale(binding.viewStatAlbums)
+        ClickEffectUtil.applyScale(binding.viewStatArtists)
+        ClickEffectUtil.applyScale(binding.viewStatLists)
+        ClickEffectUtil.applyScale(binding.viewStatOffline)
+        ClickEffectUtil.applyScale(binding.ivNext)
+        ClickEffectUtil.applyScale(binding.ivPlay)
+        ClickEffectUtil.applyScale(binding.ivPrevious)
+        ClickEffectUtil.applyEnlarge(binding.ivFavoriteCover)
+
+        binding.ivFavoritePlay.setOnClickListener {
+            snackBar.show()
+        }
+    }
 
     override fun subscribeUI() {}
 
@@ -56,5 +81,10 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         binding.ivAvatar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = insets.top
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        snackBar.dismiss()
     }
 }
