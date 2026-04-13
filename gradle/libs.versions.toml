@@ -3,6 +3,7 @@ activityKtx = "1.12.2"
 agp = "8.13.2"
 androidOpenSubsonicApi = "1.0.2"
 baserecyclerviewadapterhelper4 = "4.3.2"
+coil = "2.7.0"
 datastore = "1.2.1"
 kotlin = "2.3.0"
 coreKtx = "1.17.0"
@@ -33,6 +34,7 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 baserecyclerviewadapterhelper4 = { module = "io.github.cymchad:BaseRecyclerViewAdapterHelper4", version.ref = "baserecyclerviewadapterhelper4" }
+coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 

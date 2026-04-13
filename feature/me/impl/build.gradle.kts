@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.naviplayer.android.library)
+    alias(libs.plugins.naviplayer.hilt)
 }
 
 android {
@@ -11,7 +12,11 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.data)
     implementation(projects.core.ui)
     implementation(projects.core.navigation)
+
     implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.coil.kt)
 }

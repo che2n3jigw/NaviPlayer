@@ -8,8 +8,8 @@ android {
 }
 
 dependencies {
+    api(projects.core.datastore)
     implementation(projects.core.database)
     implementation(projects.core.common)
-    implementation(projects.core.datastore)
     implementation(libs.android.open.subsonic.api)
 }
