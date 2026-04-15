@@ -13,6 +13,9 @@ android {
         // 参考[room数据库迁移](https://developer.android.com/training/data-storage/room/migrating-db-versions?hl=zh-cn#test)
         schemaDirectory("$projectDir/schemas")
     }
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
@@ -20,4 +23,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(projects.core.model)
+
+    androidTestImplementation(libs.test.androidx.core)
+    androidTestImplementation(libs.test.androidx.runner)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 }
