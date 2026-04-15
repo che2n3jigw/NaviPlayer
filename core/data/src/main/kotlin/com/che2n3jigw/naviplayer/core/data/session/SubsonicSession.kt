@@ -21,6 +21,9 @@
 package com.che2n3jigw.naviplayer.core.data.session
 
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.BrowsingDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.ListsDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.MediaRetrievalDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.PlaylistsDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.SystemDataSource
 
 /**
@@ -28,6 +31,9 @@ import com.che2n3jigw.android.libs.opensubsonicapi.datasource.SystemDataSource
  */
 data class SubsonicSession(
     // 将所有常用的 DataSource 组合在一起
-    val browsingDataSource: BrowsingDataSource,
     val systemDataSource: SystemDataSource,
+    val browsingDataSource: BrowsingDataSource,
+    val listsDataSource: ListsDataSource,
+    val mediaRetrievalDataSource: MediaRetrievalDataSource,
+    val playlistsDataSource: PlaylistsDataSource
 )

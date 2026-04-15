@@ -23,6 +23,9 @@ package com.che2n3jigw.naviplayer.core.data.session
 
 import com.che2n3jigw.android.libs.opensubsonicapi.bean.AuthInfo
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.BrowsingDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.ListsDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.MediaRetrievalDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.PlaylistsDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.SystemDataSource
 import com.che2n3jigw.naviplayer.core.common.ApplicationScope
 import com.che2n3jigw.naviplayer.core.datastore.NaviPreferencesDataSource
@@ -51,11 +54,19 @@ class SubsonicSessionManager @Inject constructor(
                 val authInfo = AuthInfo(it.username, it.password)
                 SubsonicSession(
                     browsingDataSource = BrowsingDataSource(it.domain, authInfo),
-                    systemDataSource = SystemDataSource(it.domain, authInfo)
+                    systemDataSource = SystemDataSource(it.domain, authInfo),
+                    listsDataSource = ListsDataSource(it.domain, authInfo),
+                    mediaRetrievalDataSource = MediaRetrievalDataSource(it.domain, authInfo),
+                    playlistsDataSource = PlaylistsDataSource(it.domain, authInfo)
                 )
             } else {
                 null
             }
         }
         .stateIn(scope, SharingStarted.Eagerly, null)
+
+    val browsingDataSource get() = activeSession.value?.browsingDataSource
+    val listsDataSource get() = activeSession.value?.listsDataSource
+    val mediaRetrievalDataSource get() = activeSession.value?.mediaRetrievalDataSource
+    val playlistsDataSource get() = activeSession.value?.playlistsDataSource
 }
