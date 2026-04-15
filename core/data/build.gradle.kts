@@ -12,4 +12,7 @@ dependencies {
     implementation(projects.core.database)
     implementation(projects.core.common)
     implementation(libs.android.open.subsonic.api)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
