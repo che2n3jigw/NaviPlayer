@@ -24,6 +24,7 @@ package com.che2n3jigw.naviplayer.core.database.di
 
 import com.che2n3jigw.naviplayer.core.database.NaviPlayerDatabase
 import com.che2n3jigw.naviplayer.core.database.dao.LoginHistoryDao
+import com.che2n3jigw.naviplayer.core.database.dao.PlayHistoryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,5 +40,10 @@ internal object DaosModule {
     @Provides
     fun providesLoginHistoryDao(database: NaviPlayerDatabase): LoginHistoryDao {
         return database.loginHistoryDao()
+    }
+
+    @Provides
+    fun providesPlayHistoryDao(database: NaviPlayerDatabase): PlayHistoryDao {
+        return database.playHistoryDao()
     }
 }
