@@ -71,8 +71,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             // android 应用插件
             apply(plugin = "com.android.application")
-            // kotlin android 插件
-            apply(plugin = "org.jetbrains.kotlin.android")
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
@@ -123,7 +121,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.library")
-            apply(plugin = "org.jetbrains.kotlin.android")
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)

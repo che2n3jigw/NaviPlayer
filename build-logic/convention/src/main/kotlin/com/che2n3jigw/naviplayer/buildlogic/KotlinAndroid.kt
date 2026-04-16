@@ -40,18 +40,17 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
  * @param commonExtension 来自 Android Gradle 插件的通用配置扩展。
  */
 internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
 ) {
     commonExtension.apply {
         // 设置编译所用的 Android SDK 版本
         compileSdk = 36
 
-        defaultConfig {
+        defaultConfig.apply {
             // 设置应用支持的最低 Android SDK 版本
             minSdk = 24
         }
-
-        compileOptions {
+        compileOptions.apply {
             // 通过 "desugaring"（脱糖），我们可以在较低版本的安卓系统上使用 Java 11 的 API
             // 参考链接：https://developer.android.com/studio/write/java11-minimal-support-table
             sourceCompatibility = JavaVersion.VERSION_11
@@ -101,11 +100,6 @@ private inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() =
         is KotlinJvmProjectExtension -> compilerOptions
         else -> TODO("不支持的项目扩展类型 $this ${T::class}")
     }.apply {
-        // TODO: 升级到 AGP 9.0 后，移除 languageVersion 和 coreLibrariesVersion
-        // 设置 Kotlin 语言版本
-        languageVersion.set(KotlinVersion.KOTLIN_2_2)
-        // 强制指定 Kotlin 核心库的版本
-        coreLibrariesVersion = "2.2.21"
         // 设置生成的字节码与 JVM 11 兼容
         jvmTarget = JvmTarget.JVM_11
         // 应用上面获取的 `warningsAsErrors` 设置
@@ -128,7 +122,5 @@ private inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() =
              */
             "-Xconsistent-data-class-copy-visibility"
         )
-        // 启用实验性的 Kotlin 时间 API(kotlin.time.Instant)
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
     }
 }

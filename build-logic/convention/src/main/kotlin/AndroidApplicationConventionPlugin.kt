@@ -37,8 +37,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
         with(target) {
             // android 应用插件
             apply(plugin = "com.android.application")
-            // kotlin android 插件
-            apply(plugin = "org.jetbrains.kotlin.android")
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
