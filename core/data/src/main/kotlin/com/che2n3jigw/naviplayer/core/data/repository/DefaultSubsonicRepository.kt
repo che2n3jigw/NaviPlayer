@@ -33,6 +33,8 @@ internal class DefaultSubsonicRepository @Inject constructor(
     private val subsonicSessionManager: SubsonicSessionManager
 ) : SubsonicRepository {
 
+    override val activeSession = subsonicSessionManager.activeSession
+
     override suspend fun getArtistList(): List<Artist> {
         return subsonicSessionManager.browsingDataSource?.getArtists()?.index
             ?.asSequence()

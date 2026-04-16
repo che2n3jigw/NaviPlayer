@@ -20,12 +20,20 @@
 // 创建时间： 2026/4/13 13:56
 package com.che2n3jigw.naviplayer.core.data.repository
 
+import com.che2n3jigw.naviplayer.core.data.session.SubsonicSession
 import com.che2n3jigw.naviplayer.core.model.Album
 import com.che2n3jigw.naviplayer.core.model.Artist
 import com.che2n3jigw.naviplayer.core.model.Playlist
 import com.che2n3jigw.naviplayer.core.model.Song
+import kotlinx.coroutines.flow.StateFlow
 
 interface SubsonicRepository {
+
+    /**
+     * 当前活动的Session
+     */
+    val activeSession: StateFlow<SubsonicSession?>
+
     /**
      * 获取歌手列表
      */

@@ -23,8 +23,10 @@
 package com.che2n3jigw.naviplayer.core.data.di
 
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultLoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.DefaultSubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultUserRepository
 import com.che2n3jigw.naviplayer.core.data.repository.LoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -44,4 +46,9 @@ abstract class DataModule {
     internal abstract fun bindsUserRepository(
         defaultUserRepository: DefaultUserRepository
     ): UserRepository
+
+    @Binds
+    internal abstract fun bindSubsonicRepository(
+        defaultSubsonicRepository: DefaultSubsonicRepository
+    ): SubsonicRepository
 }
