@@ -45,4 +45,9 @@ interface SubsonicRepository {
      * 获取收藏列表
      */
     suspend fun getFavouriteList(): List<Song>
+
+    /**
+     * 获取头像地址
+     */
+    fun getAvatarUrl(username: String): String
 }

@@ -74,9 +74,22 @@ internal class DefaultSubsonicRepository @Inject constructor(
         return subsonicSessionManager.listsDataSource?.getStarred2()?.song
             ?.asSequence()
             ?.map {
-                val coverUrl =
-                    subsonicSessionManager.mediaRetrievalDataSource?.getCoverArtUrl(it?.coverArt ?: "")
-                Song(it?.id ?: "", it?.sortName ?: "", it?.displayArtist ?: "", coverUrl ?: "")
+                val id = it?.id ?: ""
+                val name = it?.sortName ?: ""
+                val singer = it?.displayArtist ?: ""
+                var coverUrl = ""
+                var streamUrl = ""
+                var downloadUrl = ""
+                subsonicSessionManager.mediaRetrievalDataSource?.apply {
+                    coverUrl = getCoverArtUrl(it?.coverArt ?: "")
+                    streamUrl = getStreamUrl(id)
+                    downloadUrl = getDownloadUrl(id)
+                }
+                Song(id, name, singer, coverUrl, streamUrl, downloadUrl)
             }?.toList() ?: emptyList()
+    }
+
+    override fun getAvatarUrl(username: String): String {
+        return subsonicSessionManager.mediaRetrievalDataSource?.getAvatarUrl(username) ?: ""
     }
 }

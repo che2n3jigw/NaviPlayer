@@ -27,5 +27,7 @@ data class Song(
     val id: String = "",
     val name: String = "",
     val singer: String = "",
-    val imageUrl: String = ""
+    val imageUrl: String = "",
+    val streamUrl: String = "",
+    val downloadUrl: String = ""
 )
