@@ -22,22 +22,26 @@ package com.che2n3jigw.naviplayer.feature.me.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
+import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MeViewModel @Inject constructor(
-    userRepository: UserRepository
+    userRepository: UserRepository,
+    private val subsonicRepository: SubsonicRepository
 ) : ViewModel() {
 
     // 收藏歌曲
-    private val _favouriteSongs = MutableStateFlow<List<String>>(emptyList())
+    private val _favouriteSongs = MutableStateFlow<List<Song>>(emptyList())
 
     // 最近播放
     private val _recentlyPlayed = MutableStateFlow<List<String>>(emptyList())
@@ -53,8 +57,8 @@ class MeViewModel @Inject constructor(
     ) { userData, favouriteSongs, recentlyPlayed, currentPlaySong ->
         MeUiState(
             isLoggedIn = userData.isLoggedIn,
-            avatar = "",
-            favouriteCover = favouriteSongs.firstOrNull() ?: "",
+            avatar = subsonicRepository.getAvatarUrl(userData.username),
+            favouriteCover = favouriteSongs.firstOrNull()?.imageUrl ?: "",
             lastPlayTime = recentlyPlayed.firstOrNull() ?: "",
             currentPlayCover = currentPlaySong?.toString() ?: "",
             currentPlayName = "",
@@ -65,6 +69,23 @@ class MeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = MeUiState()
     )
+
+
+    init {
+        viewModelScope.launch {
+            subsonicRepository.activeSession.collect { session ->
+                if (session != null) {
+                    refreshLibraryData()
+                }
+            }
+        }
+    }
+
+    fun refreshLibraryData() {
+        viewModelScope.launch {
+            launch { _favouriteSongs.value = subsonicRepository.getFavouriteList() }
+        }
+    }
 }
 
 data class MeUiState(
