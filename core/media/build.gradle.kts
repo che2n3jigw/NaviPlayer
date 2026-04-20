@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.naviplayer.android.library)
+    alias(libs.plugins.naviplayer.hilt)
 }
 
 android {
@@ -7,4 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.model)
+    implementation(libs.androidx.media3.exoplayer)
+    api(libs.androidx.media3.session)
 }
