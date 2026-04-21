@@ -24,12 +24,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
+import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,7 +39,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MeViewModel @Inject constructor(
     userRepository: UserRepository,
-    private val subsonicRepository: SubsonicRepository
+    private val subsonicRepository: SubsonicRepository,
+    private val naviMediaManager: NaviMediaManager
 ) : ViewModel() {
 
     // 收藏歌曲
@@ -46,30 +49,27 @@ class MeViewModel @Inject constructor(
     // 最近播放
     private val _recentlyPlayed = MutableStateFlow<List<String>>(emptyList())
 
-    // 当前播放歌曲封面
-    private val _currentPlaySong = MutableStateFlow<Any?>(null)
-
     val uiState: StateFlow<MeUiState> = combine(
         userRepository.userData,
         _favouriteSongs,
         _recentlyPlayed,
-        _currentPlaySong
-    ) { userData, favouriteSongs, recentlyPlayed, currentPlaySong ->
+        naviMediaManager.currentSong,
+        naviMediaManager.isPlaying
+    ) { userData, favouriteSongs, recentlyPlayed, currentPlaySong, isPlaying ->
         MeUiState(
             isLoggedIn = userData.isLoggedIn,
             avatar = subsonicRepository.getAvatarUrl(userData.username),
             favouriteCover = favouriteSongs.firstOrNull()?.imageUrl ?: "",
+            favouriteCount = favouriteSongs.size,
             lastPlayTime = recentlyPlayed.firstOrNull() ?: "",
-            currentPlayCover = currentPlaySong?.toString() ?: "",
-            currentPlayName = "",
-            currentPlaySinger = ""
+            currentSong = currentPlaySong,
+            isPlaying = isPlaying
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = MeUiState()
     )
-
 
     init {
         viewModelScope.launch {
@@ -84,6 +84,15 @@ class MeViewModel @Inject constructor(
     fun refreshLibraryData() {
         viewModelScope.launch {
             launch { _favouriteSongs.value = subsonicRepository.getFavouriteList() }
+        }
+    }
+
+    fun playFavourite() {
+        viewModelScope.launch {
+            _favouriteSongs.firstOrNull()?.let {
+                naviMediaManager.setMediaItems(it)
+                naviMediaManager.togglePlay()
+            }
         }
     }
 }
@@ -126,15 +135,11 @@ data class MeUiState(
      */
     val offlineSize: String = "",
     /**
-     * 当前播放歌曲封面
+     * 当前播放的歌曲信息（包含封面、名字、歌手）
      */
-    val currentPlayCover: String = "",
+    val currentSong: Song? = null,
     /**
-     * 当前播放歌曲名
+     * 是否正在播放（用于显示播放/暂停按钮图标）
      */
-    val currentPlayName: String = "",
-    /**
-     * 当前播放歌手
-     */
-    val currentPlaySinger: String = ""
+    val isPlaying: Boolean = false
 )

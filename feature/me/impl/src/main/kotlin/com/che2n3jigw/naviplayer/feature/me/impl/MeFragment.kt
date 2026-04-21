@@ -70,14 +70,14 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     override fun initListener() {
         binding.ivFavoritePlay.setOnClickListener {
-            snackBar.show()
+            viewModel.playFavourite()
         }
     }
 
     override fun subscribeUI() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                // 1. 只有登录状态变化时才更新 SnackBar
+                // 只有登录状态变化时才更新 SnackBar
                 launch {
                     viewModel.uiState
                         .map { it.isLoggedIn }
@@ -85,7 +85,31 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                         .collect { isLoggedIn -> updateLoginStatus(isLoggedIn) }
                 }
 
-                // 2. 只有统计数据变化时才更新统计区域
+                // 只有头像变化时才更新头像
+                launch {
+                    viewModel.uiState
+                        .map { it.avatar }
+                        .distinctUntilChanged()
+                        .collect { updateAvatar(it) }
+                }
+
+                // 只有收藏歌曲变化时更新收藏歌曲区域
+                launch {
+                    viewModel.uiState
+                        .map { it.favouriteCover to it.favouriteCount }
+                        .distinctUntilChanged()
+                        .collect { pair -> updateFavourite(pair) }
+                }
+
+                // 只有最近播放变化时更新最近播放区域
+                launch {
+                    viewModel.uiState
+                        .map { it.lastPlayTime }
+                        .distinctUntilChanged()
+                        .collect { updateLastPlayTime(it) }
+                }
+
+                // 只有统计数据变化时才更新统计区域
                 launch {
                     viewModel.uiState
                         .map { listOf(it.albumCount, it.artistCount, it.listCount, it.offlineSize) }
@@ -93,26 +117,10 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                         .collect { updateStatsSection(viewModel.uiState.value) }
                 }
 
-                // 3. 只有用户信息/收藏变化时刷新
+                // 只有播放状态变化时刷新迷你播放器
                 launch {
                     viewModel.uiState
-                        .map {
-                            Triple(
-                                it.avatar, it.favouriteCover, it.favouriteCount
-                            ) to it.lastPlayTime
-                        }
-                        .distinctUntilChanged()
-                        .collect { updateUserSection(viewModel.uiState.value) }
-                }
-
-                // 4. 只有播放状态变化时刷新迷你播放器
-                launch {
-                    viewModel.uiState
-                        .map {
-                            Triple(
-                                it.currentPlayCover, it.currentPlayName, it.currentPlaySinger
-                            )
-                        }
+                        .map { Pair(it.currentSong, it.isPlaying) }
                         .distinctUntilChanged()
                         .collect { updateMiniPlayerSection(viewModel.uiState.value) }
                 }
@@ -129,28 +137,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     override fun onPause() {
         super.onPause()
         snackBar.dismiss()
-    }
-
-    private fun updateUserSection(state: MeUiState) {
-        binding.ivAvatar.load(state.avatar) {
-            placeholder(R.drawable.me_placeholder_avatar)
-            error(R.drawable.me_placeholder_avatar)
-        }
-        binding.ivFavoriteCover.load(state.favouriteCover) {
-            placeholder(R.drawable.me_placeholder_favourite_song)
-            error(R.drawable.me_placeholder_favourite_song)
-        }
-
-        binding.tvTrackCount.text =
-            getString(R.string.me_library_tracks_count, state.favouriteCount)
-
-        // 最近播放时间
-        binding.tvActive.apply {
-            isVisible = state.lastPlayTime.isNotEmpty()
-            if (state.lastPlayTime.isNotEmpty()) {
-                text = getString(R.string.me_library_active, state.lastPlayTime)
-            }
-        }
     }
 
     private fun updateStatsSection(state: MeUiState) {
@@ -177,12 +163,36 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     }
 
     private fun updateMiniPlayerSection(state: MeUiState) {
-        binding.ivCoverPlaying.load(state.currentPlayCover) {
+        binding.ivCoverPlaying.load(state.currentSong?.imageUrl) {
             placeholder(R.drawable.me_placeholder_mini_player_cover)
             error(R.drawable.me_placeholder_mini_player_cover)
         }
-        binding.tvSingName.text = state.currentPlayName
-        binding.tvSinger.text = state.currentPlaySinger
+        binding.tvSingName.text = state.currentSong?.name
+        binding.tvSinger.text = state.currentSong?.singer
+    }
+
+    private fun updateLastPlayTime(lastPlayTime: String) {
+        binding.tvActive.apply {
+            isVisible = lastPlayTime.isNotEmpty()
+            if (lastPlayTime.isNotEmpty()) {
+                text = getString(R.string.me_library_active, lastPlayTime)
+            }
+        }
+    }
+
+    private fun updateFavourite(pair: Pair<String, Int>) {
+        binding.ivFavoriteCover.load(pair.first) {
+            placeholder(R.drawable.me_placeholder_favourite_song)
+            error(R.drawable.me_placeholder_favourite_song)
+        }
+        binding.tvTrackCount.text = getString(R.string.me_library_tracks_count, pair.second)
+    }
+
+    private fun updateAvatar(avatar: String) {
+        binding.ivAvatar.load(avatar) {
+            placeholder(R.drawable.me_placeholder_avatar)
+            error(R.drawable.me_placeholder_avatar)
+        }
     }
 
     private fun updateLoginStatus(isLoggedIn: Boolean) {
