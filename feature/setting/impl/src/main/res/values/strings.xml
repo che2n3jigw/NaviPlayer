@@ -16,4 +16,21 @@
 
 <resources>
     <string name="setting_title">设置</string>
+    <string name="setting_login">登录</string>
+    <string name="setting_logout">退出登录</string>
+    <string name="setting_author">作者: che2n3jigw</string>
+    <string name="setting_blog">博客: che2n3jigw.github.io</string>
+    <string name="setting_issue">问题反馈</string>
+    <string name="setting_version">版本: %1$s</string>
+    <string name="setting_get_version_failed">获取版本信息失败</string>
+
+    <string name="setting_offline_storage">离线存储</string>
+    <string name="setting_storage_limit">2GB限制</string>
+    <string name="setting_storage_usage">当前使用 %1$s</string>
+    <string name="setting_clear_cache">清除缓存</string>
+    <string name="setting_test_connection">测试连通性</string>
+    <string name="setting_connection_success">连接服务器成功</string>
+    <string name="setting_connection_failed">无法连接服务器</string>
+
+    <string name="setting_donate">在线乞讨(点击关闭)</string>
 </resources>
