@@ -24,17 +24,24 @@ import android.app.PendingIntent
 import androidx.annotation.OptIn
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * 播放服务基类
  */
+@AndroidEntryPoint
 abstract class BasePlaybackService : MediaLibraryService() {
 
     abstract fun getSingleTopActivity(): PendingIntent?
 
     private lateinit var mediaLibrarySession: MediaLibrarySession
+
+    @Inject
+    lateinit var cacheManager: MediaCacheManager
 
     private val callback = object : MediaLibrarySession.Callback {
 
@@ -47,7 +54,12 @@ abstract class BasePlaybackService : MediaLibraryService() {
     @OptIn(UnstableApi::class)
     override fun onCreate() {
         super.onCreate()
-        val player = ExoPlayer.Builder(this).build()
+        val player = ExoPlayer.Builder(this)
+            .setMediaSourceFactory(
+                DefaultMediaSourceFactory(this)
+                    .setDataSourceFactory(cacheManager.getCacheDataSourceFactory())
+            )
+            .build()
         mediaLibrarySession = MediaLibrarySession.Builder(this, player, callback).build()
 
         getSingleTopActivity()?.let {

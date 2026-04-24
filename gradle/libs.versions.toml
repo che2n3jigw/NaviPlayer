@@ -31,6 +31,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3Exoplayer" }
 androidx-media3-session = { module = "androidx.media3:media3-session", version.ref = "media3Exoplayer" }
+androidx-media3-datasource-cronet = { module = "androidx.media3:media3-datasource-cronet", version.ref = "media3Exoplayer" }
 androidx-navigation-common = { module = "androidx.navigation:navigation-common", version.ref = "navigation" }
 androidx-navigation-runtime-ktx = { module = "androidx.navigation:navigation-runtime-ktx", version.ref = "navigation" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }

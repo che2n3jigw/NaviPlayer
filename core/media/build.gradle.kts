@@ -8,7 +8,9 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.common)
     implementation(projects.core.model)
     implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.datasource.cronet)
     api(libs.androidx.media3.session)
 }
