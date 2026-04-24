@@ -78,6 +78,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         binding.flDonate.setOnClickListener {
             binding.flDonate.isVisible = false
         }
+        binding.mbClearCache.setOnClickListener {
+            viewModel.clearCache()
+        }
     }
 
     override fun subscribeUI() {
@@ -114,6 +117,11 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         binding.viewSplit.updateLayoutParams<ConstraintLayout.LayoutParams> {
             topMargin = insets.top
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshCacheSize()
     }
 
     private fun getVersion(): String {

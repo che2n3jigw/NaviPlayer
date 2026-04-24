@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
+import com.che2n3jigw.naviplayer.core.media.MediaCacheManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +41,8 @@ import kotlin.math.pow
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val subsonicRepository: SubsonicRepository
+    private val subsonicRepository: SubsonicRepository,
+    private val mediaCacheManager: MediaCacheManager
 ) : ViewModel() {
 
     private val _cacheSize = MutableStateFlow(0L)
@@ -53,14 +55,15 @@ class SettingViewModel @Inject constructor(
         subsonicRepository.activeSession,
         _cacheSize
     ) { userData, _, cacheSize ->
-        val used = cacheSize.toFloat() / (2 * 1024 * 1024 * 8) * 100
+        val usedPercent =
+            ((cacheSize.toFloat() / MediaCacheManager.CACHE_SIZE) * 100).toInt().coerceIn(0, 100)
         SettingUiState(
             isLoggedIn = userData.isLoggedIn,
             username = userData.username,
             avatar = subsonicRepository.getAvatarUrl(userData.username),
             server = userData.domain,
             cacheSize = toReadableFileSize(cacheSize),
-            used = used.toInt()
+            used = usedPercent
         )
     }.stateIn(
         scope = viewModelScope,
@@ -71,6 +74,17 @@ class SettingViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             userRepository.logout()
+        }
+    }
+
+    fun refreshCacheSize() {
+        _cacheSize.value = mediaCacheManager.getCacheSize()
+    }
+
+    fun clearCache() {
+        viewModelScope.launch {
+            mediaCacheManager.clearCache()
+            refreshCacheSize()
         }
     }
 
@@ -88,7 +102,7 @@ class SettingViewModel @Inject constructor(
 
     fun testConnection() {
         viewModelScope.launch {
-            _connectionResult.tryEmit(userRepository.ping())
+            _connectionResult.emit(userRepository.ping())
         }
     }
 }
