@@ -87,11 +87,30 @@ internal class DefaultSubsonicRepository @Inject constructor(
                     streamUrl = getStreamUrl(id)
                     downloadUrl = getDownloadUrl(id)
                 }
-                Song(id, name, singer, coverUrl, streamUrl, downloadUrl)
+                val isFavorite = it?.starred != null
+                Song(id, name, singer, coverUrl, streamUrl, downloadUrl, isFavorite)
             }?.toList() ?: emptyList()
     }
 
     override fun getAvatarUrl(username: String): String {
         return subsonicSessionManager.mediaRetrievalDataSource?.getAvatarUrl(username) ?: ""
+    }
+
+    override suspend fun getRandomSongs(size: Int): List<Song> {
+        return subsonicSessionManager.listsDataSource?.getRandomSongs(size)?.map {
+            val id = it.id ?: ""
+            val name = it.sortName ?: ""
+            val singer = it.displayArtist ?: ""
+            var coverUrl = ""
+            var streamUrl = ""
+            var downloadUrl = ""
+            subsonicSessionManager.mediaRetrievalDataSource?.apply {
+                coverUrl = getCoverArtUrl(it.coverArt ?: "")
+                streamUrl = getStreamUrl(id)
+                downloadUrl = getDownloadUrl(id)
+            }
+            val isFavorite = it.starred != null
+            Song(id, name, singer, coverUrl, streamUrl, downloadUrl, isFavorite)
+        }?.toList() ?: emptyList()
     }
 }

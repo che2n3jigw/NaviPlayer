@@ -58,4 +58,9 @@ interface SubsonicRepository {
      * 获取头像地址
      */
     fun getAvatarUrl(username: String): String
+
+    /**
+     * 获取随机歌歌曲
+     */
+    suspend fun getRandomSongs(size: Int): List<Song>
 }
