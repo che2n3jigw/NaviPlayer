@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.NaviPlayer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.NaviPlayer" parent="Theme.Material3Expressive.Light.NoActionBar">
         <!-- 应用的主色（Primary Color），通常用于 Toolbar、按钮等 -->
         <item name="colorPrimary">@color/color_primary</item>
 
