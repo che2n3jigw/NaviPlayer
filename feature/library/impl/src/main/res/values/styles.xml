@@ -15,9 +15,7 @@
   -->
 
 <resources>
-    <string name="library_title">音乐库</string>
-    <string name="library_all_songs">全部歌曲</string>
-    <string name="library_play_all">播放全部</string>
-    <string name="library_album">专辑</string>
-    <string name="library_recommend">推荐歌曲</string>
+    <style name="LibrarySongItemRoundedStyle">
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>
