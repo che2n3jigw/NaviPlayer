@@ -1,31 +1,21 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.NaviPlayer" parent="Theme.Material3Expressive.Light.NoActionBar">
-        <!-- 应用的主色（Primary Color），通常用于 Toolbar、按钮等 -->
-        <item name="colorPrimary">@color/color_primary</item>
-
-        <!-- 主色上的文字或图标颜色，需与 colorPrimary 有足够对比度 -->
-        <item name="colorOnPrimary">@color/white</item>
-
-        <!-- 次要强调色（Secondary Color），用于高亮、FAB、选中状态等 -->
-        <item name="colorSecondary">@color/color_secondary</item>
-
-        <!-- 次要色上的文字或图标颜色 -->
-        <item name="colorOnSecondary">@color/black</item>
-
-        <!-- Surface（如 Card、Dialog、checkbox）上的前景颜色 -->
-        <item name="colorOnSurface">@color/color_secondary</item>
-
-        <!-- 水波纹颜色 -->
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
-
-        <!-- 主要文本颜色，一般用于标题或正文 -->
-        <item name="android:textColorPrimary">@color/text_primary</item>
-
-        <!-- 次要文本颜色，一般用于说明性文字 -->
-        <item name="android:textColorSecondary">@color/text_secondary</item>
-
-        <!-- Customize your theme here. -->
+    <style name="Theme.NaviPlayer" parent="Theme.Material3Expressive.Dark.NoActionBar">
         <item name="android:windowBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorPrimaryContainer">@color/color_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/color_on_primary_container</item>
+
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/color_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/color_on_secondary_container</item>
+
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
     </style>
 </resources>

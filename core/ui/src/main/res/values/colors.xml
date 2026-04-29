@@ -17,12 +17,31 @@
   -->
 
 <resources>
-    <color name="color_primary">#FFBD2BED</color>
-    <color name="color_secondary">#FF8F5EDB</color>
+    <!--Core Background / Surface-->
     <color name="color_background">#171217</color>
-    <color name="color_control_highlight">#40FFFFFF</color>
-    <color name="text_primary">#BA91C9</color>
-    <color name="text_secondary">#B29EBA</color>
+    <color name="color_surface">#21211A</color>
+    <color name="color_on_surface">#FFFFFF</color>
+
+
+    <!--primary-->
+    <color name="color_primary">#D2BCFF</color>
+    <color name="color_on_primary">#3E246D</color>
+
+    <color name="color_primary_container">#563C88</color>
+    <color name="color_on_primary_container">#EADDFF</color>
+
+
+    <!--secondary-->
+    <color name="color_secondary">#CDBDDB</color>
+    <color name="color_on_secondary">#362B42</color>
+
+    <color name="color_secondary_container">#4D435A</color>
+    <color name="color_on_secondary_container">#E9DEF8</color>
+
+
+    <!--text-->
+    <color name="text_primary">#F1E8F5</color>
+    <color name="text_secondary">#B9ACBF</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
