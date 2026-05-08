@@ -31,14 +31,13 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_title"
+        style="@style/TextAppearance.Material3.LabelSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="#262626"
         android:maxLines="1"
         android:paddingHorizontal="4dp"
-        android:singleLine="true"
-        android:textColor="@color/white"
-        android:textSize="11sp" />
+        android:singleLine="true" />
 
 </com.google.android.material.carousel.MaskableFrameLayout>
