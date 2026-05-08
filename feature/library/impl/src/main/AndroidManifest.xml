@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~ Copyright (c) 2026 che2n3jigw.
   ~
   ~ Licensed under the MIT License (the "License");
@@ -14,8 +14,9 @@
   ~ limitations under the License.
   -->
 
-<resources>
-    <style name="LibrarySongItemRoundedStyle">
-        <item name="cornerSize">16dp</item>
-    </style>
-</resources>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--supportsRtl Material显示正确样式的关键-->
+    <application android:supportsRtl="true" />
+
+</manifest>
