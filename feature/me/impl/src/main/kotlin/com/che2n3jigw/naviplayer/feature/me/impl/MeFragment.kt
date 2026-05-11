@@ -55,21 +55,11 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     override fun inflateBinding() = FragmentMeBinding.inflate(layoutInflater)
 
     override fun initView() {
-        ClickEffectUtil.applyScale(binding.ivAvatar)
-        ClickEffectUtil.applyScale(binding.ivFavoritePlay)
-        ClickEffectUtil.applyScale(binding.ivRecentlyPlay)
-        ClickEffectUtil.applyScale(binding.viewStatAlbums)
-        ClickEffectUtil.applyScale(binding.viewStatArtists)
-        ClickEffectUtil.applyScale(binding.viewStatLists)
-        ClickEffectUtil.applyScale(binding.viewStatOffline)
-        ClickEffectUtil.applyScale(binding.ivNext)
-        ClickEffectUtil.applyScale(binding.ivPlay)
-        ClickEffectUtil.applyScale(binding.ivPrevious)
         ClickEffectUtil.applyEnlarge(binding.ivFavoriteCover)
     }
 
     override fun initListener() {
-        binding.ivFavoritePlay.setOnClickListener {
+        binding.mbFavoritePlay.setOnClickListener {
             viewModel.playFavourite()
         }
     }

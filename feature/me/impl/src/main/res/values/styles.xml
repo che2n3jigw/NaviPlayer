@@ -16,15 +16,8 @@
 
 <resources>
 
-    <style name="MeRoundedStyle">
-        <item name="cornerSize">40dp</item>
-    </style>
-
-    <style name="MeAvatarRoundedStyle">
-        <item name="cornerSize">20dp</item>
-    </style>
-
-    <style name="MePlayingCoverRoundedStyle">
-        <item name="cornerSize">20dp</item>
+    <style name="Widget.NaviPlayer.ShapeableImageView.Circle" parent="Widget.MaterialComponents.ShapeableImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 </resources>

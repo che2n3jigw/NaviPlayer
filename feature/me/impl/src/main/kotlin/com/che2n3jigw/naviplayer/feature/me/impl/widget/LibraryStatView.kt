@@ -35,6 +35,11 @@ class LibraryStatView @JvmOverloads constructor(
 
     private val binding = ViewLibraryStatBinding.inflate(LayoutInflater.from(context), this)
 
+    init {
+        isClickable = true
+        isFocusable = true
+    }
+
     fun setData(iconRes: Int, value: String, label: String) {
         binding.ivStatIcon.setImageResource(iconRes)
         binding.tvStatValue.text = value

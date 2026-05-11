@@ -27,7 +27,7 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/MeAvatarRoundedStyle" />
+        app:shapeAppearance="@style/Widget.NaviPlayer.ShapeableImageView.Circle" />
 
     <!-- 滚动区域：占据除了底部音乐栏以外的所有空间 -->
     <androidx.core.widget.NestedScrollView
@@ -44,32 +44,33 @@
             android:orientation="vertical"
             android:paddingHorizontal="24dp">
 
-            <FrameLayout
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/fl_favorite_song"
                 android:layout_width="match_parent"
                 android:layout_height="238dp"
-                android:layout_marginTop="21dp">
+                android:layout_marginTop="21dp"
+                app:cardCornerRadius="40dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/iv_favorite_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    app:shapeAppearanceOverlay="@style/MeRoundedStyle" />
+                    android:scaleType="centerCrop" />
 
-                <!--遮罩层-->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/me_bg_cover_overlay" />
+                    android:background="#80000000" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_favorite_play"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mb_favorite_play"
+                    style="?attr/materialIconButtonFilledStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="32dp"
-                    android:src="@drawable/me_ic_favorite_play" />
+                    app:icon="@drawable/me_ic_play_all"
+                    app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
@@ -78,8 +79,7 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginBottom="52dp"
                     android:text="@string/me_favorite_song"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_track_count"
@@ -87,30 +87,26 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="32dp"
-                    android:textColor="@color/me_label_color"
-                    android:textSize="12sp" />
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
 
-            </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <FrameLayout
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/fl_recently_played"
                 android:layout_width="match_parent"
                 android:layout_height="238dp"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="40dp">
 
-                <!--遮罩层-->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/me_bg_recently_played" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/iv_recently_play"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mb_recently_play"
+                    style="?attr/materialIconButtonFilledStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="32dp"
-                    android:src="@drawable/me_ic_favorite_play" />
+                    app:icon="@drawable/me_ic_play_all"
+                    app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
@@ -119,8 +115,7 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginBottom="52dp"
                     android:text="@string/me_recently_played"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_active"
@@ -128,10 +123,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="32dp"
-                    android:textColor="@color/me_label_color"
-                    android:textSize="12sp" />
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
 
-            </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/ll_library_statistics"
@@ -180,8 +174,12 @@
         android:layout_height="64dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/me_bg_rounded_container_16"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="16dp" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_cover_playing"
@@ -192,38 +190,40 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/MePlayingCoverRoundedStyle" />
+            app:shapeAppearanceOverlay="@style/Widget.NaviPlayer.ShapeableImageView.Circle" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_next"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:padding="12dp"
-            android:src="@drawable/me_ic_next"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mb_next"
+            style="?attr/materialIconButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/me_ic_next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Small" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_play"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="@null"
-            android:src="@drawable/me_ic_play"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mb_play"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/me_ic_play_all"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_next"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/mb_next"
+            app:layout_constraintTop_toTopOf="parent"
+            app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Small" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_previous"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:background="@null"
-            android:padding="12dp"
-            android:src="@drawable/me_ic_previous"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mb_previous"
+            style="?attr/materialIconButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/me_ic_previous"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_play"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@id/mb_play"
+            app:layout_constraintTop_toTopOf="parent"
+            app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Small" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_sing_name"
@@ -232,10 +232,9 @@
             android:layout_marginStart="12dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textColor="@color/white"
-            android:textSize="12sp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
             app:layout_constraintBottom_toTopOf="@id/tv_singer"
-            app:layout_constraintEnd_toStartOf="@id/iv_previous"
+            app:layout_constraintEnd_toStartOf="@id/mb_previous"
             app:layout_constraintStart_toEndOf="@id/iv_cover_playing"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
@@ -247,10 +246,9 @@
             android:layout_marginStart="12dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textColor="@color/text_primary"
-            android:textSize="11sp"
+            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/iv_previous"
+            app:layout_constraintEnd_toStartOf="@id/mb_previous"
             app:layout_constraintStart_toEndOf="@id/iv_cover_playing"
             app:layout_constraintTop_toBottomOf="@id/tv_sing_name" />
 
