@@ -14,34 +14,35 @@
   ~ limitations under the License.
   -->
 
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/me_bg_rounded_container_16"
-    android:gravity="center"
-    android:orientation="vertical">
+    tools:parentTag="com.google.android.material.card.MaterialCardView">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_stat_icon"
         android:layout_width="17dp"
-        android:layout_height="17dp" />
+        android:layout_height="17dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
+        android:textColor="?attr/colorOnSurface"
         android:id="@+id/tv_stat_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         tools:text="100" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_stat_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/me_label_color"
-        android:textSize="11sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
         tools:text="Albums" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</merge>

@@ -23,17 +23,17 @@ package com.che2n3jigw.naviplayer.feature.me.impl.widget
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.appcompat.widget.LinearLayoutCompat
 import com.che2n3jigw.naviplayer.feature.me.impl.databinding.ViewLibraryStatBinding
+import com.google.android.material.card.MaterialCardView
 
 /**
  * 音乐库统计视图
  */
 class LibraryStatView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayoutCompat(context, attrs, defStyleAttr) {
+    context: Context, attrs: AttributeSet? = null
+) : MaterialCardView(context, attrs) {
 
-    private val binding = ViewLibraryStatBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ViewLibraryStatBinding.inflate(LayoutInflater.from(context), this)
 
     fun setData(iconRes: Int, value: String, label: String) {
         binding.ivStatIcon.setImageResource(iconRes)
