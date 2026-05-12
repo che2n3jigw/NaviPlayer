@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="32dp"
-                    app:icon="@drawable/me_ic_play_all"
+                    app:icon="@drawable/ic_music_play"
                     app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_margin="32dp"
-                    app:icon="@drawable/me_ic_play_all"
+                    app:icon="@drawable/ic_music_play"
                     app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -197,7 +197,7 @@
             style="?attr/materialIconButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/me_ic_next"
+            app:icon="@drawable/ic_music_next"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -208,7 +208,7 @@
             style="?attr/materialIconButtonFilledTonalStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/me_ic_play_all"
+            app:icon="@drawable/ic_music_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/mb_next"
             app:layout_constraintTop_toTopOf="parent"
@@ -219,7 +219,7 @@
             style="?attr/materialIconButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/me_ic_previous"
+            app:icon="@drawable/ic_music_previous"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/mb_play"
             app:layout_constraintTop_toTopOf="parent"
