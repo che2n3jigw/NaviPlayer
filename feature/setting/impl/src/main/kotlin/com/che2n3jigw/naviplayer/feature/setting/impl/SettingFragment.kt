@@ -75,8 +75,8 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         binding.mbTestConnection.setOnClickListener {
             viewModel.testConnection()
         }
-        binding.flDonate.setOnClickListener {
-            binding.flDonate.isVisible = false
+        binding.mcvDonate.setOnClickListener {
+            binding.mcvDonate.isVisible = false
         }
         binding.mbClearCache.setOnClickListener {
             viewModel.clearCache()

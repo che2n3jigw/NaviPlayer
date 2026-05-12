@@ -15,10 +15,5 @@
   -->
 
 <resources>
-    <color name="setting_info">#ADAAAA</color>
     <color name="setting_info_url">#3F51B5</color>
-    <color name="setting_logout_label">#FF6E84</color>
-    <color name="setting_logout_bg">#33A70138</color>
-    <color name="setting_login_label">@color/text_primary</color>
-    <color name="setting_login_bg">#262626</color>
 </resources>
