@@ -72,22 +72,22 @@
                     app:icon="@drawable/ic_music_play"
                     app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginStart="32dp"
                     android:layout_marginBottom="52dp"
                     android:text="@string/me_favorite_song"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+                    android:textAppearance="?attr/textAppearanceTitleLarge" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_track_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="32dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+                    android:textAppearance="?attr/textAppearanceBodySmall" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -108,22 +108,22 @@
                     app:icon="@drawable/ic_music_play"
                     app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Medium" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginStart="32dp"
                     android:layout_marginBottom="52dp"
                     android:text="@string/me_recently_played"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+                    android:textAppearance="?attr/textAppearanceTitleLarge" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_active"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="32dp"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+                    android:textAppearance="?attr/textAppearanceBodySmall" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -225,28 +225,28 @@
             app:layout_constraintTop_toTopOf="parent"
             app:materialSizeOverlay="@style/SizeOverlay.Material3Expressive.Button.IconButton.Small" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_sing_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             app:layout_constraintBottom_toTopOf="@id/tv_singer"
             app:layout_constraintEnd_toStartOf="@id/mb_previous"
             app:layout_constraintStart_toEndOf="@id/iv_cover_playing"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_singer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ellipsize="marquee"
             android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/mb_previous"
             app:layout_constraintStart_toEndOf="@id/iv_cover_playing"

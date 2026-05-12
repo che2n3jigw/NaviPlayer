@@ -46,13 +46,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_all_songs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:text="@string/library_all_songs"
-        android:textAppearance="@style/TextAppearance.Material3.DisplayLarge.Emphasized"
+        android:textAppearance="?attr/textAppearanceDisplayLargeEmphasized"
         app:layout_constraintTop_toTopOf="@id/ib_search" />
 
     <com.google.android.material.button.MaterialButton
@@ -90,7 +90,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:text="@string/library_album"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_album"
@@ -118,7 +118,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:text="@string/library_recommend"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_song"
