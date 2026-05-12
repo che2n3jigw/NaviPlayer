@@ -68,7 +68,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            app:cornerSize="24dp" />
+            app:shapeAppearance="@style/Widget.NaviPlayer.ShapeableImageView.Circle" />
 
     </com.google.android.material.card.MaterialCardView>
 

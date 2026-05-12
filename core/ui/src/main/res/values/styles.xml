@@ -22,6 +22,11 @@
         <item name="android:background">?attr/actionBarItemBackground</item>
     </style>
 
+    <style name="Widget.NaviPlayer.ShapeableImageView.Circle" parent="Widget.MaterialComponents.ShapeableImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 
     <!--图标按钮样式-->
     <style name="Widget.NaviPlayer.IconButton" parent="Widget.AppCompat.ImageButton">

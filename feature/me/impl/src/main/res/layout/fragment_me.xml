@@ -190,7 +190,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/Widget.NaviPlayer.ShapeableImageView.Circle" />
+            app:shapeAppearance="@style/Widget.NaviPlayer.ShapeableImageView.Circle" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mb_next"
