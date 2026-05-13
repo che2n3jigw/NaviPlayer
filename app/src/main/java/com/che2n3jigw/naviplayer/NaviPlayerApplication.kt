@@ -23,10 +23,13 @@
 package com.che2n3jigw.naviplayer
 
 import android.app.Application
+import coil.ImageLoader
+import coil.ImageLoaderFactory
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class NaviPlayerApplication: Application() {
-
-
+class NaviPlayerApplication : Application(), ImageLoaderFactory {
+    override fun newImageLoader(): ImageLoader {
+        return NaviImageLoader(this).newImageLoader()
+    }
 }
