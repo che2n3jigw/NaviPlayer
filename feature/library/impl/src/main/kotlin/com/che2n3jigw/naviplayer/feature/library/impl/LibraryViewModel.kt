@@ -63,7 +63,9 @@ class LibraryViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             subsonicRepository.activeSession.collect {
-                loadData()
+                if (it != null) {
+                    loadData()
+                }
             }
         }
     }

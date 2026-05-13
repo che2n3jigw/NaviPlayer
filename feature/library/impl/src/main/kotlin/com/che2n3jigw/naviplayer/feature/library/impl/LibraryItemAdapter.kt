@@ -58,7 +58,9 @@ class LibraryItemAdapter : ListAdapter<LibraryItem, LibraryItemViewHolder>(
 class LibraryItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(item: LibraryItem, itemClickListener: ((LibraryItem, Int) -> Unit)?) {
-        itemView.findViewById<ImageView>(R.id.iv_cover).load(item.coverUrl)
+        itemView.findViewById<ImageView>(R.id.iv_cover).load(item.coverUrl) {
+            error(R.drawable.library_default_cover)
+        }
         itemView.findViewById<TextView>(R.id.tv_title).text = item.title
         itemView.setOnHoverListener { v, event ->
             when (event.action) {
