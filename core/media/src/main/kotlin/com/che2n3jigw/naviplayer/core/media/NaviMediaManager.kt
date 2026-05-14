@@ -29,9 +29,17 @@ import androidx.media3.session.SessionToken
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.guava.await
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -59,17 +67,29 @@ class NaviMediaManager @Inject constructor(
     private lateinit var browserFuture: ListenableFuture<MediaBrowser>
     private lateinit var browser: MediaController
 
+    // <editor-fold defaultState="collapsed" desc="播放进度相关">
+    private var checkPlaybackPositionJob: Job? = null
+    private val _position = MutableStateFlow(0L)
+    val position = _position.asStateFlow()
+    // </editor-fold>
+
+
     suspend fun initialize() {
         browserFuture = MediaBrowser.Builder(context, sessionToken).buildAsync()
         browser = browserFuture.await()
         _isPlaying.value = browser.isPlaying
         browser.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
-                _isPlaying.value = isPlaying
+                _isPlaying.update { isPlaying }
+                if (isPlaying) {
+                    checkPlaybackPositionJob?.cancel()
+                } else {
+                    checkPlaybackPosition()
+                }
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                _currentSong.value = songCache[mediaItem?.mediaId]
+                _currentSong.update { songCache[mediaItem?.mediaId] }
             }
         })
     }
@@ -104,10 +124,32 @@ class NaviMediaManager @Inject constructor(
         }
     }
 
+    fun playNext() {
+        if (browser.hasNextMediaItem()) {
+            browser.seekToNextMediaItem()
+        }
+    }
+
+    fun playPrevious() {
+        if (browser.hasPreviousMediaItem()) {
+            browser.seekToPreviousMediaItem()
+        }
+    }
+
     /**
      * 释放资源 (可选：通常随应用进程销毁，如需手动注销可调用)
      */
     fun release() {
         MediaBrowser.releaseFuture(browserFuture)
+        checkPlaybackPositionJob?.cancel()
+    }
+
+    private fun checkPlaybackPosition() {
+        checkPlaybackPositionJob = CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+            while (isActive) {
+                _position.update { browser.currentPosition }
+                delay(1000)
+            }
+        }
     }
 }
