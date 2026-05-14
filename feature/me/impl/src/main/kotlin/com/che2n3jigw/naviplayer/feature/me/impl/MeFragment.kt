@@ -102,7 +102,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                 // 只有统计数据变化时才更新统计区域
                 launch {
                     viewModel.uiState
-                        .map { listOf(it.albumCount, it.artistCount, it.listCount, it.offlineSize) }
+                        .map { listOf(it.listCount, it.offlineSize) }
                         .distinctUntilChanged()
                         .collect { updateStatsSection(viewModel.uiState.value) }
                 }
@@ -130,16 +130,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     }
 
     private fun updateStatsSection(state: MeUiState) {
-        binding.viewStatAlbums.setData(
-            R.drawable.me_ic_albums,
-            state.albumCount.toString(),
-            getString(R.string.me_albums)
-        )
-        binding.viewStatArtists.setData(
-            R.drawable.me_ic_artists,
-            state.artistCount.toString(),
-            getString(R.string.me_artists)
-        )
         binding.viewStatLists.setData(
             R.drawable.me_ic_lists,
             state.listCount.toString(),

@@ -133,14 +133,6 @@ data class MeUiState(
      */
     val lastPlayTime: String = "",
     /**
-     * 专辑个数
-     */
-    val albumCount: Int = 0,
-    /**
-     * 歌手个数
-     */
-    val artistCount: Int = 0,
-    /**
      * 歌单个数
      */
     val listCount: Int = 0,

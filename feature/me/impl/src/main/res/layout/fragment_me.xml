@@ -135,31 +135,20 @@
                 android:orientation="horizontal">
 
                 <com.che2n3jigw.naviplayer.feature.me.impl.widget.LibraryStatView
-                    android:id="@+id/view_stat_albums"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1" />
-
-                <com.che2n3jigw.naviplayer.feature.me.impl.widget.LibraryStatView
-                    android:id="@+id/view_stat_artists"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1" />
-
-                <com.che2n3jigw.naviplayer.feature.me.impl.widget.LibraryStatView
                     android:id="@+id/view_stat_lists"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1" />
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="16dp" />
 
                 <com.che2n3jigw.naviplayer.feature.me.impl.widget.LibraryStatView
                     android:id="@+id/view_stat_offline"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="16dp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
