@@ -109,6 +109,18 @@ class MeViewModel @Inject constructor(
             }
         }
     }
+
+    fun togglePlaying() {
+        naviMediaManager.togglePlay()
+    }
+
+    fun playPrevious() {
+        naviMediaManager.playPrevious()
+    }
+
+    fun playNext() {
+        naviMediaManager.playNext()
+    }
 }
 
 data class MeUiState(

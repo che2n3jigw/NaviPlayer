@@ -20,6 +20,7 @@
 // 创建时间： 2026/4/1 16:19
 package com.che2n3jigw.naviplayer.feature.me.impl
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.core.graphics.Insets
 import androidx.core.view.isVisible
@@ -61,6 +62,18 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     override fun initListener() {
         binding.mbFavoritePlay.setOnClickListener {
             viewModel.playFavourite()
+        }
+        binding.miniPlayer.onPlayPauseClick = {
+            viewModel.togglePlaying()
+        }
+        binding.miniPlayer.onPreviousClick = {
+            viewModel.playPrevious()
+        }
+        binding.miniPlayer.onNextClick = {
+            viewModel.playNext()
+        }
+        binding.miniPlayer.setOnClickListener {
+            // 进入播放详情页
         }
     }
 
