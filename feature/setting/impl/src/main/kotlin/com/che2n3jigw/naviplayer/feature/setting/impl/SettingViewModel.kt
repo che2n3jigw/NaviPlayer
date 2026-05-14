@@ -31,7 +31,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
@@ -46,30 +48,40 @@ class SettingViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _cacheSize = MutableStateFlow(0L)
+    private val _avatar = MutableStateFlow("")
 
     private val _connectionResult = MutableSharedFlow<Boolean>()
     val connectionResult = _connectionResult.asSharedFlow()
 
-    val uiState = combine(
-        userRepository.userData,
-        subsonicRepository.activeSession,
-        _cacheSize
-    ) { userData, _, cacheSize ->
-        val usedPercent =
-            ((cacheSize.toFloat() / MediaCacheManager.CACHE_SIZE) * 100).toInt().coerceIn(0, 100)
-        SettingUiState(
-            isLoggedIn = userData.isLoggedIn,
-            username = userData.username,
-            avatar = subsonicRepository.getAvatarUrl(userData.username),
-            server = userData.domain,
-            cacheSize = toReadableFileSize(cacheSize),
-            used = usedPercent
+    val uiState =
+        combine(userRepository.userData, _avatar, _cacheSize) { userData, avatar, cacheSize ->
+            val usedPercent =
+                ((cacheSize.toFloat() / MediaCacheManager.CACHE_SIZE) * 100).toInt()
+                    .coerceIn(0, 100)
+            SettingUiState(
+                isLoggedIn = userData.isLoggedIn,
+                username = userData.username,
+                avatar = avatar,
+                server = userData.domain,
+                cacheSize = toReadableFileSize(cacheSize),
+                used = usedPercent
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = SettingUiState()
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SettingUiState()
-    )
+
+    init {
+        viewModelScope.launch {
+            subsonicRepository.activeSession.collect { session ->
+                if (session != null) {
+                    val username = userRepository.userData.first().username
+                    _avatar.update { subsonicRepository.getAvatarUrl(username) }
+                }
+            }
+        }
+    }
 
     fun logout() {
         viewModelScope.launch {
@@ -78,7 +90,7 @@ class SettingViewModel @Inject constructor(
     }
 
     fun refreshCacheSize() {
-        _cacheSize.value = mediaCacheManager.getCacheSize()
+        _cacheSize.update { mediaCacheManager.getCacheSize() }
     }
 
     fun clearCache() {
