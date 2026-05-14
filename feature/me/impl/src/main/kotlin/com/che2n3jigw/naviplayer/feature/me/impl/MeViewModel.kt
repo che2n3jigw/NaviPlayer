@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -38,10 +39,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MeViewModel @Inject constructor(
-    userRepository: UserRepository,
+    private val userRepository: UserRepository,
     private val subsonicRepository: SubsonicRepository,
     private val naviMediaManager: NaviMediaManager
 ) : ViewModel() {
+
+    // 头像
+    private val _avatar = MutableStateFlow("")
 
     // 收藏歌曲
     private val _favouriteSongs = MutableStateFlow<List<Song>>(emptyList())
@@ -49,21 +53,27 @@ class MeViewModel @Inject constructor(
     // 最近播放
     private val _recentlyPlayed = MutableStateFlow<List<String>>(emptyList())
 
+    // 播放状态
+    private val _playbackState =
+        combine(naviMediaManager.currentSong, naviMediaManager.isPlaying) { song, playing ->
+            Pair(song, playing)
+        }
+
     val uiState: StateFlow<MeUiState> = combine(
         userRepository.userData,
         _favouriteSongs,
         _recentlyPlayed,
-        naviMediaManager.currentSong,
-        naviMediaManager.isPlaying
-    ) { userData, favouriteSongs, recentlyPlayed, currentPlaySong, isPlaying ->
+        _avatar,
+        _playbackState
+    ) { userData, favouriteSongs, recentlyPlayed, avatar, playbackState ->
         MeUiState(
             isLoggedIn = userData.isLoggedIn,
-            avatar = subsonicRepository.getAvatarUrl(userData.username),
+            avatar = avatar,
             favouriteCover = favouriteSongs.firstOrNull()?.imageUrl ?: "",
             favouriteCount = favouriteSongs.size,
             lastPlayTime = recentlyPlayed.firstOrNull() ?: "",
-            currentSong = currentPlaySong,
-            isPlaying = isPlaying
+            currentSong = playbackState.first,
+            isPlaying = playbackState.second
         )
     }.stateIn(
         scope = viewModelScope,
@@ -83,6 +93,10 @@ class MeViewModel @Inject constructor(
 
     fun refreshLibraryData() {
         viewModelScope.launch {
+            launch {
+                val userName = userRepository.userData.first().username
+                _avatar.value = subsonicRepository.getAvatarUrl(userName)
+            }
             launch { _favouriteSongs.value = subsonicRepository.getFavouriteList() }
         }
     }
