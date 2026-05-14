@@ -143,12 +143,12 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     }
 
     private fun updateMiniPlayerSection(state: MeUiState) {
-        binding.ivCoverPlaying.load(state.currentSong?.imageUrl) {
-            placeholder(R.drawable.me_placeholder_mini_player_cover)
-            error(R.drawable.me_placeholder_mini_player_cover)
-        }
-        binding.tvSingName.text = state.currentSong?.name
-        binding.tvSinger.text = state.currentSong?.singer
+        binding.miniPlayer.updateSongInfo(
+            state.currentSong?.imageUrl ?: "",
+            state.currentSong?.name ?: "",
+            state.currentSong?.singer ?: ""
+        )
+        binding.miniPlayer.updatePlaying(state.isPlaying)
     }
 
     private fun updateLastPlayTime(lastPlayTime: String) {
