@@ -37,6 +37,7 @@ dependencies {
     implementation(projects.core.ui)
     implementation(projects.core.navigation)
     implementation(projects.core.media)
+    implementation(projects.core.common)
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)

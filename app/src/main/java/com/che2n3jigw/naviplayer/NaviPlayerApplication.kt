@@ -25,10 +25,38 @@ package com.che2n3jigw.naviplayer
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
+import com.che2n3jigw.naviplayer.core.common.ApplicationScope
+import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @HiltAndroidApp
 class NaviPlayerApplication : Application(), ImageLoaderFactory {
+    @Inject
+    lateinit var naviMediaManager: NaviMediaManager
+
+    @Inject
+    @ApplicationScope
+    lateinit var scope: CoroutineScope
+
+    override fun onCreate() {
+        super.onCreate()
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                naviMediaManager.initialize()
+            }
+        }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        naviMediaManager.release()
+    }
+
     override fun newImageLoader(): ImageLoader {
         return NaviImageLoader(this).newImageLoader()
     }
