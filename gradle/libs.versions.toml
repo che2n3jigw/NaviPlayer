@@ -43,6 +43,7 @@ baserecyclerviewadapterhelper4 = { module = "io.github.cymchad:BaseRecyclerViewA
 coil-kt = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 test-androidx-core = { group = "androidx.test", name = "core", version.ref = "androidxTest" }

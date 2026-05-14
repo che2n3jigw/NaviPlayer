@@ -21,16 +21,17 @@
 package com.che2n3jigw.naviplayer.core.media
 
 import android.content.Context
-import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaBrowser
+import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.che2n3jigw.naviplayer.core.model.Song
+import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.guava.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,27 +42,8 @@ import javax.inject.Singleton
 @Singleton
 class NaviMediaManager @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    sessionToken: SessionToken
+    private val sessionToken: SessionToken
 ) {
-
-    companion object {
-        private const val TAG = "NaviMediaManager"
-    }
-
-    private var browserFuture = MediaBrowser.Builder(context, sessionToken).buildAsync()
-
-    /**
-     * 获取当前的 MediaBrowser 实例
-     */
-    val browser: MediaBrowser?
-        get() = if (browserFuture.isDone && !browserFuture.isCancelled) {
-            try {
-                browserFuture.get()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to get browser", e)
-                null
-            }
-        } else null
 
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying = _isPlaying.asStateFlow()
@@ -74,26 +56,22 @@ class NaviMediaManager @Inject constructor(
     private val _currentSong = MutableStateFlow<Song?>(null)
     val currentSong = _currentSong.asStateFlow()
 
-    init {
-        browserFuture.addListener({
-            try {
-                val currentBrowser = browserFuture.get()
-                // 1. 设置初始状态
-                _isPlaying.value = currentBrowser.isPlaying
-                // 2. 监听后续变化
-                currentBrowser.addListener(object : Player.Listener {
-                    override fun onIsPlayingChanged(isPlaying: Boolean) {
-                        _isPlaying.value = isPlaying
-                    }
+    private lateinit var browserFuture: ListenableFuture<MediaBrowser>
+    private lateinit var browser: MediaController
 
-                    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                        _currentSong.value = songCache[mediaItem?.mediaId]
-                    }
-                })
-            } catch (e: Exception) {
-                Log.e(TAG, "MediaBrowser connection failed", e)
+    suspend fun initialize() {
+        browserFuture = MediaBrowser.Builder(context, sessionToken).buildAsync()
+        browser = browserFuture.await()
+        _isPlaying.value = browser.isPlaying
+        browser.addListener(object : Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                _isPlaying.value = isPlaying
             }
-        }, ContextCompat.getMainExecutor(context))
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                _currentSong.value = songCache[mediaItem?.mediaId]
+            }
+        })
     }
 
     /**
@@ -106,15 +84,15 @@ class NaviMediaManager @Inject constructor(
         val mediaItems = songs.map {
             MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
         }
-        browser?.setMediaItems(mediaItems)
-        browser?.prepare()
+        browser.setMediaItems(mediaItems)
+        browser.prepare()
     }
 
     /**
      * 播放/暂停 切换逻辑
      */
     fun togglePlay() {
-        browser?.let {
+        browser.let {
             if (it.isPlaying) {
                 it.pause()
             } else {
@@ -130,9 +108,6 @@ class NaviMediaManager @Inject constructor(
      * 释放资源 (可选：通常随应用进程销毁，如需手动注销可调用)
      */
     fun release() {
-        if (!browserFuture.isDone) {
-            browserFuture.cancel(true)
-        }
         MediaBrowser.releaseFuture(browserFuture)
     }
 }
