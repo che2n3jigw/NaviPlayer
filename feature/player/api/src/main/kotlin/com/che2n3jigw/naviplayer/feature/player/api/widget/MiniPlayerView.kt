@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-// 作者: che2n3jigw
-// 邮箱: che2n3jigw@163.com
-// 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/14 15:41
-package com.che2n3jigw.naviplayer.feature.player.impl.widget
+package com.che2n3jigw.naviplayer.feature.player.api.widget
 
 import android.content.Context
 import android.util.AttributeSet
@@ -26,8 +22,8 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import coil.load
-import com.che2n3jigw.naviplayer.feature.player.impl.R
-import com.che2n3jigw.naviplayer.feature.player.impl.databinding.ViewMiniPlayerBinding
+import com.che2n3jigw.naviplayer.feature.player.api.R
+import com.che2n3jigw.naviplayer.feature.player.api.databinding.ViewMiniPlayerBinding
 
 /**
  * 迷你播放器
