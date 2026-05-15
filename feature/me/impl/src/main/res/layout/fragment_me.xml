@@ -157,7 +157,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <!-- 固定底部 -->
-    <com.che2n3jigw.naviplayer.feature.player.impl.widget.MiniPlayerView
+    <com.che2n3jigw.naviplayer.feature.player.api.widget.MiniPlayerView
         android:id="@+id/mini_player"
         android:layout_width="match_parent"
         android:layout_height="64dp"
