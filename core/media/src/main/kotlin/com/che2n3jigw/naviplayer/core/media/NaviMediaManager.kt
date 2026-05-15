@@ -145,7 +145,7 @@ class NaviMediaManager @Inject constructor(
     }
 
     private fun checkPlaybackPosition() {
-        checkPlaybackPositionJob = CoroutineScope(SupervisorJob() + Dispatchers.Default).launch {
+        checkPlaybackPositionJob = CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
             while (isActive) {
                 _position.update { browser.currentPosition }
                 delay(1000)
