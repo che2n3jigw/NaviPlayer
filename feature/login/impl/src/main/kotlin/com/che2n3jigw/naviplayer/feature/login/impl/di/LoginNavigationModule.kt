@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-// 作者: che2n3jigw
-// 邮箱: che2n3jigw@163.com
-// 博客: che2n3jigw.github.io
-// 创建时间： 2026/3/31 14:55
-package com.che2n3jigw.naviplayer.feature.login.impl
+package com.che2n3jigw.naviplayer.feature.login.impl.di
 
 import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginNavigator
+import com.che2n3jigw.naviplayer.feature.login.impl.LoginNavigatorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

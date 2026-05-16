@@ -21,19 +21,38 @@
 package com.che2n3jigw.naviplayer.feature.login.impl
 
 
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.login.impl.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 登录页面
  */
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>() {
+
+    @Inject
+    lateinit var userRepository: UserRepository
 
     override fun inflateBinding() = FragmentLoginBinding.inflate(layoutInflater)
 
     override fun initView() {}
 
-    override fun initListener() {}
+    override fun initListener() {
+        binding.btnFakeLogin.setOnClickListener {
+            lifecycleScope.launch {
+                val success = userRepository.login("http://192.168.50.247:4533", "guest", "123456")
+                if (success) {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+    }
 
     override fun subscribeUI() {}
 }
