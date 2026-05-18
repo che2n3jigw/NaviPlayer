@@ -40,6 +40,8 @@ class LibraryViewModel @Inject constructor(
     userRepository: UserRepository,
     private val subsonicRepository: SubsonicRepository
 ) : ViewModel() {
+    var appBarLayoutOffset = 0
+    var miniPlayerOut = false
 
     private val _albums = MutableStateFlow<List<LibraryItem>?>(null)
     private val _randomSongs = MutableStateFlow<List<Song>?>(null)

@@ -20,10 +20,14 @@
 // 创建时间： 2026/4/1 16:19
 package com.che2n3jigw.naviplayer.feature.library.impl
 
+import android.view.View
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.graphics.Insets
+import androidx.core.util.TypedValueCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +35,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.behavior.HideViewOnScrollBehavior
 import com.google.android.material.carousel.CarouselLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -40,6 +46,8 @@ import kotlinx.coroutines.launch
  */
 @AndroidEntryPoint
 class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
+
+    private var appBarLayoutOffset = 0
 
     private val albumAdapter = LibraryItemAdapter()
     private val songAdapter = SongItemAdapter()
@@ -57,7 +65,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
 
         binding.rvSong.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            isNestedScrollingEnabled = false
+            isNestedScrollingEnabled = true
             adapter = songAdapter
         }
     }
@@ -66,6 +74,21 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
         albumAdapter.itemClickListener = { _, position ->
             binding.rvAlbum.smoothScrollToPosition(position)
         }
+        binding.appbar.addOnOffsetChangedListener { _, verticalOffset ->
+            appBarLayoutOffset = verticalOffset
+        }
+
+        binding.appbar.post {
+            val params = binding.appbar.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior as AppBarLayout.Behavior
+            behavior.setTopAndBottomOffset(viewmodel.appBarLayoutOffset)
+        }
+
+        if (viewmodel.miniPlayerOut) {
+            binding.miniPlayer.post {
+                getMiniPlayerBehavior().slideOut(binding.miniPlayer)
+            }
+        }
     }
 
     override fun subscribeUI() {
@@ -73,7 +96,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.uiState.collect {
                     binding.loading.isVisible = it is LibraryUiState.Loading
-                    binding.groupSuccess.isVisible = it is LibraryUiState.Success
+                    binding.appbar.isVisible = it is LibraryUiState.Success
                     when (it) {
                         is LibraryUiState.Success -> {
                             albumAdapter.submitList(it.albums)
@@ -88,8 +111,21 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     }
 
     override fun onApplyWindowInsets(insets: Insets) {
-        binding.ibSearch.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        binding.appbar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = insets.top
+            val dp56 = TypedValueCompat.dpToPx(56f, requireContext().resources.displayMetrics)
+            binding.rvSong.updatePadding(bottom = insets.bottom + dp56.toInt())
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewmodel.appBarLayoutOffset = appBarLayoutOffset
+        viewmodel.miniPlayerOut = getMiniPlayerBehavior().isScrolledOut
+    }
+
+    private fun getMiniPlayerBehavior(): HideViewOnScrollBehavior<View> {
+        val layoutParams = binding.miniPlayer.layoutParams as CoordinatorLayout.LayoutParams
+        return layoutParams.behavior as HideViewOnScrollBehavior<View>
     }
 }
