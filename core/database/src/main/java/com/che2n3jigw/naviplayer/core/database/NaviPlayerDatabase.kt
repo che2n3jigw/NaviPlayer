@@ -22,6 +22,7 @@
 // 创建时间： 1/16/26
 package com.che2n3jigw.naviplayer.core.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -34,7 +35,9 @@ import com.che2n3jigw.naviplayer.core.database.util.InstantConverter
 @Database(
     entities = [LoginHistoryEntity::class, PlaybackEntity::class],
     version = 2,
-    autoMigrations = [],
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ],
     exportSchema = true
 )
 @TypeConverters(InstantConverter::class)
