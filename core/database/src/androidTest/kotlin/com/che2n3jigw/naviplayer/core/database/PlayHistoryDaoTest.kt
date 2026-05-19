@@ -32,13 +32,13 @@ internal class PlayHistoryDaoTest : NaviPlayerDatabaseTest() {
     @Test
     fun getPlayHistory() = runTest {
         insertPlayHistory()
-        val playHistory = playbackDao.getPlayHistory("guest").first()
+        val playHistory = playbackDao.getPlaybacks("guest").first()
         Assert.assertEquals(102, playHistory[0].duration)
     }
 
 
     private suspend fun insertPlayHistory() {
-        playbackDao.upsertPlayHistory(
+        playbackDao.upsertPlayback(
             PlaybackEntity(
                 songId = "1",
                 username = "guest",
@@ -50,7 +50,7 @@ internal class PlayHistoryDaoTest : NaviPlayerDatabaseTest() {
                 playedAt = Clock.System.now()
             )
         )
-        playbackDao.upsertPlayHistory(
+        playbackDao.upsertPlayback(
             PlaybackEntity(
                 songId = "1",
                 username = "guest",
