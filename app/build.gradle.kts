@@ -33,6 +33,7 @@ dependencies {
 
     implementation(projects.feature.loginHistory.impl)
     implementation(projects.feature.login.impl)
+    implementation(projects.feature.search.impl)
 
     implementation(projects.core.ui)
     implementation(projects.core.navigation)
