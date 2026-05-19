@@ -36,7 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.library.impl.adapter.LibraryItemAdapter
-import com.che2n3jigw.naviplayer.feature.library.impl.adapter.SongItemAdapter
+import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideViewOnScrollBehavior
@@ -53,7 +53,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     private var appBarLayoutOffset = 0
 
     private val albumAdapter = LibraryItemAdapter()
-    private val songAdapter = SongItemAdapter()
+    private val songAdapter = SelectableSongAdapter()
 
     private val viewmodel: LibraryViewModel by viewModels()
 

@@ -18,23 +18,20 @@
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 2026/4/27 11:30
-package com.che2n3jigw.naviplayer.feature.library.impl.adapter
+package com.che2n3jigw.naviplayer.core.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.che2n3jigw.naviplayer.core.model.SelectableSong
 import com.che2n3jigw.naviplayer.core.model.Song
-import com.che2n3jigw.naviplayer.feature.library.impl.R
-import com.che2n3jigw.naviplayer.feature.library.impl.bean.SelectableSong
-import com.google.android.material.listitem.ListItemCardView
+import com.che2n3jigw.naviplayer.core.ui.R
+import com.che2n3jigw.naviplayer.core.ui.databinding.ItemSongBinding
 
-class SongItemAdapter : ListAdapter<SelectableSong, SongItemViewHolder>(
+class SelectableSongAdapter : ListAdapter<SelectableSong, SelectableSongViewHolder>(
     object : DiffUtil.ItemCallback<SelectableSong>() {
         override fun areItemsTheSame(
             oldItem: SelectableSong,
@@ -54,27 +51,28 @@ class SongItemAdapter : ListAdapter<SelectableSong, SongItemViewHolder>(
 
     var itemClickListener: ((Song, Int) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
-        return SongItemViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableSongViewHolder {
+        val inflate = ItemSongBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return SelectableSongViewHolder(inflate)
     }
 
-    override fun onBindViewHolder(holder: SongItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SelectableSongViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item, itemClickListener)
     }
 }
 
-class SongItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class SelectableSongViewHolder(private val binding: ItemSongBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: SelectableSong, itemClickListener: ((Song, Int) -> Unit)?) {
         val song = item.song
-        itemView.findViewById<TextView>(R.id.tv_song_name).text = song.name
-        itemView.findViewById<TextView>(R.id.tv_artist).text = song.singer
-        itemView.findViewById<ImageView>(R.id.iv_cover).load(song.imageUrl) {
+        binding.tvSongName.text = song.name
+        binding.tvArtist.text = song.singer
+        binding.ivCover.load(song.imageUrl) {
             error(R.drawable.library_default_song_cover)
         }
-        itemView.findViewById<ListItemCardView>(R.id.cv_song).apply {
+        binding.cvSong.apply {
             isChecked = item.isChecked
             setOnClickListener { itemClickListener?.invoke(song, bindingAdapterPosition) }
         }

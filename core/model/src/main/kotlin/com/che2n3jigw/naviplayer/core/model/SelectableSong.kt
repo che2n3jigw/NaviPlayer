@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 
-// 作者: che2n3jigw
-// 邮箱: che2n3jigw@163.com
-// 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/19 11:10
-package com.che2n3jigw.naviplayer.feature.library.impl.bean
-
-import com.che2n3jigw.naviplayer.core.model.Song
+package com.che2n3jigw.naviplayer.core.model
 
 /**
  * 可选中的歌曲

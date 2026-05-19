@@ -27,7 +27,7 @@ import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.feature.library.impl.bean.LibraryItem
-import com.che2n3jigw.naviplayer.feature.library.impl.bean.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableSong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
