@@ -43,6 +43,8 @@ class SongItemAdapter : ListAdapter<Song, SongItemViewHolder>(
     }
 ) {
 
+    var itemClickListener: ((Song, Int) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
         return SongItemViewHolder(view)
@@ -50,20 +52,20 @@ class SongItemAdapter : ListAdapter<Song, SongItemViewHolder>(
 
     override fun onBindViewHolder(holder: SongItemViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, itemClickListener)
     }
 }
 
 class SongItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(item: Song) {
+    fun bind(item: Song, itemClickListener: ((Song, Int) -> Unit)?) {
         itemView.findViewById<TextView>(R.id.tv_song_name).text = item.name
         itemView.findViewById<TextView>(R.id.tv_artist).text = item.singer
         itemView.findViewById<ImageView>(R.id.iv_cover).load(item.imageUrl) {
             error(R.drawable.library_default_song_cover)
         }
-        itemView.setOnClickListener {
-
+        itemView.findViewById<View>(R.id.cv_song).setOnClickListener {
+            itemClickListener?.invoke(item, bindingAdapterPosition)
         }
     }
 }

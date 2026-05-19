@@ -74,6 +74,9 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
         albumAdapter.itemClickListener = { _, position ->
             binding.rvAlbum.smoothScrollToPosition(position)
         }
+        songAdapter.itemClickListener = { song, _ ->
+            viewmodel.play(song)
+        }
         binding.appbar.addOnOffsetChangedListener { _, verticalOffset ->
             appBarLayoutOffset = verticalOffset
         }

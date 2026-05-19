@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
+import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -38,7 +39,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
     userRepository: UserRepository,
-    private val subsonicRepository: SubsonicRepository
+    private val subsonicRepository: SubsonicRepository,
+    private val naviMediaManager: NaviMediaManager
 ) : ViewModel() {
     var appBarLayoutOffset = 0
     var miniPlayerOut = false
@@ -89,8 +91,17 @@ class LibraryViewModel @Inject constructor(
             _randomSongs.value = randomDeferred.await()
         }
     }
-}
 
+    fun play(song: Song) {
+        _randomSongs.value?.let {
+            val index = it.indexOf(song)
+            if (index != -1) {
+                naviMediaManager.setMediaItems(it, index)
+                naviMediaManager.togglePlay()
+            }
+        }
+    }
+}
 
 sealed interface LibraryUiState {
     /**
