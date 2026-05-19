@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time_just_now">刚刚</string>
+    <string name="time_half_hour_ago">半个钟之前</string>
+    <string name="time_long_ago">很久以前</string>
+    <string name="time_minutes_ago">%1$d分钟之前</string>
+    <string name="time_hours_ago">%1$d小时之前</string>
+    <string name="time_days_ago">%1$d天之前</string>
+    <string name="time_weeks_ago">%1$d周之前</string>
+</resources>
