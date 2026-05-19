@@ -17,14 +17,20 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/19 17:55
-package com.che2n3jigw.naviplayer.feature.search.api
+// 创建时间： 2026/5/19 20:56
+package com.che2n3jigw.naviplayer.feature.search.impl.di
 
-import androidx.navigation.NavController
+import com.che2n3jigw.naviplayer.feature.search.api.SearchNavigator
+import com.che2n3jigw.naviplayer.feature.search.impl.SearchNavigatorImpl
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-/**
- * 搜索模块的导航接口
- */
-interface SearchNavigator {
-    fun navigateToSearch(navController: NavController)
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class SearchNavigationModule {
+
+    @Binds
+    abstract fun bindSearchNavigator(impl: SearchNavigatorImpl): SearchNavigator
 }
