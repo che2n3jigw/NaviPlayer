@@ -23,15 +23,15 @@ package com.che2n3jigw.naviplayer.core.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.che2n3jigw.naviplayer.core.database.model.PlayHistoryEntity
+import com.che2n3jigw.naviplayer.core.database.model.PlaybackEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface PlayHistoryDao {
+interface PlaybackDao {
 
     @Query("SELECT * FROM play_history WHERE username = :username ORDER BY playedAt DESC LIMIT 30")
-    fun getPlayHistory(username: String): Flow<List<PlayHistoryEntity>>
+    fun getPlayHistory(username: String): Flow<List<PlaybackEntity>>
 
     @Upsert
-    suspend fun upsertPlayHistory(playHistoryEntity: PlayHistoryEntity)
+    suspend fun upsertPlayHistory(playbackEntity: PlaybackEntity)
 }

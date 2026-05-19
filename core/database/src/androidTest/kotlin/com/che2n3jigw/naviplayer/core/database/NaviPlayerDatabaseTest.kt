@@ -19,7 +19,7 @@ package com.che2n3jigw.naviplayer.core.database
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.che2n3jigw.naviplayer.core.database.dao.PlayHistoryDao
+import com.che2n3jigw.naviplayer.core.database.dao.PlaybackDao
 import org.junit.After
 import org.junit.Before
 
@@ -31,7 +31,7 @@ import org.junit.Before
 internal abstract class NaviPlayerDatabaseTest {
 
     private lateinit var db: NaviPlayerDatabase
-    protected lateinit var playHistoryDao: PlayHistoryDao
+    protected lateinit var playbackDao: PlaybackDao
 
     @Before
     fun setup() {
@@ -42,7 +42,7 @@ internal abstract class NaviPlayerDatabaseTest {
                 NaviPlayerDatabase::class.java
             ).build()
         }
-        playHistoryDao = db.playHistoryDao()
+        playbackDao = db.playbackDao()
     }
 
     @After

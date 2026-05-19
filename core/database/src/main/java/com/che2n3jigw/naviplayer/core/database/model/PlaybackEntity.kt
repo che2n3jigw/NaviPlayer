@@ -30,7 +30,7 @@ import kotlin.time.Instant
     tableName = "play_history",
     primaryKeys = ["songId", "username"]
 )
-data class PlayHistoryEntity(
+data class PlaybackEntity(
     /**
      * 歌曲唯一标识符 (Subsonic ID)
      */

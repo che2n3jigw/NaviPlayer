@@ -26,13 +26,13 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.che2n3jigw.naviplayer.core.database.dao.LoginHistoryDao
-import com.che2n3jigw.naviplayer.core.database.dao.PlayHistoryDao
+import com.che2n3jigw.naviplayer.core.database.dao.PlaybackDao
 import com.che2n3jigw.naviplayer.core.database.model.LoginHistoryEntity
-import com.che2n3jigw.naviplayer.core.database.model.PlayHistoryEntity
+import com.che2n3jigw.naviplayer.core.database.model.PlaybackEntity
 import com.che2n3jigw.naviplayer.core.database.util.InstantConverter
 
 @Database(
-    entities = [LoginHistoryEntity::class, PlayHistoryEntity::class],
+    entities = [LoginHistoryEntity::class, PlaybackEntity::class],
     version = 2,
     autoMigrations = [],
     exportSchema = true
@@ -40,5 +40,5 @@ import com.che2n3jigw.naviplayer.core.database.util.InstantConverter
 @TypeConverters(InstantConverter::class)
 internal abstract class NaviPlayerDatabase : RoomDatabase() {
     abstract fun loginHistoryDao(): LoginHistoryDao
-    abstract fun playHistoryDao(): PlayHistoryDao
+    abstract fun playbackDao(): PlaybackDao
 }

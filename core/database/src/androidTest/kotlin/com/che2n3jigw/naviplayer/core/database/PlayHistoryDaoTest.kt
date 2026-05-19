@@ -20,7 +20,7 @@
 // 创建时间： 2026/4/15 21:48
 package com.che2n3jigw.naviplayer.core.database
 
-import com.che2n3jigw.naviplayer.core.database.model.PlayHistoryEntity
+import com.che2n3jigw.naviplayer.core.database.model.PlaybackEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -32,14 +32,14 @@ internal class PlayHistoryDaoTest : NaviPlayerDatabaseTest() {
     @Test
     fun getPlayHistory() = runTest {
         insertPlayHistory()
-        val playHistory = playHistoryDao.getPlayHistory("guest").first()
+        val playHistory = playbackDao.getPlayHistory("guest").first()
         Assert.assertEquals(102, playHistory[0].duration)
     }
 
 
     private suspend fun insertPlayHistory() {
-        playHistoryDao.upsertPlayHistory(
-            PlayHistoryEntity(
+        playbackDao.upsertPlayHistory(
+            PlaybackEntity(
                 songId = "1",
                 username = "guest",
                 title = "title",
@@ -50,8 +50,8 @@ internal class PlayHistoryDaoTest : NaviPlayerDatabaseTest() {
                 playedAt = Clock.System.now()
             )
         )
-        playHistoryDao.upsertPlayHistory(
-            PlayHistoryEntity(
+        playbackDao.upsertPlayHistory(
+            PlaybackEntity(
                 songId = "1",
                 username = "guest",
                 title = "title",
