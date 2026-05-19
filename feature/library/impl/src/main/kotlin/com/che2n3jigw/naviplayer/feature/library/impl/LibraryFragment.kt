@@ -97,7 +97,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
             viewmodel.playNext()
         }
         binding.miniPlayer.onPlayPauseClick = {
-            viewmodel.play()
+            viewmodel.togglePlaying()
         }
         binding.miniPlayer.onPreviousClick = {
             viewmodel.playPrevious()

@@ -105,21 +105,27 @@ class MeViewModel @Inject constructor(
         viewModelScope.launch {
             _favouriteSongs.firstOrNull()?.let {
                 naviMediaManager.setMediaItems(it)
-                naviMediaManager.togglePlay()
+                naviMediaManager.play()
             }
         }
     }
 
     fun togglePlaying() {
-        naviMediaManager.togglePlay()
+        viewModelScope.launch {
+            naviMediaManager.togglePlay()
+        }
     }
 
     fun playPrevious() {
-        naviMediaManager.playPrevious()
+        viewModelScope.launch {
+            naviMediaManager.playPrevious()
+        }
     }
 
     fun playNext() {
-        naviMediaManager.playNext()
+        viewModelScope.launch {
+            naviMediaManager.playNext()
+        }
     }
 }
 
