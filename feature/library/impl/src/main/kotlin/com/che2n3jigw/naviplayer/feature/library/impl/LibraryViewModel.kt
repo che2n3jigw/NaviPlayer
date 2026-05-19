@@ -47,16 +47,21 @@ class LibraryViewModel @Inject constructor(
 
     private val _albums = MutableStateFlow<List<LibraryItem>?>(null)
     private val _randomSongs = MutableStateFlow<List<Song>?>(null)
+    private val _playbackState = combine(
+        naviMediaManager.currentSong, naviMediaManager.isPlaying
+    ) { song, isPlaying ->
+        Pair(song, isPlaying)
+    }
 
     val uiState: StateFlow<LibraryUiState> = combine(
-        userRepository.userData, _albums, _randomSongs
-    ) { userData, albums, randomSongs ->
+        userRepository.userData, _albums, _randomSongs, _playbackState
+    ) { userData, albums, randomSongs, playbackState ->
         if (!userData.isLoggedIn) {
             LibraryUiState.NotLogin
         } else if (albums == null || randomSongs == null) {
             LibraryUiState.Loading
         } else {
-            LibraryUiState.Success(albums, randomSongs)
+            LibraryUiState.Success(albums, randomSongs, playbackState.first, playbackState.second)
         }
     }.stateIn(
         scope = viewModelScope,
@@ -120,5 +125,7 @@ sealed interface LibraryUiState {
     data class Success(
         val albums: List<LibraryItem> = emptyList(),
         val randomSongs: List<Song> = emptyList(),
+        val currentSong: Song? = null,
+        val isPlaying: Boolean = false
     ) : LibraryUiState
 }

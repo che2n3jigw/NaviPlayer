@@ -33,6 +33,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
 import com.google.android.material.appbar.AppBarLayout
@@ -104,6 +105,7 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
                         is LibraryUiState.Success -> {
                             albumAdapter.submitList(it.albums)
                             songAdapter.submitList(it.randomSongs)
+                            updateMiniPlayer(it.currentSong, it.isPlaying)
                         }
 
                         else -> {}
@@ -130,5 +132,12 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     private fun getMiniPlayerBehavior(): HideViewOnScrollBehavior<View> {
         val layoutParams = binding.miniPlayer.layoutParams as CoordinatorLayout.LayoutParams
         return layoutParams.behavior as HideViewOnScrollBehavior<View>
+    }
+
+    private fun updateMiniPlayer(song: Song?, isPlaying: Boolean) {
+        binding.miniPlayer.updateSongInfo(
+            song?.imageUrl ?: "", song?.name ?: "", song?.singer ?: ""
+        )
+        binding.miniPlayer.updatePlaying(isPlaying)
     }
 }
