@@ -17,11 +17,15 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/4/27 11:31
-package com.che2n3jigw.naviplayer.feature.library.impl
+// 创建时间： 2026/5/19 11:10
+package com.che2n3jigw.naviplayer.feature.library.impl.bean
 
-data class LibraryItem(
-    val id: String,
-    val title: String,
-    val coverUrl: String
+import com.che2n3jigw.naviplayer.core.model.Song
+
+/**
+ * 可选中的歌曲
+ */
+data class SelectableSong(
+    val song: Song,
+    var isChecked: Boolean = false
 )

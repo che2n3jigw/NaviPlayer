@@ -26,6 +26,8 @@ import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.Song
+import com.che2n3jigw.naviplayer.feature.library.impl.bean.LibraryItem
+import com.che2n3jigw.naviplayer.feature.library.impl.bean.SelectableSong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +63,12 @@ class LibraryViewModel @Inject constructor(
         } else if (albums == null || randomSongs == null) {
             LibraryUiState.Loading
         } else {
-            LibraryUiState.Success(albums, randomSongs, playbackState.first, playbackState.second)
+            val song = playbackState.first
+            // 随机歌曲列表转换成可选中的随机歌曲列表
+            val selectableRandomSongs = randomSongs.map {
+                SelectableSong(it, it.id == song?.id)
+            }
+            LibraryUiState.Success(albums, selectableRandomSongs, song, playbackState.second)
         }
     }.stateIn(
         scope = viewModelScope,
@@ -144,7 +151,7 @@ sealed interface LibraryUiState {
      */
     data class Success(
         val albums: List<LibraryItem> = emptyList(),
-        val randomSongs: List<Song> = emptyList(),
+        val randomSongs: List<SelectableSong> = emptyList(),
         val currentSong: Song? = null,
         val isPlaying: Boolean = false
     ) : LibraryUiState

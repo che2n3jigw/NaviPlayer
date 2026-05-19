@@ -35,6 +35,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
+import com.che2n3jigw.naviplayer.feature.library.impl.adapter.LibraryItemAdapter
+import com.che2n3jigw.naviplayer.feature.library.impl.adapter.SongItemAdapter
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideViewOnScrollBehavior

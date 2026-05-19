@@ -18,7 +18,7 @@
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 2026/4/27 11:30
-package com.che2n3jigw.naviplayer.feature.library.impl
+package com.che2n3jigw.naviplayer.feature.library.impl.adapter
 
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -30,6 +30,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.che2n3jigw.naviplayer.feature.library.impl.bean.LibraryItem
+import com.che2n3jigw.naviplayer.feature.library.impl.R
 
 class LibraryItemAdapter : ListAdapter<LibraryItem, LibraryItemViewHolder>(
     object : DiffUtil.ItemCallback<LibraryItem>() {
