@@ -32,6 +32,9 @@ interface PlaybackDao {
     @Query("SELECT * FROM playback WHERE username = :username ORDER BY playedAt DESC LIMIT 30")
     fun getPlaybacks(username: String): Flow<List<PlaybackEntity>>
 
+    @Query("SELECT * FROM playback WHERE songId = :songId AND username = :username")
+    suspend fun getPlayback(songId: String, username: String): PlaybackEntity?
+
     @Upsert
     suspend fun upsertPlayback(playback: PlaybackEntity)
 }
