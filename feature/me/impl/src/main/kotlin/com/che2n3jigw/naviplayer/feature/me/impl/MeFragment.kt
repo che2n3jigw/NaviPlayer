@@ -20,7 +20,6 @@
 // 创建时间： 2026/4/1 16:19
 package com.che2n3jigw.naviplayer.feature.me.impl
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.core.graphics.Insets
 import androidx.core.view.isVisible
@@ -57,6 +56,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     override fun initView() {
         ClickEffectUtil.applyEnlarge(binding.ivFavoriteCover)
+        ClickEffectUtil.applyEnlarge(binding.ivLastPlayback)
     }
 
     override fun initListener() {
@@ -107,9 +107,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                 // 只有最近播放变化时更新最近播放区域
                 launch {
                     viewModel.uiState
-                        .map { it.lastPlayTime }
+                        .map { it.lastPlaybackTime to it.lastPlaybackCoverUrl }
                         .distinctUntilChanged()
-                        .collect { updateLastPlayTime(it) }
+                        .collect { updateLastPlayback(it.first, it.second) }
                 }
 
                 // 只有统计数据变化时才更新统计区域
@@ -164,12 +164,15 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         binding.miniPlayer.updatePlaying(state.isPlaying)
     }
 
-    private fun updateLastPlayTime(lastPlayTime: String) {
+    private fun updateLastPlayback(lastPlayTime: String, lastPlaybackCoverUrl: String) {
         binding.tvActive.apply {
             isVisible = lastPlayTime.isNotEmpty()
             if (lastPlayTime.isNotEmpty()) {
                 text = getString(R.string.me_library_active, lastPlayTime)
             }
+        }
+        binding.ivLastPlayback.load(lastPlaybackCoverUrl) {
+            error(R.drawable.me_placeholder_favourite_song)
         }
     }
 

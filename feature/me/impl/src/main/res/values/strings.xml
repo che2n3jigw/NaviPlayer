@@ -19,7 +19,7 @@
     <string name="me_favorite_song">收藏歌曲</string>
     <string name="me_recently_played">最近播放</string>
     <string name="me_library_tracks_count">%1$d 首歌曲</string>
-    <string name="me_library_active">%1$s 前活跃</string>
+    <string name="me_library_active">%1$s 活跃</string>
 
     <string name="me_lists">歌单</string>
     <string name="me_offline">离线</string>

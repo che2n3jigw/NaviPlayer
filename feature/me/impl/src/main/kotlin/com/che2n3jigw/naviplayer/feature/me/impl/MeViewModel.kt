@@ -22,7 +22,9 @@ package com.che2n3jigw.naviplayer.feature.me.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
+import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.Song
@@ -41,7 +43,9 @@ import javax.inject.Inject
 class MeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val subsonicRepository: SubsonicRepository,
-    private val naviMediaManager: NaviMediaManager
+    private val naviMediaManager: NaviMediaManager,
+    private val timeUtils: TimeUtils,
+    userPlaybackRepository: UserPlaybackRepository
 ) : ViewModel() {
 
     // 头像
@@ -49,9 +53,6 @@ class MeViewModel @Inject constructor(
 
     // 收藏歌曲
     private val _favouriteSongs = MutableStateFlow<List<Song>>(emptyList())
-
-    // 最近播放
-    private val _recentlyPlayed = MutableStateFlow<List<String>>(emptyList())
 
     // 播放状态
     private val _playbackState =
@@ -62,16 +63,24 @@ class MeViewModel @Inject constructor(
     val uiState: StateFlow<MeUiState> = combine(
         userRepository.userData,
         _favouriteSongs,
-        _recentlyPlayed,
+        userPlaybackRepository.playbacks,
         _avatar,
         _playbackState
-    ) { userData, favouriteSongs, recentlyPlayed, avatar, playbackState ->
+    ) { userData, favouriteSongs, playbacks, avatar, playbackState ->
+        val lastPlayback = playbacks.first()
+        val lastPlaybackAt = lastPlayback.playedAt
+        val lastPlaybackTime = if (lastPlaybackAt == 0L) {
+            ""
+        } else {
+            timeUtils.toTimeAgo(lastPlaybackAt)
+        }
         MeUiState(
             isLoggedIn = userData.isLoggedIn,
             avatar = avatar,
             favouriteCover = favouriteSongs.firstOrNull()?.imageUrl ?: "",
             favouriteCount = favouriteSongs.size,
-            lastPlayTime = recentlyPlayed.firstOrNull() ?: "",
+            lastPlaybackTime = lastPlaybackTime,
+            lastPlaybackCoverUrl = lastPlayback.song.imageUrl,
             currentSong = playbackState.first,
             isPlaying = playbackState.second
         )
@@ -147,9 +156,13 @@ data class MeUiState(
      */
     val favouriteCount: Int = 0,
     /**
-     * 上一次听歌的时间
+     * 距离上一首歌曲播放时间
      */
-    val lastPlayTime: String = "",
+    val lastPlaybackTime: String = "",
+    /**
+     * 上一首播放歌曲封面
+     */
+    val lastPlaybackCoverUrl: String = "",
     /**
      * 歌单个数
      */
