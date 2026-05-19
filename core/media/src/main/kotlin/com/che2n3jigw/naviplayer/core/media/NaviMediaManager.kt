@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -98,42 +99,76 @@ class NaviMediaManager @Inject constructor(
     /**
      * 设置播放列表
      */
-    fun setMediaItems(songs: List<Song>, position: Int = 0) {
+    suspend fun setMediaItems(songs: List<Song>, position: Int = 0) {
         _playlist.value = songs
         songCache.clear()
         songs.forEach { songCache[it.id] = it }
         val mediaItems = songs.map {
             MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
         }
-        browser.setMediaItems(mediaItems, position, C.TIME_UNSET)
-        browser.prepare()
+        withContext(Dispatchers.Main) {
+            browser.setMediaItems(mediaItems, position, C.TIME_UNSET)
+            browser.prepare()
+        }
+    }
+
+    /**
+     * 播放
+     */
+    suspend fun play() {
+        withContext(Dispatchers.Main) {
+            browser.let {
+                if (!it.isPlaying) {
+                    if (it.playbackState == Player.STATE_IDLE) {
+                        it.prepare()
+                    }
+                    it.play()
+                }
+            }
+        }
+    }
+
+    /**
+     * 暂停
+     */
+    suspend fun pause() {
+        withContext(Dispatchers.Main) {
+            browser.let {
+                if (it.isPlaying) {
+                    it.pause()
+                }
+            }
+        }
     }
 
     /**
      * 播放/暂停 切换逻辑
      */
-    fun togglePlay() {
-        browser.let {
-            if (it.isPlaying) {
-                it.pause()
-            } else {
-                if (it.playbackState == Player.STATE_IDLE) {
-                    it.prepare()
+    suspend fun togglePlay() {
+        withContext(Dispatchers.Main) {
+            browser.let {
+                if (it.isPlaying) {
+                    pause()
+                } else {
+                    play()
                 }
-                it.play()
             }
         }
     }
 
-    fun playNext() {
-        if (browser.hasNextMediaItem()) {
-            browser.seekToNextMediaItem()
+    suspend fun playNext() {
+        withContext(Dispatchers.Main) {
+            if (browser.hasNextMediaItem()) {
+                browser.seekToNextMediaItem()
+            }
         }
     }
 
-    fun playPrevious() {
-        if (browser.hasPreviousMediaItem()) {
-            browser.seekToPreviousMediaItem()
+    suspend fun playPrevious() {
+        withContext(Dispatchers.Main) {
+            if (browser.hasPreviousMediaItem()) {
+                browser.seekToPreviousMediaItem()
+            }
         }
     }
 
