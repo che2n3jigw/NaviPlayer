@@ -106,6 +106,18 @@ class LibraryViewModel @Inject constructor(
             }
         }
     }
+
+    fun playNext() {
+        naviMediaManager.playNext()
+    }
+
+    fun play() {
+        naviMediaManager.togglePlay()
+    }
+
+    fun playPrevious() {
+        naviMediaManager.playPrevious()
+    }
 }
 
 sealed interface LibraryUiState {

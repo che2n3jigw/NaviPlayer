@@ -93,6 +93,15 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
                 getMiniPlayerBehavior().slideOut(binding.miniPlayer)
             }
         }
+        binding.miniPlayer.onNextClick = {
+            viewmodel.playNext()
+        }
+        binding.miniPlayer.onPlayPauseClick = {
+            viewmodel.play()
+        }
+        binding.miniPlayer.onPreviousClick = {
+            viewmodel.playPrevious()
+        }
     }
 
     override fun subscribeUI() {
@@ -101,6 +110,8 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
                 viewmodel.uiState.collect {
                     binding.loading.isVisible = it is LibraryUiState.Loading
                     binding.appbar.isVisible = it is LibraryUiState.Success
+                    binding.rvSong.isVisible = it is LibraryUiState.Success
+                    binding.miniPlayer.isVisible = it is LibraryUiState.Success
                     when (it) {
                         is LibraryUiState.Success -> {
                             albumAdapter.submitList(it.albums)
