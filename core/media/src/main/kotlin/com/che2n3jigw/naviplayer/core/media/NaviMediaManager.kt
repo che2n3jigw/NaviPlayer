@@ -27,6 +27,8 @@ import androidx.media3.common.Player
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
+import com.che2n3jigw.naviplayer.core.common.ApplicationScope
+import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -52,7 +54,9 @@ import javax.inject.Singleton
 @Singleton
 class NaviMediaManager @Inject constructor(
     @param:ApplicationContext private val context: Context,
-    private val sessionToken: SessionToken
+    @param:ApplicationScope private val scope: CoroutineScope,
+    private val sessionToken: SessionToken,
+    private val userPlaybackRepository: UserPlaybackRepository
 ) {
 
     private val _isPlaying = MutableStateFlow(false)
@@ -91,7 +95,12 @@ class NaviMediaManager @Inject constructor(
             }
 
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                _currentSong.update { songCache[mediaItem?.mediaId] }
+                songCache[mediaItem?.mediaId]?.let { song ->
+                    scope.launch {
+                        _currentSong.update { song }
+                        userPlaybackRepository.upsertPlayback(song)
+                    }
+                }
             }
         })
     }
