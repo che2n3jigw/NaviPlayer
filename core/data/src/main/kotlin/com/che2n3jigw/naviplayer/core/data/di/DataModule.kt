@@ -22,11 +22,15 @@
 // 创建时间： 1/18/26
 package com.che2n3jigw.naviplayer.core.data.di
 
+import com.che2n3jigw.naviplayer.core.data.repository.CompositeUserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultLoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.DefaultPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultSubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultUserRepository
 import com.che2n3jigw.naviplayer.core.data.repository.LoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.PlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
+import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -51,4 +55,14 @@ abstract class DataModule {
     internal abstract fun bindSubsonicRepository(
         defaultSubsonicRepository: DefaultSubsonicRepository
     ): SubsonicRepository
+
+    @Binds
+    internal abstract fun bindPlaybackRepository(
+        defaultPlaybackRepository: DefaultPlaybackRepository
+    ): PlaybackRepository
+
+    @Binds
+    internal abstract fun bindUserPlaybackRepository(
+        compositeUserPlaybackRepository: CompositeUserPlaybackRepository
+    ): UserPlaybackRepository
 }
