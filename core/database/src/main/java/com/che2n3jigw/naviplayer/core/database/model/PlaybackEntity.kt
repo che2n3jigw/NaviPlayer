@@ -27,7 +27,7 @@ import kotlin.time.Instant
  * 播放历史数据结构
  */
 @Entity(
-    tableName = "play_history",
+    tableName = "playback",
     primaryKeys = ["songId", "username"]
 )
 data class PlaybackEntity(

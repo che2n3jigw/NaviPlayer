@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PlaybackDao {
 
-    @Query("SELECT * FROM play_history WHERE username = :username ORDER BY playedAt DESC LIMIT 30")
+    @Query("SELECT * FROM playback WHERE username = :username ORDER BY playedAt DESC LIMIT 30")
     fun getPlayHistory(username: String): Flow<List<PlaybackEntity>>
 
     @Upsert

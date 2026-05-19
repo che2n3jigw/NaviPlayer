@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "1bd203295bf9c539ec2f9397228b537c",
+    "identityHash": "4fac72ff244ce368f4a7cf0fc27c9884",
     "entities": [
       {
         "tableName": "login_history",
@@ -48,7 +48,7 @@
         }
       },
       {
-        "tableName": "play_history",
+        "tableName": "playback",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` TEXT NOT NULL, `username` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `coverArt` TEXT NOT NULL, `duration` INTEGER NOT NULL, `playCount` INTEGER NOT NULL, `playedAt` INTEGER NOT NULL, PRIMARY KEY(`songId`, `username`))",
         "fields": [
           {
@@ -117,7 +117,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1bd203295bf9c539ec2f9397228b537c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4fac72ff244ce368f4a7cf0fc27c9884')"
     ]
   }
 }
