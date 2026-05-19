@@ -32,23 +32,29 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
-import com.che2n3jigw.naviplayer.feature.library.impl.adapter.LibraryItemAdapter
 import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
+import com.che2n3jigw.naviplayer.feature.library.impl.adapter.LibraryItemAdapter
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
+import com.che2n3jigw.naviplayer.feature.search.api.SearchNavigator
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideViewOnScrollBehavior
 import com.google.android.material.carousel.CarouselLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 音乐库页面
  */
 @AndroidEntryPoint
 class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
+
+    @Inject
+    lateinit var searchNavigator: SearchNavigator
 
     private var appBarLayoutOffset = 0
 
@@ -103,6 +109,9 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
         }
         binding.miniPlayer.onPreviousClick = {
             viewmodel.playPrevious()
+        }
+        binding.ibSearch.setOnClickListener {
+            searchNavigator.navigateToSearch(findNavController())
         }
     }
 
