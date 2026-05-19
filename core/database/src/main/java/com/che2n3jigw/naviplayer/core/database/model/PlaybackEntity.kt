@@ -40,25 +40,21 @@ data class PlaybackEntity(
      */
     val username: String,
     /**
-     * 歌曲标题
+     * 歌名
      */
-    val title: String,
+    val name: String,
     /**
-     * 歌手名称
+     * 歌手
      */
-    val artist: String,
+    val singer: String,
     /**
-     * 专辑名称
+     * 封面
      */
-    val album: String,
+    val imageUrl: String,
     /**
-     * 封面图片 ID 或完整 URL
+     * 音频地址
      */
-    val coverArt: String,
-    /**
-     * 歌曲总时长（单位：秒）
-     */
-    val duration: Int,
+    val streamUrl: String,
     /**
      * 该歌曲被完整播放的总次数
      */

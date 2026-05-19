@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "4fac72ff244ce368f4a7cf0fc27c9884",
+    "identityHash": "ad2ef59afc3ba1ac794a2b65a696e9b1",
     "entities": [
       {
         "tableName": "login_history",
@@ -49,7 +49,7 @@
       },
       {
         "tableName": "playback",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` TEXT NOT NULL, `username` TEXT NOT NULL, `title` TEXT NOT NULL, `artist` TEXT NOT NULL, `album` TEXT NOT NULL, `coverArt` TEXT NOT NULL, `duration` INTEGER NOT NULL, `playCount` INTEGER NOT NULL, `playedAt` INTEGER NOT NULL, PRIMARY KEY(`songId`, `username`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`songId` TEXT NOT NULL, `username` TEXT NOT NULL, `name` TEXT NOT NULL, `singer` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `streamUrl` TEXT NOT NULL, `playCount` INTEGER NOT NULL, `playedAt` INTEGER NOT NULL, PRIMARY KEY(`songId`, `username`))",
         "fields": [
           {
             "fieldPath": "songId",
@@ -64,33 +64,27 @@
             "notNull": true
           },
           {
-            "fieldPath": "title",
-            "columnName": "title",
+            "fieldPath": "name",
+            "columnName": "name",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "artist",
-            "columnName": "artist",
+            "fieldPath": "singer",
+            "columnName": "singer",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "album",
-            "columnName": "album",
+            "fieldPath": "imageUrl",
+            "columnName": "imageUrl",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "coverArt",
-            "columnName": "coverArt",
+            "fieldPath": "streamUrl",
+            "columnName": "streamUrl",
             "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "duration",
-            "columnName": "duration",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -117,7 +111,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4fac72ff244ce368f4a7cf0fc27c9884')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ad2ef59afc3ba1ac794a2b65a696e9b1')"
     ]
   }
 }
