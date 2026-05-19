@@ -21,6 +21,7 @@
 package com.che2n3jigw.naviplayer.core.media
 
 import android.content.Context
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaBrowser
@@ -97,14 +98,14 @@ class NaviMediaManager @Inject constructor(
     /**
      * 设置播放列表
      */
-    fun setMediaItems(songs: List<Song>) {
+    fun setMediaItems(songs: List<Song>, position: Int = 0) {
         _playlist.value = songs
         songCache.clear()
         songs.forEach { songCache[it.id] = it }
         val mediaItems = songs.map {
             MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
         }
-        browser.setMediaItems(mediaItems)
+        browser.setMediaItems(mediaItems, position, C.TIME_UNSET)
         browser.prepare()
     }
 
