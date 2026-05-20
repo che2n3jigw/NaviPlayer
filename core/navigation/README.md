@@ -73,11 +73,11 @@
     <navigation xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/login_graph"
-        app:startDestination="@id/login_dest">
+        android:id="@+id/search_graph"
+        app:startDestination="@id/search_dest">
 
         <fragment
-            android:id="@+id/login_dest"
+            android:id="@+id/search_dest"
             android:name="com.che2n3jigw.naviplayer.feature.search.impl.SearchFragment"
             android:label="SearchFragment"
             tools:layout="@layout/fragment_search">
@@ -118,7 +118,27 @@
    
 ---
 
-## 3. 注意事项 (Best Practices)
+## 3. 主模块集成 (Integration in :app)
+
+主模块作为“壳”，负责将所有功能的 `impl` 模块进行聚合。
+
+1. **添加实现依赖**：
+   在 `app/build.gradle.kts` 中引入具体的实现模块：
+    ```groovy
+    implementation(projects.feature.search.impl)
+    ```
+
+2. **合并导航图**：
+   在主导航图 `app/src/main/res/navigation/nav_main.xml` 中引入子模块的导航图：
+    ```xml
+    <include app:graph="@navigation/nav_search" />
+    ```
+
+
+
+
+
+## 4. 注意事项 (Best Practices)
 
 1. **Scheme 规范**：全项目统一使用 `naviplayer://` 作为 DeepLink 开头，避免使用 `android-app://` 等过长字符串。
 2. **解耦原则**：`impl` 模块禁止作为其他模块的依赖。所有跨模块通信必须通过 `api` 模块定义的接口。
