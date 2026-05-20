@@ -21,5 +21,5 @@
 package com.che2n3jigw.naviplayer.feature.search.api
 
 object SearchDeepLink {
-    const val SEARCH = "android-app://com.che2n3jigw.naviplayer.feature.search.api/search"
+    const val SEARCH = "naviplayer://feature/search"
 }

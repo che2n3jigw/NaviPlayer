@@ -21,5 +21,5 @@
 package com.che2n3jigw.naviplayer.feature.login.api.navigation
 
 object LoginDeepLink {
-    const val LOGIN = "android-app://com.che2n3jigw.naviplayer.feature.login.api/login"
+    const val LOGIN = "naviplayer://feature/login"
 }

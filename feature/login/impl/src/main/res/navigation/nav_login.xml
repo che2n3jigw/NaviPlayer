@@ -26,7 +26,7 @@
         android:label="LoginFragment"
         tools:layout="@layout/fragment_login">
 
-        <deepLink app:uri="android-app://com.che2n3jigw.naviplayer.feature.login.api/login" />
+        <deepLink app:uri="naviplayer://feature/login" />
 
     </fragment>
 </navigation>
