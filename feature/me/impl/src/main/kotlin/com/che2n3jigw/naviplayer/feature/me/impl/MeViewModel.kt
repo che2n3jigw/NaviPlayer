@@ -67,8 +67,8 @@ class MeViewModel @Inject constructor(
         _avatar,
         _playbackState
     ) { userData, favouriteSongs, playbacks, avatar, playbackState ->
-        val lastPlayback = playbacks.first()
-        val lastPlaybackAt = lastPlayback.playedAt
+        val lastPlayback = playbacks.firstOrNull()
+        val lastPlaybackAt = lastPlayback?.playedAt ?: 0L
         val lastPlaybackTime = if (lastPlaybackAt == 0L) {
             ""
         } else {
@@ -80,7 +80,7 @@ class MeViewModel @Inject constructor(
             favouriteCover = favouriteSongs.firstOrNull()?.imageUrl ?: "",
             favouriteCount = favouriteSongs.size,
             lastPlaybackTime = lastPlaybackTime,
-            lastPlaybackCoverUrl = lastPlayback.song.imageUrl,
+            lastPlaybackCoverUrl = lastPlayback?.song?.imageUrl ?: "",
             currentSong = playbackState.first,
             isPlaying = playbackState.second
         )
