@@ -63,4 +63,9 @@ interface SubsonicRepository {
      * 获取随机歌歌曲
      */
     suspend fun getRandomSongs(size: Int): List<Song>
+
+    /**
+     * 查询歌曲
+     */
+    suspend fun search(query: String): List<Song>
 }

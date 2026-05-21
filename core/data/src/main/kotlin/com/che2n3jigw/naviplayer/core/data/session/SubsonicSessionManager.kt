@@ -26,6 +26,7 @@ import com.che2n3jigw.android.libs.opensubsonicapi.datasource.BrowsingDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.ListsDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.MediaRetrievalDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.PlaylistsDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.SearchingDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.SystemDataSource
 import com.che2n3jigw.naviplayer.core.common.ApplicationScope
 import com.che2n3jigw.naviplayer.core.datastore.NaviPreferencesDataSource
@@ -57,7 +58,8 @@ class SubsonicSessionManager @Inject constructor(
                     systemDataSource = SystemDataSource(it.domain, authInfo),
                     listsDataSource = ListsDataSource(it.domain, authInfo),
                     mediaRetrievalDataSource = MediaRetrievalDataSource(it.domain, authInfo),
-                    playlistsDataSource = PlaylistsDataSource(it.domain, authInfo)
+                    playlistsDataSource = PlaylistsDataSource(it.domain, authInfo),
+                    searchingDataSource = SearchingDataSource(it.domain, authInfo)
                 )
             } else {
                 null
@@ -69,4 +71,5 @@ class SubsonicSessionManager @Inject constructor(
     val listsDataSource get() = activeSession.value?.listsDataSource
     val mediaRetrievalDataSource get() = activeSession.value?.mediaRetrievalDataSource
     val playlistsDataSource get() = activeSession.value?.playlistsDataSource
+    val searchingDataSource get() = activeSession.value?.searchingDataSource
 }

@@ -21,6 +21,7 @@
 package com.che2n3jigw.naviplayer.core.data.repository
 
 import com.che2n3jigw.android.libs.opensubsonicapi.bean.AlbumListType
+import com.che2n3jigw.android.libs.opensubsonicapi.response.common.Child
 import com.che2n3jigw.naviplayer.core.data.session.SubsonicSessionManager
 import com.che2n3jigw.naviplayer.core.model.Album
 import com.che2n3jigw.naviplayer.core.model.Artist
@@ -98,19 +99,30 @@ internal class DefaultSubsonicRepository @Inject constructor(
 
     override suspend fun getRandomSongs(size: Int): List<Song> {
         return subsonicSessionManager.listsDataSource?.getRandomSongs(size)?.map {
-            val id = it.id ?: ""
-            val name = it.sortName ?: ""
-            val singer = it.displayArtist ?: ""
-            var coverUrl = ""
-            var streamUrl = ""
-            var downloadUrl = ""
-            subsonicSessionManager.mediaRetrievalDataSource?.apply {
-                coverUrl = getCoverArtUrl(it.coverArt ?: "")
-                streamUrl = getStreamUrl(id)
-                downloadUrl = getDownloadUrl(id)
-            }
-            val isFavorite = it.starred != null
-            Song(id, name, singer, coverUrl, streamUrl, downloadUrl, isFavorite)
+            childToSong(it)
         }?.toList() ?: emptyList()
+    }
+
+    override suspend fun search(query: String): List<Song> {
+        return subsonicSessionManager.searchingDataSource?.search3(query)?.song
+            ?.filterNotNull()
+            ?.map { childToSong(it) }
+            ?: emptyList()
+    }
+
+    private fun childToSong(child: Child): Song {
+        val id = child.id ?: ""
+        val name = child.sortName ?: ""
+        val singer = child.displayArtist ?: ""
+        var coverUrl = ""
+        var streamUrl = ""
+        var downloadUrl = ""
+        subsonicSessionManager.mediaRetrievalDataSource?.apply {
+            coverUrl = getCoverArtUrl(child.coverArt ?: "")
+            streamUrl = getStreamUrl(id)
+            downloadUrl = getDownloadUrl(id)
+        }
+        val isFavorite = child.starred != null
+        return Song(id, name, singer, coverUrl, streamUrl, downloadUrl, isFavorite)
     }
 }
