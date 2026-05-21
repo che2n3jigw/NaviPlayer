@@ -141,7 +141,7 @@
                 android:orientation="horizontal">
 
                 <com.che2n3jigw.naviplayer.feature.me.impl.widget.LibraryStatView
-                    android:id="@+id/view_stat_lists"
+                    android:id="@+id/view_stat_playlists"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="16dp"

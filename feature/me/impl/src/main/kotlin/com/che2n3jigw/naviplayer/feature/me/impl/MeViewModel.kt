@@ -27,6 +27,7 @@ import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
+import com.che2n3jigw.naviplayer.core.model.Playlist
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,6 +55,18 @@ class MeViewModel @Inject constructor(
     // 收藏歌曲
     private val _favouriteSongs = MutableStateFlow<List<Song>>(emptyList())
 
+    // 歌单列表
+    private val _playlists = MutableStateFlow<List<Playlist>>(emptyList())
+
+    // 收藏歌曲,歌曲播放记录和歌单列表
+    private val _lists = combine(
+        _favouriteSongs,
+        userPlaybackRepository.playbacks,
+        _playlists
+    ) { favouriteSongs, playbacks, playlists ->
+        Triple(favouriteSongs, playbacks, playlists)
+    }
+
     // 播放状态
     private val _playbackState =
         combine(naviMediaManager.currentSong, naviMediaManager.isPlaying) { song, playing ->
@@ -62,11 +75,18 @@ class MeViewModel @Inject constructor(
 
     val uiState: StateFlow<MeUiState> = combine(
         userRepository.userData,
-        _favouriteSongs,
-        userPlaybackRepository.playbacks,
+        _lists,
         _avatar,
-        _playbackState
-    ) { userData, favouriteSongs, playbacks, avatar, playbackState ->
+        _playbackState,
+    ) { userData, lists, avatar, playbackState ->
+        val favouriteSongs = lists.first
+        val playbacks = lists.second
+        val playlists = lists.third
+
+        val currentSong = playbackState.first
+        val isPlaying = playbackState.second
+
+        // 获取上一次播放歌曲的播放时间转文本
         val lastPlayback = playbacks.firstOrNull()
         val lastPlaybackAt = lastPlayback?.playedAt ?: 0L
         val lastPlaybackTime = if (lastPlaybackAt == 0L) {
@@ -74,6 +94,7 @@ class MeViewModel @Inject constructor(
         } else {
             timeUtils.toTimeAgo(lastPlaybackAt)
         }
+
         MeUiState(
             isLoggedIn = userData.isLoggedIn,
             avatar = avatar,
@@ -81,8 +102,9 @@ class MeViewModel @Inject constructor(
             favouriteCount = favouriteSongs.size,
             lastPlaybackTime = lastPlaybackTime,
             lastPlaybackCoverUrl = lastPlayback?.song?.imageUrl ?: "",
-            currentSong = playbackState.first,
-            isPlaying = playbackState.second
+            currentSong = currentSong,
+            isPlaying = isPlaying,
+            playlistCount = playlists.size
         )
     }.stateIn(
         scope = viewModelScope,
@@ -107,6 +129,7 @@ class MeViewModel @Inject constructor(
                 _avatar.value = subsonicRepository.getAvatarUrl(userName)
             }
             launch { _favouriteSongs.value = subsonicRepository.getFavouriteList() }
+            launch { _playlists.value = subsonicRepository.getPlaylistList() }
         }
     }
 
@@ -166,7 +189,7 @@ data class MeUiState(
     /**
      * 歌单个数
      */
-    val listCount: Int = 0,
+    val playlistCount: Int = 0,
     /**
      * 离线缓存大小
      */

@@ -28,21 +28,27 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.util.ClickEffectUtil
 import com.che2n3jigw.naviplayer.feature.me.impl.databinding.FragmentMeBinding
+import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 我的页面
  */
 @AndroidEntryPoint
 class MeFragment : BaseFragment<FragmentMeBinding>() {
+
+    @Inject
+    lateinit var playlistNavigator: PlaylistNavigator
 
     private val snackBar by lazy {
         Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
@@ -74,6 +80,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         }
         binding.miniPlayer.setOnClickListener {
             // 进入播放详情页
+        }
+        binding.viewStatPlaylists.setOnClickListener {
+            playlistNavigator.navigateToPlaylist(findNavController())
         }
     }
 
@@ -115,7 +124,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                 // 只有统计数据变化时才更新统计区域
                 launch {
                     viewModel.uiState
-                        .map { listOf(it.listCount, it.offlineSize) }
+                        .map { listOf(it.playlistCount, it.offlineSize) }
                         .distinctUntilChanged()
                         .collect { updateStatsSection(viewModel.uiState.value) }
                 }
@@ -143,9 +152,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     }
 
     private fun updateStatsSection(state: MeUiState) {
-        binding.viewStatLists.setData(
+        binding.viewStatPlaylists.setData(
             R.drawable.me_ic_lists,
-            state.listCount.toString(),
+            state.playlistCount.toString(),
             getString(R.string.me_lists)
         )
         binding.viewStatOffline.setData(

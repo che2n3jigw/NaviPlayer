@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.core.media)
 
     implementation(projects.feature.player.api)
+    implementation(projects.feature.playlist.api)
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.core.ktx)
