@@ -66,13 +66,13 @@
             android:layout_marginVertical="16dp"
             android:clipChildren="false"
             android:clipToPadding="false"
+            android:paddingBottom="16dp"
             app:layout_scrollFlags="scroll" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
             android:text="@string/library_recommend"
             android:textAppearance="?attr/textAppearanceTitleMedium" />
 
@@ -94,8 +94,8 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_gravity="bottom"
-        app:layout_behavior="com.google.android.material.behavior.HideViewOnScrollBehavior"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="12dp"
+        app:layout_behavior="com.google.android.material.behavior.HideViewOnScrollBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
