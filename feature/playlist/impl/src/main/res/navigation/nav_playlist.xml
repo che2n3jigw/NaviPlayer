@@ -22,11 +22,21 @@
 
     <fragment
         android:id="@+id/playlist_dest"
-        android:name="com.che2n3jigw.naviplayer.feature.player.impl.PlaylistFragment"
+        android:name="com.che2n3jigw.naviplayer.feature.player.impl.fragment.PlaylistFragment"
         android:label="PlaylistFragment"
         tools:layout="@layout/fragment_playlist">
 
         <deepLink app:uri="naviplayer://feature/playlist" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/playlists_dest"
+        android:name="com.che2n3jigw.naviplayer.feature.player.impl.fragment.PlaylistsFragment"
+        android:label="PlaylistsFragment"
+        tools:layout="@layout/fragment_playlists">
+
+        <deepLink app:uri="naviplayer://feature/playlists" />
 
     </fragment>
 </navigation>

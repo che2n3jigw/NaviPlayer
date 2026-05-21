@@ -18,14 +18,18 @@
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 2026/5/21 14:02
-package com.che2n3jigw.naviplayer.feature.player.impl
+package com.che2n3jigw.naviplayer.feature.player.impl.fragment
 
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlaylistBinding
+import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlaylistsBinding
 
-class PlaylistFragment: BaseFragment<FragmentPlaylistBinding>() {
-    override fun inflateBinding(): FragmentPlaylistBinding {
-        return FragmentPlaylistBinding.inflate(layoutInflater)
+/**
+ * 歌单列表页
+ */
+class PlaylistsFragment: BaseFragment<FragmentPlaylistsBinding>() {
+    override fun inflateBinding(): FragmentPlaylistsBinding {
+        return FragmentPlaylistsBinding.inflate(layoutInflater)
     }
 
     override fun initView() {

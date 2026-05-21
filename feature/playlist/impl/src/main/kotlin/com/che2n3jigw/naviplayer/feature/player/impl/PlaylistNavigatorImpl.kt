@@ -35,4 +35,11 @@ class PlaylistNavigatorImpl @Inject constructor() : PlaylistNavigator {
             .build()
         navController.navigate(request, CommonNavOptions.slideInOptions)
     }
+
+    override fun navigateToPlaylists(navController: NavController) {
+        val request = NavDeepLinkRequest.Builder
+            .fromUri(PlaylistDeepLink.PLAYLISTS.toUri())
+            .build()
+        navController.navigate(request, CommonNavOptions.slideInOptions)
+    }
 }

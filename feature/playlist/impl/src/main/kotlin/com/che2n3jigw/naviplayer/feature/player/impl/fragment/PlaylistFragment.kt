@@ -17,10 +17,26 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/21 13:54
-package com.che2n3jigw.naviplayer.feature.playlist.api
+// 创建时间： 2026/5/21 14:02
+package com.che2n3jigw.naviplayer.feature.player.impl.fragment
 
-object PlaylistDeepLink {
-    const val PLAYLIST = "naviplayer://feature/playlist"
-    const val PLAYLISTS = "naviplayer://feature/playlists"
+import com.che2n3jigw.naviplayer.core.ui.BaseFragment
+import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlaylistBinding
+
+/**
+ * 歌单详情页
+ */
+class PlaylistFragment: BaseFragment<FragmentPlaylistBinding>() {
+    override fun inflateBinding(): FragmentPlaylistBinding {
+        return FragmentPlaylistBinding.inflate(layoutInflater)
+    }
+
+    override fun initView() {
+    }
+
+    override fun initListener() {
+    }
+
+    override fun subscribeUI() {
+    }
 }

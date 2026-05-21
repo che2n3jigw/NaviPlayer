@@ -27,4 +27,5 @@ import androidx.navigation.NavController
  */
 interface PlaylistNavigator {
     fun navigateToPlaylist(navController: NavController)
+    fun navigateToPlaylists(navController: NavController)
 }
