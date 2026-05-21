@@ -17,4 +17,5 @@
 <resources>
     <string name="content_description_back">返回按钮</string>
     <string name="content_description_delete">删除按钮</string>
+    <string name="toolbar_navigation_close_description">关闭</string>
 </resources>

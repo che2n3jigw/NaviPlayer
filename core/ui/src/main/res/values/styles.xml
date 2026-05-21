@@ -27,6 +27,13 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="Widget.NaviPlayer.Toolbar.WithCloseButton" parent="Widget.Material3Expressive.Toolbar.OnSurface">
+        <item name="navigationContentDescription">
+            @string/toolbar_navigation_close_description
+        </item>
+        <item name="navigationIcon">@drawable/ic_close</item>
+    </style>
+
 
     <!--图标按钮样式-->
     <style name="Widget.NaviPlayer.IconButton" parent="Widget.AppCompat.ImageButton">
