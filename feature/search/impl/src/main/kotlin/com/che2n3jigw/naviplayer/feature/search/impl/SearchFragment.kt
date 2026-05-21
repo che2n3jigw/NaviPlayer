@@ -20,21 +20,101 @@
 // 创建时间： 2026/5/19 17:04
 package com.che2n3jigw.naviplayer.feature.search.impl
 
+import android.view.ViewGroup
+import androidx.core.graphics.Insets
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
+import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
 import com.che2n3jigw.naviplayer.feature.search.impl.databinding.FragmentSearchBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
+
+    private val viewModel: SearchViewModel by viewModels()
+
+    private val selectableSongAdapter = SelectableSongAdapter()
+
     override fun inflateBinding(): FragmentSearchBinding {
         return FragmentSearchBinding.inflate(layoutInflater)
     }
 
     override fun initView() {
+        binding.rvSearchSongResult.apply {
+            adapter = selectableSongAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            isNestedScrollingEnabled = true
+        }
     }
 
     override fun initListener() {
+        binding.searchView.editText.setOnEditorActionListener { v, _, _ ->
+            val txt = v.text.toString()
+            binding.searchBar.setText(txt)
+            binding.searchView.setText(txt)
+            binding.searchView.hide()
+            viewModel.search(txt)
+            return@setOnEditorActionListener false
+        }
+        binding.ibBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        selectableSongAdapter.itemClickListener = { song, _ ->
+            viewModel.play(song)
+        }
+        binding.miniPlayer.onNextClick = {
+            viewModel.playNext()
+        }
+        binding.miniPlayer.onPlayPauseClick = {
+            viewModel.togglePlaying()
+        }
+        binding.miniPlayer.onPreviousClick = {
+            viewModel.playPrevious()
+        }
     }
 
     override fun subscribeUI() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    binding.loading.isVisible = it is SearchUiState.Loading
+                    binding.rvSearchSongResult.isVisible = it is SearchUiState.Success
+                    if (it is SearchUiState.Success) {
+                        selectableSongAdapter.submitList(it.songs)
+                    }
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.playbackState.collect {
+                    if (it != null) {
+                        updateMiniPlayer(it.first, it.second)
+                    }
+                }
+            }
+        }
     }
 
+    override fun onApplyWindowInsets(insets: Insets) {
+        binding.searchBar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = insets.top
+        }
+    }
+
+    private fun updateMiniPlayer(song: Song?, isPlaying: Boolean) {
+        binding.miniPlayer.updateSongInfo(
+            song?.imageUrl ?: "", song?.name ?: "", song?.singer ?: ""
+        )
+        binding.miniPlayer.updatePlaying(isPlaying)
+    }
 }

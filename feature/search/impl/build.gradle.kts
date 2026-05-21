@@ -13,8 +13,11 @@ android {
 
 dependencies {
     implementation(projects.core.ui)
+    implementation(projects.core.data)
+    implementation(projects.core.media)
 
     implementation(projects.feature.search.api)
+    implementation(projects.feature.player.api)
 
     implementation(libs.androidx.navigation.fragment.ktx)
 }
