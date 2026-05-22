@@ -24,9 +24,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.che2n3jigw.naviplayer.core.model.Playlist
 import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.ItemPlaylistsBinding
-import com.google.android.material.listitem.ListItemViewHolder
 
 /**
  * 歌单列表适配器
@@ -42,6 +42,8 @@ class PlaylistsAdapter :
         }
     }) {
 
+    var onDeleteClickListener: ((Playlist) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
         val binding =
             ItemPlaylistsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -50,16 +52,18 @@ class PlaylistsAdapter :
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
         val data = getItem(position)
-        holder.bind(data, position, itemCount)
+        holder.bind(data, onDeleteClickListener)
     }
 }
 
 class PlaylistsViewHolder(private val binding: ItemPlaylistsBinding) :
-    ListItemViewHolder(binding.root) {
+    RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(data: Playlist, position: Int, itemCount: Int) {
-        super.bind(position, itemCount)
+    fun bind(data: Playlist, deleteClickListener: ((Playlist) -> Unit)?) {
         binding.tvPlaylistName.text = data.name
         binding.tvPlaylistSongCount.text = data.songCount.toString()
+        binding.btnDelete.setOnClickListener {
+            deleteClickListener?.invoke(data)
+        }
     }
 }

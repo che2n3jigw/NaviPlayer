@@ -23,6 +23,9 @@ package com.che2n3jigw.naviplayer.feature.playlist.impl.fragment
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.Insets
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
@@ -33,9 +36,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.playlist.impl.MarginItemDecoration
+import com.che2n3jigw.naviplayer.feature.playlist.impl.R
 import com.che2n3jigw.naviplayer.feature.playlist.impl.adapter.PlaylistsAdapter
 import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.FragmentPlaylistsBinding
 import com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel.PlaylistsViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,6 +53,9 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
     private val viewModel: PlaylistsViewModel by viewModels()
 
     private val playlistsAdapter = PlaylistsAdapter()
+
+    private var createPlaylistDialog: AlertDialog? = null
+    private var deletePlaylistDialog: AlertDialog? = null
 
     override fun inflateBinding(): FragmentPlaylistsBinding {
         return FragmentPlaylistsBinding.inflate(layoutInflater)
@@ -64,11 +72,43 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(MarginItemDecoration(requireContext()))
         }
+        binding.toolbar.inflateMenu(R.menu.playlists_top_appbar_menu)
     }
 
     override fun initListener() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.playlists_top_appbar_item_add -> {
+                    // 创建歌单弹窗
+                    createPlaylistDialog = MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.playlist_create)
+                        .setView(R.layout.playlist_dialog_edit_text)
+                        .setPositiveButton(R.string.playlist_enter) { dialog, _ ->
+                            val alertDialog = (dialog as AlertDialog)
+                            alertDialog.findViewById<TextView>(R.id.et_playlist_name)?.let { v ->
+                                val name = v.text.toString()
+                                viewModel.createPlaylist(name)
+                            }
+                        }
+                        .setNegativeButton(R.string.playlist_cancel, null)
+                        .show()
+                    true
+                }
+
+                else -> false
+            }
+        }
+        playlistsAdapter.onDeleteClickListener = { playlist ->
+            deletePlaylistDialog = MaterialAlertDialogBuilder(requireContext())
+                .setMessage(R.string.playlist_delete_hint)
+                .setPositiveButton(R.string.playlist_enter) { _, _ ->
+                    viewModel.deletePlaylist(playlist)
+                }
+                .setNegativeButton(R.string.playlist_cancel, null)
+                .show()
         }
     }
 
@@ -80,11 +120,40 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.createFailedEvent.collect {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.playlist_create_failed,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deleteFailedEvent.collect {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.playlist_delete_failed,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     override fun onApplyWindowInsets(insets: Insets) {
         binding.toolbar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = insets.top
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        createPlaylistDialog?.dismiss()
+        deletePlaylistDialog?.dismiss()
     }
 }

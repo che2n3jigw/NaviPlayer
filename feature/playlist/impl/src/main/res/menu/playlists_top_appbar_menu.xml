@@ -14,14 +14,11 @@
   ~ limitations under the License.
   -->
 
-<resources>
-    <string name="playlist_playlists">歌单列表</string>
-    <string name="playlist_create">创建歌单</string>
-    <string name="playlist_create_hint">请输入歌单名称</string>
-    <string name="playlist_enter">确定</string>
-    <string name="playlist_cancel">取消</string>
-    <string name="playlist_create_failed">创建失败</string>
-    <string name="playlist_delete_hint">是否确认删除该歌单?</string>
-    <string name="playlist_delete">删除</string>
-    <string name="playlist_delete_failed">删除失败</string>
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/playlists_top_appbar_item_add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/playlist_create"
+        app:showAsAction="ifRoom" />
+</menu>

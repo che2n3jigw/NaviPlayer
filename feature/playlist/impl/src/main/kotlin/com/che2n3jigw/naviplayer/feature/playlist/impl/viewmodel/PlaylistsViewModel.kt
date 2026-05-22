@@ -25,7 +25,9 @@ import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.model.Playlist
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,10 +41,38 @@ class PlaylistsViewModel @Inject constructor(
     private val _playlists = MutableStateFlow<List<Playlist>>(emptyList())
     val playlists = _playlists.asStateFlow()
 
+    private val _createFailedEvent = MutableSharedFlow<Unit>()
+    val createFailedEvent = _createFailedEvent.asSharedFlow()
+
+    private val _deleteFailedEvent = MutableSharedFlow<Unit>()
+    val deleteFailedEvent = _deleteFailedEvent.asSharedFlow()
+
     fun queryPlaylists() {
         viewModelScope.launch {
             val lists = subsonicRepository.getPlaylistList()
             _playlists.update { lists }
+        }
+    }
+
+    fun createPlaylist(name: String) {
+        viewModelScope.launch {
+            val playlist = subsonicRepository.createPlaylist(name)
+            if (playlist == null) {
+                _createFailedEvent.emit(Unit)
+            } else {
+                queryPlaylists()
+            }
+        }
+    }
+
+    fun deletePlaylist(playlist: Playlist) {
+        viewModelScope.launch {
+            val success = subsonicRepository.deletePlaylist(playlist.id)
+            if (success) {
+                queryPlaylists()
+            } else {
+                _deleteFailedEvent.emit(Unit)
+            }
         }
     }
 }
