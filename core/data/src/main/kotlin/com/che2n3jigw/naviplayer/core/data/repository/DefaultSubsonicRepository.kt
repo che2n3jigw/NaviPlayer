@@ -110,6 +110,23 @@ internal class DefaultSubsonicRepository @Inject constructor(
             ?: emptyList()
     }
 
+    override suspend fun createPlaylist(name: String): Playlist? {
+        subsonicSessionManager.playlistsDataSource?.createPlaylist(name = name)?.let {
+            return Playlist(
+                id = it.id ?: "",
+                name = it.name ?: "",
+                songCount = it.songCount ?: 0,
+                owner = it.owner ?: "",
+                changed = it.changed ?: ""
+            )
+        }
+        return null
+    }
+
+    override suspend fun deletePlaylist(id: String): Boolean {
+        return subsonicSessionManager.playlistsDataSource?.deletePlaylist(id) ?: false
+    }
+
     private fun childToSong(child: Child): Song {
         val id = child.id ?: ""
         val name = child.sortName ?: ""

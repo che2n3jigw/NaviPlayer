@@ -68,4 +68,14 @@ interface SubsonicRepository {
      * 查询歌曲
      */
     suspend fun search(query: String): List<Song>
+
+    /**
+     * 创建歌单
+     */
+    suspend fun createPlaylist(name: String): Playlist?
+
+    /**
+     * 删除歌单
+     */
+    suspend fun deletePlaylist(id: String): Boolean
 }
