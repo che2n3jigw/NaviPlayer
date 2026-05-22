@@ -82,7 +82,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
             // 进入播放详情页
         }
         binding.viewStatPlaylists.setOnClickListener {
-            playlistNavigator.navigateToPlaylist(findNavController())
+            playlistNavigator.navigateToPlaylists(findNavController())
         }
     }
 
