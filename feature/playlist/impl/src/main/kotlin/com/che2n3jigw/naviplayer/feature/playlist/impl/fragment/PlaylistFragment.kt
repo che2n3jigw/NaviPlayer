@@ -17,19 +17,26 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/21 14:01
-package com.che2n3jigw.naviplayer.feature.player.impl.di
+// 创建时间： 2026/5/21 14:02
+package com.che2n3jigw.naviplayer.feature.playlist.impl.fragment
 
-import com.che2n3jigw.naviplayer.feature.player.impl.PlaylistNavigatorImpl
-import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.che2n3jigw.naviplayer.core.ui.BaseFragment
+import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.FragmentPlaylistBinding
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class PlaylistNavigationModule {
-    @Binds
-    abstract fun bindPlaylistNavigator(impl: PlaylistNavigatorImpl): PlaylistNavigator
+/**
+ * 歌单详情页
+ */
+class PlaylistFragment: BaseFragment<FragmentPlaylistBinding>() {
+    override fun inflateBinding(): FragmentPlaylistBinding {
+        return FragmentPlaylistBinding.inflate(layoutInflater)
+    }
+
+    override fun initView() {
+    }
+
+    override fun initListener() {
+    }
+
+    override fun subscribeUI() {
+    }
 }

@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/playlist_dest"
-        android:name="com.che2n3jigw.naviplayer.feature.player.impl.fragment.PlaylistFragment"
+        android:name="com.che2n3jigw.naviplayer.feature.playlist.impl.fragment.PlaylistFragment"
         android:label="PlaylistFragment"
         tools:layout="@layout/fragment_playlist">
 
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/playlists_dest"
-        android:name="com.che2n3jigw.naviplayer.feature.player.impl.fragment.PlaylistsFragment"
+        android:name="com.che2n3jigw.naviplayer.feature.playlist.impl.fragment.PlaylistsFragment"
         android:label="PlaylistsFragment"
         tools:layout="@layout/fragment_playlists">
 

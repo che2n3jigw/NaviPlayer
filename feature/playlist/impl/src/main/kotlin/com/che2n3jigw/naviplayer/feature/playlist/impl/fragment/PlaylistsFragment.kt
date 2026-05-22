@@ -18,7 +18,7 @@
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 2026/5/21 14:02
-package com.che2n3jigw.naviplayer.feature.player.impl.fragment
+package com.che2n3jigw.naviplayer.feature.playlist.impl.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -32,10 +32,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
-import com.che2n3jigw.naviplayer.feature.player.impl.MarginItemDecoration
-import com.che2n3jigw.naviplayer.feature.player.impl.adapter.PlaylistsAdapter
-import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlaylistsBinding
-import com.che2n3jigw.naviplayer.feature.player.impl.viewmodel.PlaylistsViewModel
+import com.che2n3jigw.naviplayer.feature.playlist.impl.MarginItemDecoration
+import com.che2n3jigw.naviplayer.feature.playlist.impl.adapter.PlaylistsAdapter
+import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.FragmentPlaylistsBinding
+import com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel.PlaylistsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

@@ -18,7 +18,7 @@
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 2026/5/21 16:55
-package com.che2n3jigw.naviplayer.feature.player.impl
+package com.che2n3jigw.naviplayer.feature.playlist.impl
 
 import android.content.Context
 import android.graphics.Rect

@@ -18,7 +18,7 @@
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 2026/5/21 15:57
-package com.che2n3jigw.naviplayer.feature.player.impl.viewmodel
+package com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

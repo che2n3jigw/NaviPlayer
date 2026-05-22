@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.che2n3jigw.naviplayer.feature.player.impl"
+    namespace = "com.che2n3jigw.naviplayer.feature.playlist.impl"
 
     buildFeatures {
         viewBinding = true

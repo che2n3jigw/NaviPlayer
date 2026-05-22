@@ -18,14 +18,14 @@
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
 // 创建时间： 2026/5/21 16:09
-package com.che2n3jigw.naviplayer.feature.player.impl.adapter
+package com.che2n3jigw.naviplayer.feature.playlist.impl.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.che2n3jigw.naviplayer.core.model.Playlist
-import com.che2n3jigw.naviplayer.feature.player.impl.databinding.ItemPlaylistsBinding
+import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.ItemPlaylistsBinding
 import com.google.android.material.listitem.ListItemViewHolder
 
 /**
