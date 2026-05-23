@@ -73,6 +73,15 @@ internal class DefaultSubsonicRepository @Inject constructor(
             ?.toList() ?: emptyList()
     }
 
+    override suspend fun getPlaylist(playlistId: String): List<Song> {
+        return subsonicSessionManager.playlistsDataSource?.getPlaylist(playlistId)
+            ?.entry
+            ?.filterNotNull()
+            ?.map {
+                childToSong(it)
+            } ?: emptyList()
+    }
+
     override suspend fun getFavouriteList(): List<Song> {
         return subsonicSessionManager.listsDataSource?.getStarred2()?.song
             ?.asSequence()

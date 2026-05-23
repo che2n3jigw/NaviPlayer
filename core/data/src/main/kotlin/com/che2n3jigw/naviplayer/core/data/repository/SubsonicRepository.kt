@@ -50,6 +50,11 @@ interface SubsonicRepository {
     suspend fun getPlaylistList(): List<Playlist>
 
     /**
+     * 获取指定歌单的数据
+     */
+    suspend fun getPlaylist(playlistId: String): List<Song>
+
+    /**
      * 获取收藏列表
      */
     suspend fun getFavouriteList(): List<Song>
