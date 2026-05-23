@@ -43,6 +43,7 @@ class PlaylistsAdapter :
     }) {
 
     var onDeleteClickListener: ((Playlist) -> Unit)? = null
+    var onItemClickListener: ((Playlist) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
         val binding =
@@ -52,18 +53,25 @@ class PlaylistsAdapter :
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
         val data = getItem(position)
-        holder.bind(data, onDeleteClickListener)
+        holder.bind(data, onDeleteClickListener, onItemClickListener)
     }
 }
 
 class PlaylistsViewHolder(private val binding: ItemPlaylistsBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(data: Playlist, deleteClickListener: ((Playlist) -> Unit)?) {
+    fun bind(
+        data: Playlist,
+        deleteClickListener: ((Playlist) -> Unit)?,
+        onItemClickListener: ((Playlist) -> Unit)?
+    ) {
         binding.tvPlaylistName.text = data.name
         binding.tvPlaylistSongCount.text = data.songCount.toString()
         binding.btnDelete.setOnClickListener {
             deleteClickListener?.invoke(data)
+        }
+        binding.cvPlaylist.setOnClickListener {
+            onItemClickListener?.invoke(data)
         }
     }
 }

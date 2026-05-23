@@ -21,6 +21,7 @@
 package com.che2n3jigw.naviplayer.feature.playlist.impl
 
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.NavDeepLinkRequest
 import com.che2n3jigw.naviplayer.core.navigation.CommonNavOptions
@@ -29,11 +30,10 @@ import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
 import javax.inject.Inject
 
 class PlaylistNavigatorImpl @Inject constructor() : PlaylistNavigator {
-    override fun navigateToPlaylist(navController: NavController) {
-        val request = NavDeepLinkRequest.Builder
-            .fromUri(PlaylistDeepLink.PLAYLIST.toUri())
-            .build()
-        navController.navigate(request, CommonNavOptions.slideInOptions)
+    override fun navigateToPlaylist(navController: NavController, playlistId: String) {
+        val bundle = bundleOf()
+        bundle.putString("id", playlistId)
+        navController.navigate(R.id.playlist_dest, bundle, CommonNavOptions.slideInOptions)
     }
 
     override fun navigateToPlaylists(navController: NavController) {

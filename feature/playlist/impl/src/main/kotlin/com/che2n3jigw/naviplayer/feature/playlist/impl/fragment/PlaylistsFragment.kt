@@ -35,6 +35,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
+import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
 import com.che2n3jigw.naviplayer.feature.playlist.impl.MarginItemDecoration
 import com.che2n3jigw.naviplayer.feature.playlist.impl.R
 import com.che2n3jigw.naviplayer.feature.playlist.impl.adapter.PlaylistsAdapter
@@ -43,12 +44,16 @@ import com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel.PlaylistsViewMo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 歌单列表页
  */
 @AndroidEntryPoint
 class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
+
+    @Inject
+    lateinit var playlistNavigator: PlaylistNavigator
 
     private val viewModel: PlaylistsViewModel by viewModels()
 
@@ -109,6 +114,9 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
                 }
                 .setNegativeButton(R.string.playlist_cancel, null)
                 .show()
+        }
+        playlistsAdapter.onItemClickListener = { playlist ->
+            playlistNavigator.navigateToPlaylist(findNavController(), playlist.id)
         }
     }
 

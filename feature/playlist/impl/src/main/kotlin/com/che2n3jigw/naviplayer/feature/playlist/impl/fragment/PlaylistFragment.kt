@@ -26,12 +26,14 @@ import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.FragmentPlayl
 /**
  * 歌单详情页
  */
-class PlaylistFragment: BaseFragment<FragmentPlaylistBinding>() {
+class PlaylistFragment : BaseFragment<FragmentPlaylistBinding>() {
     override fun inflateBinding(): FragmentPlaylistBinding {
         return FragmentPlaylistBinding.inflate(layoutInflater)
     }
 
     override fun initView() {
+        val id = arguments?.getString("id")
+        binding.tvId.text = id
     }
 
     override fun initListener() {
