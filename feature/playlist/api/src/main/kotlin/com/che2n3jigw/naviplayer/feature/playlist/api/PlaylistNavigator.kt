@@ -26,6 +26,6 @@ import androidx.navigation.NavController
  * 歌单模块导航接口
  */
 interface PlaylistNavigator {
-    fun navigateToPlaylist(navController: NavController)
+    fun navigateToPlaylist(navController: NavController, playlistId: String)
     fun navigateToPlaylists(navController: NavController)
 }
