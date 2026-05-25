@@ -8,4 +8,12 @@ android {
 }
 
 dependencies {
+    implementation(projects.feature.recent.api)
+    implementation(projects.feature.songlist.api)
+
+    implementation(projects.core.ui)
+    implementation(projects.core.media)
+    implementation(projects.core.data)
+
+    implementation(libs.androidx.navigation.fragment.ktx)
 }
