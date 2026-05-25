@@ -21,13 +21,16 @@
 package com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
+import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.feature.songlist.api.BaseSongListViewModel
+import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -35,25 +38,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(
-    private val subsonicRepository: SubsonicRepository
-) : ViewModel() {
+    private val subsonicRepository: SubsonicRepository,
+    naviMediaManager: NaviMediaManager
+) : BaseSongListViewModel(naviMediaManager) {
 
     private val _playlistId = MutableStateFlow("")
 
-    val uiState = _playlistId.map { id ->
-        if (id.isEmpty()) {
-            PlaylistUiState.Loading
-        } else {
-            val list = subsonicRepository.getPlaylist(id).map {
-                SelectableSong(it, false)
+    override val uiState: StateFlow<SongListUiState>
+        get() = _playlistId.map { id ->
+            if (id.isEmpty()) {
+                SongListUiState.Loading
+            } else {
+                val list = subsonicRepository.getPlaylist(id).map {
+                    SelectableSong(it, false)
+                }
+                SongListUiState.Success(list)
             }
-            PlaylistUiState.Success(list)
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = PlaylistUiState.Loading
-    )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = SongListUiState.Loading
+        )
 
     /**
      * 加载歌单数据
@@ -63,11 +68,4 @@ class PlaylistViewModel @Inject constructor(
             _playlistId.update { id }
         }
     }
-}
-
-sealed interface PlaylistUiState {
-    data object Loading : PlaylistUiState
-    data class Success(
-        val songs: List<SelectableSong>
-    ) : PlaylistUiState
 }

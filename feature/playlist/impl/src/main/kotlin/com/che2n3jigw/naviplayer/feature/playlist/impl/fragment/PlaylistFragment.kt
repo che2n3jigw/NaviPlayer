@@ -20,75 +20,30 @@
 // 创建时间： 2026/5/21 14:02
 package com.che2n3jigw.naviplayer.feature.playlist.impl.fragment
 
-import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.graphics.Insets
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.che2n3jigw.naviplayer.core.ui.BaseFragment
-import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
-import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.FragmentPlaylistBinding
-import com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel.PlaylistUiState
+import com.che2n3jigw.naviplayer.feature.playlist.impl.R
 import com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel.PlaylistViewModel
+import com.che2n3jigw.naviplayer.feature.songlist.api.SongListFragment
+import com.che2n3jigw.naviplayer.feature.songlist.api.SongListInteraction
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 /**
  * 歌单详情页
  */
 @AndroidEntryPoint
-class PlaylistFragment : BaseFragment<FragmentPlaylistBinding>() {
+class PlaylistFragment : SongListFragment() {
 
     private val viewModel: PlaylistViewModel by viewModels()
 
-    private val selectableSongAdapter = SelectableSongAdapter()
+    override val interaction: SongListInteraction
+        get() = viewModel
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun getTitleRes(): Int {
+        return R.string.playlist_playlist
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.loadPlaylist(arguments)
-    }
-
-    override fun inflateBinding(): FragmentPlaylistBinding {
-        return FragmentPlaylistBinding.inflate(layoutInflater)
-    }
-
-    override fun initView() {
-        binding.rvPlaylist.apply {
-            adapter = selectableSongAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-    }
-
-    override fun initListener() {
-        binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
-    override fun subscribeUI() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    binding.loading.isVisible = it is PlaylistUiState.Loading
-                    binding.rvPlaylist.isVisible = it is PlaylistUiState.Success
-                    if (it is PlaylistUiState.Success) {
-                        selectableSongAdapter.submitList(it.songs)
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onApplyWindowInsets(insets: Insets) {
-        binding.toolbar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            topMargin = insets.top
-        }
     }
 }
