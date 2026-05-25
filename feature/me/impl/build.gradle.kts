@@ -20,6 +20,7 @@ dependencies {
 
     implementation(projects.feature.player.api)
     implementation(projects.feature.playlist.api)
+    implementation(projects.feature.favourite.api)
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.core.ktx)

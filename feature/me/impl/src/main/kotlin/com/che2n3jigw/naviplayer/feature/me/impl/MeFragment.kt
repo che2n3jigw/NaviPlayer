@@ -32,6 +32,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.util.ClickEffectUtil
+import com.che2n3jigw.naviplayer.feature.favourite.api.FavouriteNavigator
 import com.che2n3jigw.naviplayer.feature.me.impl.databinding.FragmentMeBinding
 import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
 import com.google.android.material.snackbar.Snackbar
@@ -49,6 +50,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     @Inject
     lateinit var playlistNavigator: PlaylistNavigator
+
+    @Inject
+    lateinit var favouriteNavigator: FavouriteNavigator
 
     private val snackBar by lazy {
         Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
@@ -83,6 +87,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         }
         binding.viewStatPlaylists.setOnClickListener {
             playlistNavigator.navigateToPlaylists(findNavController())
+        }
+        binding.ivFavoriteCover.setOnClickListener {
+            favouriteNavigator.navigateToFavourite(findNavController())
         }
     }
 
