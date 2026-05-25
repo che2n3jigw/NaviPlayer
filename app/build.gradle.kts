@@ -36,6 +36,7 @@ dependencies {
     implementation(projects.feature.search.impl)
     implementation(projects.feature.playlist.impl)
     implementation(projects.feature.favourite.impl)
+    implementation(projects.feature.recent.impl)
 
     implementation(projects.core.ui)
     implementation(projects.core.navigation)

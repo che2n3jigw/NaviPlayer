@@ -26,4 +26,5 @@
     <include app:graph="@navigation/nav_search" />
     <include app:graph="@navigation/nav_playlist" />
     <include app:graph="@navigation/nav_favourite" />
+    <include app:graph="@navigation/nav_recent" />
 </navigation>
