@@ -12,6 +12,10 @@ android {
 
 dependencies {
     implementation(projects.core.ui)
-//
-//    implementation(libs.coil.kt)
+    implementation(projects.core.model)
+    implementation(projects.core.media)
+
+    implementation(projects.feature.player.api)
+
+    implementation(libs.androidx.navigation.fragment.ktx)
 }
