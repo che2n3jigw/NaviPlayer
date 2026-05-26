@@ -19,6 +19,7 @@ dependencies {
 
     implementation(projects.feature.player.api)
     implementation(projects.feature.search.api)
+    implementation(projects.feature.album.api)
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.coil.kt)
