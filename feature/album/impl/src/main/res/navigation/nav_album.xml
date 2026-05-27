@@ -36,7 +36,7 @@
         android:label="AlbumDetailFragment"
         tools:layout="@layout/fragment_song_list">
 
-        <deepLink app:uri="naviplayer://feature/album/detail/{id}" />
+        <deepLink app:uri="naviplayer://feature/album/detail?id={id}" />
 
         <argument
             android:name="id"

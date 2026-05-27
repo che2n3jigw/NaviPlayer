@@ -29,5 +29,5 @@ object AlbumDeepLink {
     /**
      * 专辑详情
      */
-    const val ALBUM_DETAIL = "naviplayer://feature/album/detail/{id}"
+    const val ALBUM_DETAIL = "naviplayer://feature/album/detail?id={id}"
 }
