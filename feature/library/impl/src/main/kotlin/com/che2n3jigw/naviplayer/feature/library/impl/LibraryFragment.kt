@@ -38,6 +38,8 @@ import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumCarouselAdapter
+import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
+import com.che2n3jigw.naviplayer.feature.album.api.AlbumNavigator
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
 import com.che2n3jigw.naviplayer.feature.search.api.SearchNavigator
 import com.google.android.material.appbar.AppBarLayout
@@ -55,6 +57,9 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
 
     @Inject
     lateinit var searchNavigator: SearchNavigator
+
+    @Inject
+    lateinit var albumNavigator: AlbumNavigator
 
     private var appBarLayoutOffset = 0
 
@@ -80,8 +85,13 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     }
 
     override fun initListener() {
-        albumAdapter.itemClickListener = { _, position ->
+        albumAdapter.itemClickListener = { item, position ->
             binding.rvAlbum.smoothScrollToPosition(position)
+            if (item is AlbumItem.Content) {
+                albumNavigator.navigateToAlbumDetail(findNavController(), item.id)
+            } else {
+                albumNavigator.navigateToAlbumList(findNavController())
+            }
         }
         songAdapter.itemClickListener = { song, _ ->
             viewmodel.play(song)
