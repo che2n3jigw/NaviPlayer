@@ -70,7 +70,7 @@ class SelectableSongViewHolder(private val binding: ItemSongBinding) :
         binding.tvSongName.text = song.name
         binding.tvArtist.text = song.singer
         binding.ivCover.load(song.imageUrl) {
-            error(R.drawable.default_song_cover)
+            error(R.drawable.default_error_cover)
         }
         binding.cvSong.apply {
             isChecked = item.isChecked

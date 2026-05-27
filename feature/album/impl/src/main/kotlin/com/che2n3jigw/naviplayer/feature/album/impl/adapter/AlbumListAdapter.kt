@@ -26,8 +26,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.che2n3jigw.naviplayer.core.ui.R
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
-import com.che2n3jigw.naviplayer.feature.album.api.R
 import com.che2n3jigw.naviplayer.feature.album.impl.databinding.ItemAlbumListBinding
 
 class AlbumListAdapter :
@@ -68,7 +68,7 @@ class AlbumListAdapter :
 
         fun bind(item: AlbumItem.Content) {
             binding.ivCover.load(item.coverUrl) {
-                error(R.drawable.album_default_cover)
+                error(R.drawable.default_error_cover)
             }
             binding.tvTitle.text = item.title
             binding.root.setOnClickListener {

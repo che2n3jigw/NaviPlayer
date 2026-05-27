@@ -68,7 +68,7 @@ class AlbumCarouselViewHolder(private val binding: ItemAlbumCarouselBinding) :
 
     fun bind(item: AlbumItem, itemClickListener: ((AlbumItem, Int) -> Unit)?) {
         if (item is AlbumItem.Content) {
-            binding.ivCover.load(item.coverUrl) { error(R.drawable.album_default_cover) }
+            binding.ivCover.load(item.coverUrl) { error(com.che2n3jigw.naviplayer.core.ui.R.drawable.default_error_cover) }
             binding.tvTitle.text = item.title
         } else if (item is AlbumItem.More) {
             binding.ivCover.load(R.drawable.album_ic_more)
