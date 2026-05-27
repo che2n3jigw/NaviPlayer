@@ -45,6 +45,11 @@ interface SubsonicRepository {
     suspend fun getAlbumList(size: Int, offset: Int): List<Album>
 
     /**
+     * 获取指定歌单详情
+     */
+    suspend fun getAlbumDetail(id: String): List<Song>
+
+    /**
      * 获取歌单列表
      */
     suspend fun getPlaylistList(): List<Playlist>
