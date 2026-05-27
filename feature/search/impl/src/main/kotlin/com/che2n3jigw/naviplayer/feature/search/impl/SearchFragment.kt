@@ -33,12 +33,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
+import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import com.che2n3jigw.naviplayer.feature.search.impl.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
+
+    @Inject
+    lateinit var playerNavigator: PlayerNavigator
 
     private val viewModel: SearchViewModel by viewModels()
 
@@ -79,6 +84,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         }
         binding.miniPlayer.onPreviousClick = {
             viewModel.playPrevious()
+        }
+        binding.miniPlayer.setOnClickListener {
+            playerNavigator.navigateToPlayer(findNavController())
         }
     }
 

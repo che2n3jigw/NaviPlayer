@@ -34,6 +34,7 @@ import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.util.ClickEffectUtil
 import com.che2n3jigw.naviplayer.feature.favourite.api.FavouriteNavigator
 import com.che2n3jigw.naviplayer.feature.me.impl.databinding.FragmentMeBinding
+import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
 import com.che2n3jigw.naviplayer.feature.rencet.api.RecentNavigator
 import com.google.android.material.snackbar.Snackbar
@@ -57,6 +58,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     @Inject
     lateinit var recentNavigator: RecentNavigator
+
+    @Inject
+    lateinit var playerNavigator: PlayerNavigator
 
     private val snackBar by lazy {
         Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
@@ -97,6 +101,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         }
         binding.ivLastPlayback.setOnClickListener {
             recentNavigator.navigateToRecent(findNavController())
+        }
+        binding.miniPlayer.setOnClickListener {
+            playerNavigator.navigateToPlayer(findNavController())
         }
     }
 

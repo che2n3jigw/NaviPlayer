@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.naviplayer.android.library)
+    alias(libs.plugins.naviplayer.hilt)
 }
 
 android {

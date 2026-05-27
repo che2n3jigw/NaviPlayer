@@ -41,6 +41,7 @@ import com.che2n3jigw.naviplayer.feature.album.api.AlbumCarouselAdapter
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumNavigator
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
+import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import com.che2n3jigw.naviplayer.feature.search.api.SearchNavigator
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideViewOnScrollBehavior
@@ -60,6 +61,9 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
 
     @Inject
     lateinit var albumNavigator: AlbumNavigator
+
+    @Inject
+    lateinit var playerNavigator: PlayerNavigator
 
     private var appBarLayoutOffset = 0
 
@@ -119,6 +123,9 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
         }
         binding.miniPlayer.onPreviousClick = {
             viewmodel.playPrevious()
+        }
+        binding.miniPlayer.setOnClickListener {
+            playerNavigator.navigateToPlayer(findNavController())
         }
         binding.ibSearch.setOnClickListener {
             searchNavigator.navigateToSearch(findNavController())

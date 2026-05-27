@@ -31,13 +31,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
+import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import com.che2n3jigw.naviplayer.feature.songlist.api.databinding.FragmentSongListBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 歌曲列表页面
  */
+@AndroidEntryPoint
 abstract class SongListFragment : BaseFragment<FragmentSongListBinding>() {
+
+    @Inject
+    lateinit var playerNavigator: PlayerNavigator
 
     abstract val interaction: SongListInteraction
 
@@ -72,6 +79,7 @@ abstract class SongListFragment : BaseFragment<FragmentSongListBinding>() {
         }
         binding.miniPlayer.setOnClickListener {
             // 进入播放详情页
+            playerNavigator.navigateToPlayer(findNavController())
         }
     }
 
