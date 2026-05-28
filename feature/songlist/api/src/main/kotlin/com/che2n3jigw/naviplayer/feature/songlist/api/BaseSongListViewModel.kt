@@ -38,7 +38,7 @@ abstract class BaseSongListViewModel(
             scope = viewModelScope,
             songListProvider = {
                 // 统一从当前的 uiState 中提取歌曲列表
-                (uiState.value as? SongListUiState.Success)?.songList?.map { it.song }
+                (uiState.value as? SongListUiState.Success)?.songList?.map { it.data }
                     ?: emptyList()
             }
         )

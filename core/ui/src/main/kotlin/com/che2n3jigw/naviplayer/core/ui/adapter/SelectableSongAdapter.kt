@@ -26,23 +26,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.R
 import com.che2n3jigw.naviplayer.core.ui.databinding.ItemSongBinding
 
-class SelectableSongAdapter : ListAdapter<SelectableSong, SelectableSongViewHolder>(
-    object : DiffUtil.ItemCallback<SelectableSong>() {
+/**
+ * 可选择的歌曲列表适配器
+ */
+class SelectableSongAdapter : ListAdapter<SelectableItem<Song>, SelectableSongViewHolder>(
+    object : DiffUtil.ItemCallback<SelectableItem<Song>>() {
         override fun areItemsTheSame(
-            oldItem: SelectableSong,
-            newItem: SelectableSong
+            oldItem: SelectableItem<Song>,
+            newItem: SelectableItem<Song>
         ): Boolean {
-            return oldItem.song.id == newItem.song.id
+            return oldItem.data.id == newItem.data.id
         }
 
         override fun areContentsTheSame(
-            oldItem: SelectableSong,
-            newItem: SelectableSong
+            oldItem: SelectableItem<Song>,
+            newItem: SelectableItem<Song>
         ): Boolean {
             return oldItem == newItem
         }
@@ -65,15 +68,15 @@ class SelectableSongAdapter : ListAdapter<SelectableSong, SelectableSongViewHold
 class SelectableSongViewHolder(private val binding: ItemSongBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: SelectableSong, itemClickListener: ((Song, Int) -> Unit)?) {
-        val song = item.song
+    fun bind(item: SelectableItem<Song>, itemClickListener: ((Song, Int) -> Unit)?) {
+        val song = item.data
         binding.tvSongName.text = song.name
         binding.tvArtist.text = song.singer
         binding.ivCover.load(song.imageUrl) {
             error(R.drawable.default_error_cover)
         }
         binding.cvSong.apply {
-            isChecked = item.isChecked
+            isChecked = item.isSelected
             setOnClickListener { itemClickListener?.invoke(song, bindingAdapterPosition) }
         }
     }

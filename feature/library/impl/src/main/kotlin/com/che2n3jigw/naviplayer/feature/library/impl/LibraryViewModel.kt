@@ -25,7 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -66,7 +66,7 @@ class LibraryViewModel @Inject constructor(
             val song = playbackState.first
             // 随机歌曲列表转换成可选中的随机歌曲列表
             val selectableRandomSongs = randomSongs.map {
-                SelectableSong(it, it.id == song?.id)
+                SelectableItem(it, it.id == song?.id)
             }
             LibraryUiState.Success(albumItems, selectableRandomSongs, song, playbackState.second)
         }
@@ -157,7 +157,7 @@ sealed interface LibraryUiState {
      */
     data class Success(
         val albumItems: List<AlbumItem> = emptyList(),
-        val randomSongs: List<SelectableSong> = emptyList(),
+        val randomSongs: List<SelectableItem<Song>> = emptyList(),
         val currentSong: Song? = null,
         val isPlaying: Boolean = false
     ) : LibraryUiState

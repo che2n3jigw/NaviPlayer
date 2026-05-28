@@ -23,7 +23,7 @@ package com.che2n3jigw.naviplayer.feature.favourite.impl
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.feature.songlist.api.BaseSongListViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
@@ -51,7 +51,7 @@ class FavouriteViewModel @Inject constructor(
                 SongListUiState.Loading
             } else {
                 val list = it.map { song ->
-                    SelectableSong(song, false)
+                    SelectableItem(song, false)
                 }
                 SongListUiState.Success(list)
             }

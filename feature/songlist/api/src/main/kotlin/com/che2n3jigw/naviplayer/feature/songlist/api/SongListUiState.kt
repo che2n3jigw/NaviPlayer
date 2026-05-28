@@ -20,13 +20,13 @@
 // 创建时间： 2026/5/25 14:22
 package com.che2n3jigw.naviplayer.feature.songlist.api
 
-import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 
 sealed interface SongListUiState {
     data object Loading : SongListUiState
     data class Success(
-        val songList: List<SelectableSong>,
+        val songList: List<SelectableItem<Song>>,
         val isPlaying: Boolean = false,
         val currentSong: Song? = null
     ) : SongListUiState

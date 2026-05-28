@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +53,7 @@ class SearchViewModel @Inject constructor(
             return@combine SearchUiState.Empty
         }
         val songs = result.map {
-            SelectableSong(it, false)
+            SelectableItem(it, false)
         }
         SearchUiState.Success(songs)
     }.stateIn(
@@ -115,5 +115,5 @@ class SearchViewModel @Inject constructor(
 sealed interface SearchUiState {
     data object Loading : SearchUiState
     data object Empty : SearchUiState
-    data class Success(val songs: List<SelectableSong>) : SearchUiState
+    data class Success(val songs: List<SelectableItem<Song>>) : SearchUiState
 }

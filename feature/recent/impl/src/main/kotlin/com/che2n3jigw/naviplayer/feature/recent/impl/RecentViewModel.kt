@@ -23,7 +23,7 @@ package com.che2n3jigw.naviplayer.feature.recent.impl
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.feature.songlist.api.BaseSongListViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +43,7 @@ class RecentViewModel @Inject constructor(
     override val uiState: StateFlow<SongListUiState> =
         userPlaybackRepository.playbacks.map { playbacks ->
             val songList = playbacks.map {
-                SelectableSong(it.song, false)
+                SelectableItem(it.song, false)
             }
             SongListUiState.Success(songList)
         }.stateIn(

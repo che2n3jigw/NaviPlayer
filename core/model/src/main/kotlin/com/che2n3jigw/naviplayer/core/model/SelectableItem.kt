@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
+// 作者: che2n3jigw
+// 邮箱: che2n3jigw@163.com
+// 博客: che2n3jigw.github.io
+// 创建时间： 2026/5/28 17:43
 package com.che2n3jigw.naviplayer.core.model
 
 /**
- * 可选中的歌曲
+ * 可选择的条目数据结构
  */
-data class SelectableSong(
-    val song: Song,
-    var isChecked: Boolean = false
+data class SelectableItem<T>(
+    val data: T,
+    val isSelected: Boolean = false
 )

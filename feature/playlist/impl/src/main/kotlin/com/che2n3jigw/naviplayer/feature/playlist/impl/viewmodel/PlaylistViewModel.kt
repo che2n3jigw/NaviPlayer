@@ -24,7 +24,7 @@ import android.os.Bundle
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableSong
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.feature.songlist.api.BaseSongListViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,7 +50,7 @@ class PlaylistViewModel @Inject constructor(
                 SongListUiState.Loading
             } else {
                 val list = subsonicRepository.getPlaylist(id).map {
-                    SelectableSong(it, false)
+                    SelectableItem(it, false)
                 }
                 SongListUiState.Success(list)
             }
