@@ -40,7 +40,13 @@ internal class DefaultSubsonicRepository @Inject constructor(
         return subsonicSessionManager.browsingDataSource?.getArtists()?.index
             ?.asSequence()
             ?.flatMap { it.artist ?: emptyList() }
-            ?.map { Artist(it.id ?: "", it.name ?: "", it.artistImageUrl ?: "") }
+            ?.map {
+                Artist(
+                    id = it.id ?: "",
+                    name = it.name ?: "",
+                    imageUrl = it.artistImageUrl ?: ""
+                )
+            }
             ?.toList() ?: emptyList()
     }
 
@@ -52,7 +58,11 @@ internal class DefaultSubsonicRepository @Inject constructor(
         )?.asSequence()?.map {
             val coverUrl =
                 subsonicSessionManager.mediaRetrievalDataSource?.getCoverArtUrl(it.id ?: "")
-            Album(it.id ?: "", it.sortName ?: "", coverUrl ?: "")
+            Album(
+                id = it.id ?: "",
+                name = it.sortName ?: "",
+                imageUrl = coverUrl ?: ""
+            )
         }?.toList() ?: emptyList()
     }
 
@@ -67,11 +77,11 @@ internal class DefaultSubsonicRepository @Inject constructor(
             ?.asSequence()
             ?.map {
                 Playlist(
-                    it.id ?: "",
-                    it.name ?: "",
-                    it.songCount ?: 0,
-                    it.owner ?: "",
-                    it.changed ?: ""
+                    id = it.id ?: "",
+                    name = it.name ?: "",
+                    songCount = it.songCount ?: 0,
+                    owner = it.owner ?: "",
+                    changed = it.changed ?: ""
                 )
             }
             // 字符串直接比较即可，descending 表示降序（最新的在前）
@@ -91,20 +101,9 @@ internal class DefaultSubsonicRepository @Inject constructor(
     override suspend fun getFavouriteList(): List<Song> {
         return subsonicSessionManager.listsDataSource?.getStarred2()?.song
             ?.asSequence()
+            ?.filterNotNull()
             ?.map {
-                val id = it?.id ?: ""
-                val name = it?.sortName ?: ""
-                val singer = it?.displayArtist ?: ""
-                var coverUrl = ""
-                var streamUrl = ""
-                var downloadUrl = ""
-                subsonicSessionManager.mediaRetrievalDataSource?.apply {
-                    coverUrl = getCoverArtUrl(it?.coverArt ?: "")
-                    streamUrl = getStreamUrl(id)
-                    downloadUrl = getDownloadUrl(id)
-                }
-                val isFavorite = it?.starred != null
-                Song(id, name, singer, coverUrl, streamUrl, downloadUrl, isFavorite)
+                childToSong(it)
             }?.toList() ?: emptyList()
     }
 
@@ -146,6 +145,7 @@ internal class DefaultSubsonicRepository @Inject constructor(
         val id = child.id ?: ""
         val name = child.sortName ?: ""
         val singer = child.displayArtist ?: ""
+        val duration = child.duration ?: 0
         var coverUrl = ""
         var streamUrl = ""
         var downloadUrl = ""
@@ -154,7 +154,16 @@ internal class DefaultSubsonicRepository @Inject constructor(
             streamUrl = getStreamUrl(id)
             downloadUrl = getDownloadUrl(id)
         }
-        val isFavorite = child.starred != null
-        return Song(id, name, singer, coverUrl, streamUrl, downloadUrl, isFavorite)
+        val isFavourite = child.starred != null
+        return Song(
+            id = id,
+            name = name,
+            singer = singer,
+            imageUrl = coverUrl,
+            streamUrl = streamUrl,
+            downloadUrl = downloadUrl,
+            duration = duration,
+            isFavourite = isFavourite
+        )
     }
 }

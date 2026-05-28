@@ -30,5 +30,6 @@ data class Song(
     val imageUrl: String = "",
     val streamUrl: String = "",
     val downloadUrl: String = "",
+    val duration: Int = 0,
     val isFavourite: Boolean = false
 )
