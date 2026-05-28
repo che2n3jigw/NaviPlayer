@@ -87,7 +87,7 @@ class NaviMediaManager @Inject constructor(
         browser.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 _isPlaying.update { isPlaying }
-                if (isPlaying) {
+                if (!isPlaying) {
                     checkPlaybackPositionJob?.cancel()
                 } else {
                     checkPlaybackPosition()
