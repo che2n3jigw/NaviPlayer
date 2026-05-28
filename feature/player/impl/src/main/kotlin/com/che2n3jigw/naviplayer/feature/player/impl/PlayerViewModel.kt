@@ -22,6 +22,8 @@ package com.che2n3jigw.naviplayer.feature.player.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
+import com.che2n3jigw.naviplayer.core.media.MediaInteractionDelegate
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,23 +34,57 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    naviMediaManager: NaviMediaManager
+    naviMediaManager: NaviMediaManager,
+    timeUtils: TimeUtils
 ) : ViewModel() {
+    private val mediaDelegate by lazy {
+        MediaInteractionDelegate(
+            naviMediaManager = naviMediaManager,
+            scope = viewModelScope,
+            songListProvider = { naviMediaManager.playlist.value }
+        )
+    }
 
     val uiState = combine(
         naviMediaManager.isPlaying,
-        naviMediaManager.currentSong
-    ) { isPlaying, currentSong ->
-        PlayerUiState(isPlaying, currentSong)
+        naviMediaManager.currentSong,
+        naviMediaManager.position
+    ) { isPlaying, currentSong, position ->
+        // 总时长 单位秒
+        val duration = currentSong?.duration ?: 0
+        val durationTxt = timeUtils.toTimeText(duration)
+        val currentDuration = (position / 1000).toInt()
+        val currentDurationTxt = timeUtils.toTimeText(currentDuration)
+        PlayerUiState(
+            isPlaying,
+            currentSong,
+            duration,
+            durationTxt,
+            currentDuration,
+            currentDurationTxt
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = PlayerUiState()
     )
 
+    fun togglePlayPause() = mediaDelegate.togglePlayPause()
+    fun skipToNext() = mediaDelegate.skipToNext()
+    fun skipToPrevious() = mediaDelegate.skipToPrevious()
 }
 
 data class PlayerUiState(
     val isPlaying: Boolean = false,
-    val currentSong: Song? = null
+    val currentSong: Song? = null,
+    /**
+     * 歌曲时长 单位秒
+     */
+    val duration: Int = 0,
+    val durationTxt: String = "",
+    /**
+     * 当前播放进度 单位秒
+     */
+    val currentDuration: Int = 0,
+    val currentDurationTxt: String = ""
 )

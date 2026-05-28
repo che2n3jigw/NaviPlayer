@@ -26,11 +26,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import coil.load
+import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.player.api.R
 import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlayerBinding
+import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * 播放器页面
@@ -38,35 +43,106 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
 
+    @Inject
+    lateinit var timeUtils: TimeUtils
+
     private val viewModel by viewModels<PlayerViewModel>()
+
+    private var sliderTouchFlag = false
+
+    private val touchListener = object : Slider.OnSliderTouchListener {
+        override fun onStartTrackingTouch(slider: Slider) {
+            sliderTouchFlag = true
+        }
+
+        override fun onStopTrackingTouch(slider: Slider) {
+            sliderTouchFlag = false
+        }
+
+    }
 
     override fun inflateBinding() = FragmentPlayerBinding.inflate(layoutInflater)
 
     override fun initView() {
+        binding.slider.setLabelFormatter { value: Float ->
+            timeUtils.toTimeText(value.toInt())
+        }
     }
 
     override fun initListener() {
+        binding.slider.addOnSliderTouchListener(touchListener)
+        binding.mbPlayPause.setOnClickListener {
+            viewModel.togglePlayPause()
+        }
+        binding.mbPrevious.setOnClickListener {
+            viewModel.skipToPrevious()
+        }
+        binding.mbNext.setOnClickListener {
+            viewModel.skipToNext()
+        }
     }
 
     override fun subscribeUI() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    binding.ivCover.load(it.currentSong?.imageUrl) {
-                        error(com.che2n3jigw.naviplayer.core.ui.R.drawable.default_error_cover)
-                    }
-                    binding.tvSongName.text =
-                        it.currentSong?.name ?: getString(R.string.player_song_name)
-                    binding.tvSinger.text =
-                        it.currentSong?.singer ?: getString(R.string.player_singer)
-                    binding.mbFavourite.isChecked = it.currentSong?.isFavourite ?: false
-                    binding.mbPlayPause.icon = if (it.isPlaying) {
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_music_pause)
-                    } else {
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_music_play)
-                    }
+                launch {
+                    viewModel.uiState
+                        .map { it.currentSong }
+                        .distinctUntilChanged()
+                        .collect { song ->
+                            val songName = song?.name ?: getString(R.string.player_song_name)
+                            val singer = song?.singer ?: getString(R.string.player_singer)
+                            val isFavourite = song?.isFavourite ?: false
+                            binding.ivCover.load(song?.imageUrl) {
+                                error(com.che2n3jigw.naviplayer.core.ui.R.drawable.default_error_cover)
+                            }
+                            binding.tvSongName.text = songName
+                            binding.tvSinger.text = singer
+                            binding.mbFavourite.isChecked = isFavourite
+                        }
+                }
+
+                launch {
+                    viewModel.uiState
+                        .map { it.duration to it.durationTxt }
+                        .distinctUntilChanged()
+                        .collect { (duration, durationTxt) ->
+                            binding.slider.valueTo = duration.toFloat()
+                            binding.tvSongDuration.text = durationTxt
+                        }
+                }
+
+                launch {
+                    viewModel.uiState
+                        .map { it.currentDuration to it.currentDurationTxt }
+                        .distinctUntilChanged()
+                        .collect { (currentDuration, currentDurationTxt) ->
+                            if (!sliderTouchFlag) {
+                                binding.slider.value = currentDuration.toFloat()
+                            }
+                            binding.tvCurrentTime.text = currentDurationTxt
+                        }
+                }
+
+                launch {
+                    viewModel.uiState
+                        .map { it.isPlaying }
+                        .distinctUntilChanged()
+                        .collect { isPlaying ->
+                            val ctx = requireContext()
+                            binding.mbPlayPause.icon = if (isPlaying) {
+                                ContextCompat.getDrawable(ctx, R.drawable.ic_music_pause)
+                            } else {
+                                ContextCompat.getDrawable(ctx, R.drawable.ic_music_play)
+                            }
+                        }
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        binding.slider.removeOnSliderTouchListener(touchListener)
+        super.onDestroyView()
     }
 }
