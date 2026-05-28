@@ -23,6 +23,7 @@ package com.che2n3jigw.naviplayer.core.common.utils
 import android.content.Context
 import com.che2n3jigw.naviplayer.core.common.R
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -62,5 +63,14 @@ class TimeUtils @Inject constructor(
         }
 
         return context.getString(R.string.time_long_ago)
+    }
+
+    /**
+     * 秒转时间文本
+     */
+    fun toTimeText(seconds: Int): String {
+        val minutes = seconds / 60
+        val remainingSeconds = seconds % 60
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, remainingSeconds)
     }
 }
