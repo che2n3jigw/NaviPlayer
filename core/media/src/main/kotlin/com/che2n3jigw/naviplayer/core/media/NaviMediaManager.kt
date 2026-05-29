@@ -39,6 +39,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.isActive
@@ -59,19 +60,43 @@ class NaviMediaManager @Inject constructor(
     private val userPlaybackRepository: UserPlaybackRepository
 ) {
 
+    // <editor-fold defaultState="collapsed" desc="Flow">
     private val _isPlaying = MutableStateFlow(false)
     val isPlaying = _isPlaying.asStateFlow()
 
     private val _playlist = MutableStateFlow<List<Song>>(emptyList())
     val playlist = _playlist.asStateFlow()
 
-    private val songCache = mutableMapOf<String, Song>()
-
     private val _currentSong = MutableStateFlow<Song?>(null)
     val currentSong = _currentSong.asStateFlow()
+    // </editor-fold>
 
+    // <editor-fold defaultState="collapsed" desc="播放器相关">
     private lateinit var browserFuture: ListenableFuture<MediaBrowser>
     private lateinit var browser: MediaController
+    private val playListener = object : Player.Listener {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            // 更新播放状态
+            _isPlaying.update { isPlaying }
+            // 根据播放状态开启/关闭检查播放进度任务
+            if (!isPlaying) {
+                checkPlaybackPositionJob?.cancel()
+            } else {
+                checkPlaybackPosition()
+            }
+        }
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            // 获取当前播放歌曲并记录
+            scope.launch {
+                _playlist.first().find { it.id == mediaItem?.mediaId }?.let { song ->
+                    _currentSong.update { song }
+                    userPlaybackRepository.upsertPlayback(song)
+                }
+            }
+        }
+    }
+    // </editor-fold>
 
     // <editor-fold defaultState="collapsed" desc="播放进度相关">
     private var checkPlaybackPositionJob: Job? = null
@@ -79,59 +104,50 @@ class NaviMediaManager @Inject constructor(
     val position = _position.asStateFlow()
     // </editor-fold>
 
-
-    suspend fun initialize() {
-        browserFuture = MediaBrowser.Builder(context, sessionToken).buildAsync()
-        browser = browserFuture.await()
-        _isPlaying.value = browser.isPlaying
-        browser.addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                _isPlaying.update { isPlaying }
-                if (!isPlaying) {
-                    checkPlaybackPositionJob?.cancel()
-                } else {
-                    checkPlaybackPosition()
-                }
+    /**
+     * 初始化媒体管理器
+     */
+    fun initialize() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                browserFuture = MediaBrowser.Builder(context, sessionToken).buildAsync()
+                browser = browserFuture.await()
+                _isPlaying.update { browser.isPlaying }
+                browser.addListener(playListener)
             }
-
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                songCache[mediaItem?.mediaId]?.let { song ->
-                    scope.launch {
-                        _currentSong.update { song }
-                        userPlaybackRepository.upsertPlayback(song)
-                    }
-                }
-            }
-        })
+        }
     }
 
     /**
      * 设置播放列表
      */
-    suspend fun setMediaItems(songs: List<Song>, position: Int = 0) {
-        _playlist.value = songs
-        songCache.clear()
-        songs.forEach { songCache[it.id] = it }
-        val mediaItems = songs.map {
-            MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
-        }
-        withContext(Dispatchers.Main) {
-            browser.setMediaItems(mediaItems, position, C.TIME_UNSET)
-            browser.prepare()
+    fun setMediaItems(songs: List<Song>, position: Int = 0) {
+        scope.launch {
+            // 更新播放列表
+            _playlist.update { songs }
+            // song转换mediaItem
+            val mediaItems = songs.map {
+                MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
+            }
+            // 将mediaItem给到媒体播放器
+            withContext(Dispatchers.Main) {
+                browser.setMediaItems(mediaItems, position, C.TIME_UNSET)
+                browser.prepare()
+            }
         }
     }
 
     /**
      * 播放
      */
-    suspend fun play() {
-        withContext(Dispatchers.Main) {
-            browser.let {
-                if (!it.isPlaying) {
-                    if (it.playbackState == Player.STATE_IDLE) {
-                        it.prepare()
+    fun play() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (!browser.isPlaying) {
+                    if (browser.playbackState == Player.STATE_IDLE) {
+                        browser.prepare()
                     }
-                    it.play()
+                    browser.play()
                 }
             }
         }
@@ -140,11 +156,11 @@ class NaviMediaManager @Inject constructor(
     /**
      * 暂停
      */
-    suspend fun pause() {
-        withContext(Dispatchers.Main) {
-            browser.let {
-                if (it.isPlaying) {
-                    it.pause()
+    fun pause() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.isPlaying) {
+                    browser.pause()
                 }
             }
         }
@@ -153,10 +169,10 @@ class NaviMediaManager @Inject constructor(
     /**
      * 播放/暂停 切换逻辑
      */
-    suspend fun togglePlay() {
-        withContext(Dispatchers.Main) {
-            browser.let {
-                if (it.isPlaying) {
+    fun togglePlay() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.isPlaying) {
                     pause()
                 } else {
                     play()
@@ -165,18 +181,25 @@ class NaviMediaManager @Inject constructor(
         }
     }
 
-    suspend fun playNext() {
-        withContext(Dispatchers.Main) {
-            if (browser.hasNextMediaItem()) {
-                browser.seekToNextMediaItem()
+    /**
+     * 播放下一首歌
+     */
+    fun playNext() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.hasNextMediaItem()) {
+                    browser.seekToNextMediaItem()
+                }
             }
         }
     }
 
-    suspend fun playPrevious() {
-        withContext(Dispatchers.Main) {
-            if (browser.hasPreviousMediaItem()) {
-                browser.seekToPreviousMediaItem()
+    fun playPrevious() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.hasPreviousMediaItem()) {
+                    browser.seekToPreviousMediaItem()
+                }
             }
         }
     }
@@ -185,6 +208,7 @@ class NaviMediaManager @Inject constructor(
      * 释放资源 (可选：通常随应用进程销毁，如需手动注销可调用)
      */
     fun release() {
+        browser.removeListener(playListener)
         MediaBrowser.releaseFuture(browserFuture)
         checkPlaybackPositionJob?.cancel()
     }
