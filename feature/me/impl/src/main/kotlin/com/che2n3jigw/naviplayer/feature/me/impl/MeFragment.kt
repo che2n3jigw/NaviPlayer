@@ -82,13 +82,13 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
             viewModel.playFavourite()
         }
         binding.miniPlayer.onPlayPauseClick = {
-            viewModel.togglePlaying()
+            viewModel.togglePlayPause()
         }
         binding.miniPlayer.onPreviousClick = {
-            viewModel.playPrevious()
+            viewModel.skipToPrevious()
         }
         binding.miniPlayer.onNextClick = {
-            viewModel.playNext()
+            viewModel.skipToNext()
         }
         binding.miniPlayer.setOnClickListener {
             // 进入播放详情页

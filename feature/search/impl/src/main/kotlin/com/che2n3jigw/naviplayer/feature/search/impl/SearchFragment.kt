@@ -77,13 +77,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
             viewModel.play(song)
         }
         binding.miniPlayer.onNextClick = {
-            viewModel.playNext()
+            viewModel.skipToNext()
         }
         binding.miniPlayer.onPlayPauseClick = {
-            viewModel.togglePlaying()
+            viewModel.togglePlayPause()
         }
         binding.miniPlayer.onPreviousClick = {
-            viewModel.playPrevious()
+            viewModel.skipToPrevious()
         }
         binding.miniPlayer.setOnClickListener {
             playerNavigator.navigateToPlayer(findNavController())

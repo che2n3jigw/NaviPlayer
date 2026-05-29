@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
+import com.che2n3jigw.naviplayer.core.media.api.PlaybackController
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +41,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val subsonicRepository: SubsonicRepository,
     private val naviMediaManager: NaviMediaManager
-) : ViewModel() {
+) : ViewModel(), PlaybackController by naviMediaManager {
 
     private val _searchResult = MutableStateFlow<List<Song>>(emptyList())
     private val _loading = MutableStateFlow(false)
@@ -85,24 +86,11 @@ class SearchViewModel @Inject constructor(
     fun play(song: Song) {
         viewModelScope.launch {
             val list = _searchResult.first()
-            val position = list.indexOf(song)
-            if (position != -1) {
-                naviMediaManager.setMediaItems(list, position)
-                naviMediaManager.play()
+            val index = list.indexOf(song)
+            if (index != -1) {
+                naviMediaManager.play(list, index)
             }
         }
-    }
-
-    fun playNext() {
-        naviMediaManager.playNext()
-    }
-
-    fun togglePlaying() {
-        naviMediaManager.togglePlay()
-    }
-
-    fun playPrevious() {
-        naviMediaManager.playPrevious()
     }
 }
 

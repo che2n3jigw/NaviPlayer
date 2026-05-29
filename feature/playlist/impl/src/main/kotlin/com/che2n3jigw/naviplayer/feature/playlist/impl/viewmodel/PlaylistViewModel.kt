@@ -25,12 +25,11 @@ import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
-import com.che2n3jigw.naviplayer.feature.songlist.api.BaseSongListViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
+import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,25 +39,24 @@ import javax.inject.Inject
 class PlaylistViewModel @Inject constructor(
     private val subsonicRepository: SubsonicRepository,
     naviMediaManager: NaviMediaManager
-) : BaseSongListViewModel(naviMediaManager) {
+) : SongListViewModel(naviMediaManager) {
 
     private val _playlistId = MutableStateFlow("")
 
-    override val uiState: StateFlow<SongListUiState>
-        get() = _playlistId.map { id ->
-            if (id.isEmpty()) {
-                SongListUiState.Loading
-            } else {
-                val list = subsonicRepository.getPlaylist(id).map {
-                    SelectableItem(it, false)
-                }
-                SongListUiState.Success(list)
+    override val songListUiState = _playlistId.map { id ->
+        if (id.isEmpty()) {
+            SongListUiState.Loading
+        } else {
+            val list = subsonicRepository.getPlaylist(id).map {
+                SelectableItem(it, false)
             }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = SongListUiState.Loading
-        )
+            SongListUiState.Success(list)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = SongListUiState.Loading
+    )
 
     /**
      * 加载歌单数据

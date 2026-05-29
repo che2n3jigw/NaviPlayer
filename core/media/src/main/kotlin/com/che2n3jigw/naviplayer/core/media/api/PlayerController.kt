@@ -17,19 +17,10 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/25 14:32
-package com.che2n3jigw.naviplayer.feature.songlist.api
-
-import com.che2n3jigw.naviplayer.core.media.MediaInteraction
-import kotlinx.coroutines.flow.StateFlow
+// 创建时间： 2026/5/29 10:50
+package com.che2n3jigw.naviplayer.core.media.api
 
 /**
- * 完整的歌曲列表交互契约
+ * 复合接口
  */
-interface SongListInteraction : MediaInteraction {
-
-    /**
-     * UI 状态流：Fragment 观察此流来更新界面
-     */
-    val uiState: StateFlow<SongListUiState>
-}
+interface PlayerController : PlaybackController, QueueController

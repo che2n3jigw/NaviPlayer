@@ -21,10 +21,9 @@
 package com.che2n3jigw.naviplayer.feature.album.impl.fragment
 
 import androidx.fragment.app.viewModels
-import com.che2n3jigw.naviplayer.feature.album.impl.viewmodel.AlbumDetailViewModel
 import com.che2n3jigw.naviplayer.feature.album.impl.R
+import com.che2n3jigw.naviplayer.feature.album.impl.viewmodel.AlbumDetailViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListFragment
-import com.che2n3jigw.naviplayer.feature.songlist.api.SongListInteraction
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -35,9 +34,9 @@ class AlbumDetailFragment : SongListFragment() {
 
     private val viewModel: AlbumDetailViewModel by viewModels()
 
-    override val interaction: SongListInteraction get() = viewModel
+    override val songListViewModel get() = viewModel
 
-    override fun getTitleRes(): Int = R.string.album_detail_title
+    override fun getTitleRes() = R.string.album_detail_title
 
     override fun onResume() {
         super.onResume()

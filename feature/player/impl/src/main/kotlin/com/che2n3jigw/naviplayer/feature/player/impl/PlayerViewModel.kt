@@ -23,8 +23,8 @@ package com.che2n3jigw.naviplayer.feature.player.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
-import com.che2n3jigw.naviplayer.core.media.MediaInteractionDelegate
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
+import com.che2n3jigw.naviplayer.core.media.api.PlayerController
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,13 +36,7 @@ import javax.inject.Inject
 class PlayerViewModel @Inject constructor(
     naviMediaManager: NaviMediaManager,
     timeUtils: TimeUtils
-) : ViewModel() {
-    private val mediaDelegate by lazy {
-        MediaInteractionDelegate(
-            naviMediaManager = naviMediaManager,
-            songListProvider = { naviMediaManager.playlist.value }
-        )
-    }
+) : ViewModel(), PlayerController by naviMediaManager {
 
     val uiState = combine(
         naviMediaManager.isPlaying,
@@ -67,10 +61,6 @@ class PlayerViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = PlayerUiState()
     )
-
-    fun togglePlayPause() = mediaDelegate.togglePlayPause()
-    fun skipToNext() = mediaDelegate.skipToNext()
-    fun skipToPrevious() = mediaDelegate.skipToPrevious()
 }
 
 data class PlayerUiState(

@@ -17,21 +17,42 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/25 22:34
-package com.che2n3jigw.naviplayer.feature.recent.impl
-
-import androidx.fragment.app.viewModels
-import com.che2n3jigw.naviplayer.feature.songlist.api.SongListFragment
-import dagger.hilt.android.AndroidEntryPoint
+// 创建时间： 2026/5/29 11:24
+package com.che2n3jigw.naviplayer.core.media.api
 
 /**
- * 最近播放列表页
+ * 基础播放控制（针对当前已存在的列表）
+ * 适合：播放界面、底部控制栏、通知栏
  */
-@AndroidEntryPoint
-class RecentFragment : SongListFragment() {
-    private val viewModel: RecentViewModel by viewModels()
+interface PlaybackController {
 
-    override val songListViewModel = viewModel
+    /**
+     * 播放
+     */
+    fun play()
 
-    override fun getTitleRes(): Int = R.string.recent_title
+    /**
+     * 暂停
+     */
+    fun pause()
+
+    /**
+     * 切换播放/暂停
+     */
+    fun togglePlayPause()
+
+    /**
+     * 下一首
+     */
+    fun skipToNext()
+
+    /**
+     * 上一首
+     */
+    fun skipToPrevious()
+
+    /**
+     * 播放进度跳转
+     */
+    fun seekTo(positionMs: Long)
 }

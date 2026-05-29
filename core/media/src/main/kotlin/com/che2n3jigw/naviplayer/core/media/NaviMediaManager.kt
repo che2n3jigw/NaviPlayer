@@ -29,6 +29,7 @@ import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.che2n3jigw.naviplayer.core.common.ApplicationScope
 import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
+import com.che2n3jigw.naviplayer.core.media.api.PlayerController
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -58,7 +59,7 @@ class NaviMediaManager @Inject constructor(
     @param:ApplicationScope private val scope: CoroutineScope,
     private val sessionToken: SessionToken,
     private val userPlaybackRepository: UserPlaybackRepository
-) {
+) : PlayerController {
 
     // <editor-fold defaultState="collapsed" desc="Flow">
     private val _isPlaying = MutableStateFlow(false)
@@ -119,92 +120,6 @@ class NaviMediaManager @Inject constructor(
     }
 
     /**
-     * 设置播放列表
-     */
-    fun setMediaItems(songs: List<Song>, position: Int = 0) {
-        scope.launch {
-            // 更新播放列表
-            _playlist.update { songs }
-            // song转换mediaItem
-            val mediaItems = songs.map {
-                MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
-            }
-            // 将mediaItem给到媒体播放器
-            withContext(Dispatchers.Main) {
-                browser.setMediaItems(mediaItems, position, C.TIME_UNSET)
-                browser.prepare()
-            }
-        }
-    }
-
-    /**
-     * 播放
-     */
-    fun play() {
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                if (!browser.isPlaying) {
-                    if (browser.playbackState == Player.STATE_IDLE) {
-                        browser.prepare()
-                    }
-                    browser.play()
-                }
-            }
-        }
-    }
-
-    /**
-     * 暂停
-     */
-    fun pause() {
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                if (browser.isPlaying) {
-                    browser.pause()
-                }
-            }
-        }
-    }
-
-    /**
-     * 播放/暂停 切换逻辑
-     */
-    fun togglePlay() {
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                if (browser.isPlaying) {
-                    pause()
-                } else {
-                    play()
-                }
-            }
-        }
-    }
-
-    /**
-     * 播放下一首歌
-     */
-    fun playNext() {
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                if (browser.hasNextMediaItem()) {
-                    browser.seekToNextMediaItem()
-                }
-            }
-        }
-    }
-
-    fun playPrevious() {
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                if (browser.hasPreviousMediaItem()) {
-                    browser.seekToPreviousMediaItem()
-                }
-            }
-        }
-    }
-
-    /**
      * 释放资源 (可选：通常随应用进程销毁，如需手动注销可调用)
      */
     fun release() {
@@ -221,4 +136,96 @@ class NaviMediaManager @Inject constructor(
             }
         }
     }
+
+    // <editor-fold defaultState="collapsed" desc="PlaybackController">
+    override fun play() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (!browser.isPlaying) {
+                    if (browser.playbackState == Player.STATE_IDLE) {
+                        browser.prepare()
+                    }
+                    browser.play()
+                }
+            }
+        }
+    }
+
+    override fun pause() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.isPlaying) {
+                    browser.pause()
+                }
+            }
+        }
+    }
+
+    override fun togglePlayPause() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.isPlaying) {
+                    pause()
+                } else {
+                    play()
+                }
+            }
+        }
+    }
+
+    override fun skipToNext() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.hasNextMediaItem()) {
+                    browser.seekToNextMediaItem()
+                }
+            }
+        }
+    }
+
+    override fun skipToPrevious() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                if (browser.hasPreviousMediaItem()) {
+                    browser.seekToPreviousMediaItem()
+                }
+            }
+        }
+    }
+
+    override fun seekTo(positionMs: Long) {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                browser.seekTo(positionMs)
+            }
+        }
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultState="collapsed" desc="QueueController">
+    override fun play(songs: List<Song>, index: Int) {
+        scope.launch {
+            // 更新播放列表
+            _playlist.update { songs }
+            // song转换mediaItem
+            val mediaItems = songs.map {
+                MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
+            }
+            // 将mediaItem给到媒体播放器
+            withContext(Dispatchers.Main) {
+                browser.setMediaItems(mediaItems, index, C.TIME_UNSET)
+                browser.prepare()
+                browser.play()
+            }
+        }
+    }
+
+    override fun skipToItem(index: Int) {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                browser.seekTo(index, C.TIME_UNSET)
+            }
+        }
+    }
+    // </editor-fold>
 }

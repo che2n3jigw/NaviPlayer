@@ -25,12 +25,11 @@ import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
-import com.che2n3jigw.naviplayer.feature.songlist.api.BaseSongListViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
+import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -41,25 +40,21 @@ import javax.inject.Inject
 class FavouriteViewModel @Inject constructor(
     naviMediaManager: NaviMediaManager,
     private val subsonicRepository: SubsonicRepository
-) :
-    BaseSongListViewModel(naviMediaManager) {
+) : SongListViewModel(naviMediaManager) {
     private val songList = MutableStateFlow<List<Song>?>(null)
 
-    override val uiState: StateFlow<SongListUiState>
-        get() = songList.map {
-            if (it == null) {
-                SongListUiState.Loading
-            } else {
-                val list = it.map { song ->
-                    SelectableItem(song, false)
-                }
-                SongListUiState.Success(list)
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = SongListUiState.Loading
-        )
+    override val songListUiState = songList.map {
+        if (it == null) {
+            SongListUiState.Loading
+        } else {
+            val list = it.map { song -> SelectableItem(song, false) }
+            SongListUiState.Success(list)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = SongListUiState.Loading
+    )
 
     fun loadData() {
         viewModelScope.launch {

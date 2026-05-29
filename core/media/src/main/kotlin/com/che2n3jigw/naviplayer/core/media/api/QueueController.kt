@@ -17,32 +17,23 @@
 // 作者: che2n3jigw
 // 邮箱: che2n3jigw@163.com
 // 博客: che2n3jigw.github.io
-// 创建时间： 2026/5/25 15:09
-package com.che2n3jigw.naviplayer.core.media
+// 创建时间： 2026/5/29 11:26
+package com.che2n3jigw.naviplayer.core.media.api
 
 import com.che2n3jigw.naviplayer.core.model.Song
 
 /**
- * 通用的播放控制行为
+ * 播放队列管理（改变播放上下文）
+ * 适合：歌单列表、搜索列表、专辑列表
  */
-interface MediaInteraction {
+interface QueueController {
     /**
-     * 播放特定歌曲（通常是点击列表项）
+     * 传入新的列表并从指定位置播放
      */
-    fun playSong(song: Song)
+    fun play(songs: List<Song>, index: Int)
 
     /**
-     * 切换播放/暂停
+     * 在当前队列中直接跳转到某一项
      */
-    fun togglePlayPause()
-
-    /**
-     * 下一首
-     */
-    fun skipToNext()
-
-    /**
-     * 上一首
-     */
-    fun skipToPrevious()
+    fun skipToItem(index: Int)
 }

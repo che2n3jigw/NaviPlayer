@@ -24,7 +24,6 @@ import androidx.fragment.app.viewModels
 import com.che2n3jigw.naviplayer.feature.playlist.impl.R
 import com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel.PlaylistViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListFragment
-import com.che2n3jigw.naviplayer.feature.songlist.api.SongListInteraction
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -35,12 +34,10 @@ class PlaylistFragment : SongListFragment() {
 
     private val viewModel: PlaylistViewModel by viewModels()
 
-    override val interaction: SongListInteraction
-        get() = viewModel
+    override val songListViewModel = viewModel
 
-    override fun getTitleRes(): Int {
-        return R.string.playlist_playlist
-    }
+    override fun getTitleRes() = R.string.playlist_playlist
+
 
     override fun onResume() {
         super.onResume()

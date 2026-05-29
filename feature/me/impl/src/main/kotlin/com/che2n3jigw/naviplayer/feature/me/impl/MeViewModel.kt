@@ -27,6 +27,7 @@ import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
+import com.che2n3jigw.naviplayer.core.media.api.PlaybackController
 import com.che2n3jigw.naviplayer.core.model.Playlist
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,7 +48,7 @@ class MeViewModel @Inject constructor(
     private val naviMediaManager: NaviMediaManager,
     private val timeUtils: TimeUtils,
     userPlaybackRepository: UserPlaybackRepository
-) : ViewModel() {
+) : ViewModel(), PlaybackController by naviMediaManager {
 
     // 头像
     private val _avatar = MutableStateFlow("")
@@ -136,22 +137,9 @@ class MeViewModel @Inject constructor(
     fun playFavourite() {
         viewModelScope.launch {
             _favouriteSongs.firstOrNull()?.let {
-                naviMediaManager.setMediaItems(it)
-                naviMediaManager.play()
+                naviMediaManager.play(it, 0)
             }
         }
-    }
-
-    fun togglePlaying() {
-        naviMediaManager.togglePlay()
-    }
-
-    fun playPrevious() {
-        naviMediaManager.playPrevious()
-    }
-
-    fun playNext() {
-        naviMediaManager.playNext()
     }
 }
 

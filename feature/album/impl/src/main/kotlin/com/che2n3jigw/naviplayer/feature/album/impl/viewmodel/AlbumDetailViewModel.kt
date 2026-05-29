@@ -21,12 +21,11 @@ import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
-import com.che2n3jigw.naviplayer.feature.songlist.api.BaseSongListViewModel
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
+import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -36,12 +35,12 @@ import javax.inject.Inject
 class AlbumDetailViewModel @Inject constructor(
     naviMediaManager: NaviMediaManager,
     private val subsonicRepository: SubsonicRepository
-) : BaseSongListViewModel(naviMediaManager) {
+) : SongListViewModel(naviMediaManager) {
 
     // 专辑id
     private val _albumId = MutableStateFlow("")
 
-    override val uiState: StateFlow<SongListUiState> = _albumId.map { albumId ->
+    override val songListUiState = _albumId.map { albumId ->
         if (albumId.isEmpty()) {
             SongListUiState.Loading
         } else {

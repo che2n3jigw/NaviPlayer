@@ -46,7 +46,7 @@ abstract class SongListFragment : BaseFragment<FragmentSongListBinding>() {
     @Inject
     lateinit var playerNavigator: PlayerNavigator
 
-    abstract val interaction: SongListInteraction
+    abstract val songListViewModel: SongListViewModel
 
     abstract fun getTitleRes(): Int
 
@@ -69,13 +69,16 @@ abstract class SongListFragment : BaseFragment<FragmentSongListBinding>() {
             findNavController().popBackStack()
         }
         binding.miniPlayer.onPlayPauseClick = {
-            interaction.togglePlayPause()
+            songListViewModel.togglePlayPause()
         }
         binding.miniPlayer.onPreviousClick = {
-            interaction.skipToPrevious()
+            songListViewModel.skipToPrevious()
         }
         binding.miniPlayer.onNextClick = {
-            interaction.skipToNext()
+            songListViewModel.skipToNext()
+        }
+        selectableSongAdapter.itemClickListener = { song, _ ->
+            songListViewModel.onSongClicked(song)
         }
         binding.miniPlayer.setOnClickListener {
             // 进入播放详情页
@@ -86,7 +89,7 @@ abstract class SongListFragment : BaseFragment<FragmentSongListBinding>() {
     override fun subscribeUI() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                interaction.uiState.collect {
+                songListViewModel.songListUiState.collect {
                     binding.loading.isVisible = it is SongListUiState.Loading
                     binding.rvSong.isVisible = it is SongListUiState.Success
 

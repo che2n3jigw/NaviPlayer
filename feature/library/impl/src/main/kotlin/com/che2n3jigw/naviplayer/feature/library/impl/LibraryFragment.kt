@@ -116,13 +116,13 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
             }
         }
         binding.miniPlayer.onNextClick = {
-            viewmodel.playNext()
+            viewmodel.skipToNext()
         }
         binding.miniPlayer.onPlayPauseClick = {
-            viewmodel.togglePlaying()
+            viewmodel.togglePlayPause()
         }
         binding.miniPlayer.onPreviousClick = {
-            viewmodel.playPrevious()
+            viewmodel.skipToPrevious()
         }
         binding.miniPlayer.setOnClickListener {
             playerNavigator.navigateToPlayer(findNavController())
