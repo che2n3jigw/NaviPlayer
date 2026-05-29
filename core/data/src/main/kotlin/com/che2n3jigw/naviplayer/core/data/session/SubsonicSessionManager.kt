@@ -24,6 +24,7 @@ package com.che2n3jigw.naviplayer.core.data.session
 import com.che2n3jigw.android.libs.opensubsonicapi.bean.AuthInfo
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.BrowsingDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.ListsDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.MediaAnnotationDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.MediaRetrievalDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.PlaylistsDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.SearchingDataSource
@@ -59,7 +60,8 @@ class SubsonicSessionManager @Inject constructor(
                     listsDataSource = ListsDataSource(it.domain, authInfo),
                     mediaRetrievalDataSource = MediaRetrievalDataSource(it.domain, authInfo),
                     playlistsDataSource = PlaylistsDataSource(it.domain, authInfo),
-                    searchingDataSource = SearchingDataSource(it.domain, authInfo)
+                    searchingDataSource = SearchingDataSource(it.domain, authInfo),
+                    mediaAnnotationDataSource = MediaAnnotationDataSource(it.domain, authInfo),
                 )
             } else {
                 null
@@ -72,4 +74,5 @@ class SubsonicSessionManager @Inject constructor(
     val mediaRetrievalDataSource get() = activeSession.value?.mediaRetrievalDataSource
     val playlistsDataSource get() = activeSession.value?.playlistsDataSource
     val searchingDataSource get() = activeSession.value?.searchingDataSource
+    val mediaAnnotationDataSource get() = activeSession.value?.mediaAnnotationDataSource
 }

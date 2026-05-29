@@ -22,6 +22,7 @@ package com.che2n3jigw.naviplayer.core.data.session
 
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.BrowsingDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.ListsDataSource
+import com.che2n3jigw.android.libs.opensubsonicapi.datasource.MediaAnnotationDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.MediaRetrievalDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.PlaylistsDataSource
 import com.che2n3jigw.android.libs.opensubsonicapi.datasource.SearchingDataSource
@@ -37,5 +38,6 @@ data class SubsonicSession(
     val listsDataSource: ListsDataSource,
     val mediaRetrievalDataSource: MediaRetrievalDataSource,
     val playlistsDataSource: PlaylistsDataSource,
-    val searchingDataSource: SearchingDataSource
+    val searchingDataSource: SearchingDataSource,
+    val mediaAnnotationDataSource: MediaAnnotationDataSource
 )

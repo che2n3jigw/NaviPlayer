@@ -88,4 +88,15 @@ interface SubsonicRepository {
      * 删除歌单
      */
     suspend fun deletePlaylist(id: String): Boolean
+
+    /**
+     * 收藏歌曲
+     */
+    suspend fun star(songId: String): Boolean
+
+    /**
+     * 取消收藏
+     */
+    suspend fun unstar(songId: String): Boolean
+
 }

@@ -141,6 +141,16 @@ internal class DefaultSubsonicRepository @Inject constructor(
         return subsonicSessionManager.playlistsDataSource?.deletePlaylist(id) ?: false
     }
 
+    override suspend fun star(songId: String): Boolean {
+        return subsonicSessionManager.mediaAnnotationDataSource?.star(id = listOf(songId)) ?: false
+    }
+
+    override suspend fun unstar(songId: String): Boolean {
+        return subsonicSessionManager.mediaAnnotationDataSource
+            ?.unstar(id = listOf(songId))
+            ?: false
+    }
+
     private fun childToSong(child: Child): Song {
         val id = child.id ?: ""
         val name = child.sortName ?: ""
