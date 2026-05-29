@@ -40,7 +40,6 @@ class PlayerViewModel @Inject constructor(
     private val mediaDelegate by lazy {
         MediaInteractionDelegate(
             naviMediaManager = naviMediaManager,
-            scope = viewModelScope,
             songListProvider = { naviMediaManager.playlist.value }
         )
     }

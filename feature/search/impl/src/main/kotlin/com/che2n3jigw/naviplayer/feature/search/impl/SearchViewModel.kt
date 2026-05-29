@@ -94,21 +94,15 @@ class SearchViewModel @Inject constructor(
     }
 
     fun playNext() {
-        viewModelScope.launch {
-            naviMediaManager.playNext()
-        }
+        naviMediaManager.playNext()
     }
 
     fun togglePlaying() {
-        viewModelScope.launch {
-            naviMediaManager.togglePlay()
-        }
+        naviMediaManager.togglePlay()
     }
 
     fun playPrevious() {
-        viewModelScope.launch {
-            naviMediaManager.playPrevious()
-        }
+        naviMediaManager.playPrevious()
     }
 }
 

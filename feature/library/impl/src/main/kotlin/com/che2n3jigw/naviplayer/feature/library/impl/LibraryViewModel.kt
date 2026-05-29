@@ -111,33 +111,25 @@ class LibraryViewModel @Inject constructor(
     }
 
     fun play(song: Song) {
-        viewModelScope.launch {
-            _randomSongs.value?.let {
-                val index = it.indexOf(song)
-                if (index != -1) {
-                    naviMediaManager.setMediaItems(it, index)
-                    naviMediaManager.play()
-                }
+        _randomSongs.value?.let {
+            val index = it.indexOf(song)
+            if (index != -1) {
+                naviMediaManager.setMediaItems(it, index)
+                naviMediaManager.play()
             }
         }
     }
 
     fun playNext() {
-        viewModelScope.launch {
-            naviMediaManager.playNext()
-        }
+        naviMediaManager.playNext()
     }
 
     fun togglePlaying() {
-        viewModelScope.launch {
-            naviMediaManager.togglePlay()
-        }
+        naviMediaManager.togglePlay()
     }
 
     fun playPrevious() {
-        viewModelScope.launch {
-            naviMediaManager.playPrevious()
-        }
+        naviMediaManager.playPrevious()
     }
 }
 

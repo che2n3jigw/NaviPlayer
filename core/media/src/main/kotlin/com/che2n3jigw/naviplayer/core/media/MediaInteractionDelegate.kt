@@ -21,47 +21,36 @@
 package com.che2n3jigw.naviplayer.core.media
 
 import com.che2n3jigw.naviplayer.core.model.Song
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /**
  * 通用的播放控制行为委托类
  * @param naviMediaManager  媒体管理器
- * @param scope             协程作用域
  * @param songListProvider  歌曲列表提供者
  */
 class MediaInteractionDelegate(
     private val naviMediaManager: NaviMediaManager,
-    private val scope: CoroutineScope,
     private val songListProvider: () -> List<Song>
 ) : MediaInteraction {
 
     override fun togglePlayPause() {
-        scope.launch {
-            naviMediaManager.togglePlay()
-        }
+        naviMediaManager.togglePlay()
+
     }
 
     override fun skipToNext() {
-        scope.launch {
-            naviMediaManager.playNext()
-        }
+        naviMediaManager.playNext()
     }
 
     override fun skipToPrevious() {
-        scope.launch {
-            naviMediaManager.playPrevious()
-        }
+        naviMediaManager.playPrevious()
     }
 
     override fun playSong(song: Song) {
-        scope.launch {
-            songListProvider.invoke().let {
-                val index = it.indexOf(song)
-                if (index != -1) {
-                    naviMediaManager.setMediaItems(it, index)
-                    naviMediaManager.play()
-                }
+        songListProvider.invoke().let {
+            val index = it.indexOf(song)
+            if (index != -1) {
+                naviMediaManager.setMediaItems(it, index)
+                naviMediaManager.play()
             }
         }
     }

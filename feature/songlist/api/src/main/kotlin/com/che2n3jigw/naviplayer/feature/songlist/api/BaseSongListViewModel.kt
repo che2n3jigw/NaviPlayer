@@ -21,7 +21,6 @@
 package com.che2n3jigw.naviplayer.feature.songlist.api
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.media.MediaInteractionDelegate
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.model.Song
@@ -35,7 +34,6 @@ abstract class BaseSongListViewModel(
     private val mediaDelegate by lazy {
         MediaInteractionDelegate(
             naviMediaManager = naviMediaManager,
-            scope = viewModelScope,
             songListProvider = {
                 // 统一从当前的 uiState 中提取歌曲列表
                 (uiState.value as? SongListUiState.Success)?.songList?.map { it.data }

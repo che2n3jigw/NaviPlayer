@@ -29,9 +29,8 @@ import com.che2n3jigw.naviplayer.core.common.ApplicationScope
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -46,9 +45,8 @@ class NaviPlayerApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         scope.launch {
-            withContext(Dispatchers.Main) {
-                naviMediaManager.initialize()
-            }
+            delay(3000)
+            naviMediaManager.initialize()
         }
     }
 

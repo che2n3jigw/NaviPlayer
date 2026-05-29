@@ -143,21 +143,15 @@ class MeViewModel @Inject constructor(
     }
 
     fun togglePlaying() {
-        viewModelScope.launch {
-            naviMediaManager.togglePlay()
-        }
+        naviMediaManager.togglePlay()
     }
 
     fun playPrevious() {
-        viewModelScope.launch {
-            naviMediaManager.playPrevious()
-        }
+        naviMediaManager.playPrevious()
     }
 
     fun playNext() {
-        viewModelScope.launch {
-            naviMediaManager.playNext()
-        }
+        naviMediaManager.playNext()
     }
 }
 
