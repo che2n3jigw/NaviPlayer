@@ -20,6 +20,7 @@
 // 创建时间： 2026/3/30 14:17
 package com.che2n3jigw.naviplayer
 
+import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -45,6 +46,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun initListener() {
+        navController?.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == com.che2n3jigw.naviplayer.feature.player.impl.R.id.player_dest) {
+                binding.bottomNavView.visibility = View.GONE
+            } else {
+                binding.bottomNavView.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun subscribeUI() {
