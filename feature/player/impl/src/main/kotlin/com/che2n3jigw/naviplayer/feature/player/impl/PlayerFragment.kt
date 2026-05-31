@@ -20,11 +20,15 @@
 // 创建时间： 2026/5/27 16:52
 package com.che2n3jigw.naviplayer.feature.player.impl
 
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
@@ -57,8 +61,8 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
 
         override fun onStopTrackingTouch(slider: Slider) {
             sliderTouchFlag = false
+            viewModel.seekTo(slider.value.toInt() * 1000L)
         }
-
     }
 
     override fun inflateBinding() = FragmentPlayerBinding.inflate(layoutInflater)
@@ -79,6 +83,12 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
         }
         binding.mbNext.setOnClickListener {
             viewModel.skipToNext()
+        }
+        binding.mbFavourite.setOnClickListener {
+            viewModel.starOrUnStar()
+        }
+        binding.mbBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -107,7 +117,12 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
                         .map { it.duration to it.durationTxt }
                         .distinctUntilChanged()
                         .collect { (duration, durationTxt) ->
-                            binding.slider.valueTo = duration.toFloat()
+                            if (duration > 0.0) {
+                                binding.slider.valueTo = duration.toFloat()
+                                binding.slider.isEnabled = true
+                            } else {
+                                binding.slider.isEnabled = false
+                            }
                             binding.tvSongDuration.text = durationTxt
                         }
                 }
@@ -144,5 +159,11 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
     override fun onDestroyView() {
         binding.slider.removeOnSliderTouchListener(touchListener)
         super.onDestroyView()
+    }
+
+    override fun onApplyWindowInsets(insets: Insets) {
+        binding.mbBack.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = insets.top
+        }
     }
 }

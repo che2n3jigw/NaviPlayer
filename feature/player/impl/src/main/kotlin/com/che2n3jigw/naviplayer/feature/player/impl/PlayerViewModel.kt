@@ -23,18 +23,22 @@ package com.che2n3jigw.naviplayer.feature.player.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
+import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.media.api.PlayerController
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PlayerViewModel @Inject constructor(
-    naviMediaManager: NaviMediaManager,
+    private val subsonicRepository: SubsonicRepository,
+    private val naviMediaManager: NaviMediaManager,
     timeUtils: TimeUtils
 ) : ViewModel(), PlayerController by naviMediaManager {
 
@@ -61,6 +65,25 @@ class PlayerViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = PlayerUiState()
     )
+
+    fun starOrUnStar() {
+        viewModelScope.launch {
+            naviMediaManager.currentSong.firstOrNull()?.let { song ->
+                val isFavourite = song.isFavourite
+                if (isFavourite) {
+                    val success = subsonicRepository.unstar(song.id)
+                    if (success) {
+                        naviMediaManager.updateSongMetadata(song.id, false)
+                    }
+                } else {
+                    val success = subsonicRepository.star(song.id)
+                    if (success) {
+                        naviMediaManager.updateSongMetadata(song.id, true)
+                    }
+                }
+            }
+        }
+    }
 }
 
 data class PlayerUiState(

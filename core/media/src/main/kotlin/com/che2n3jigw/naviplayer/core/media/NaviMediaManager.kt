@@ -128,6 +128,23 @@ class NaviMediaManager @Inject constructor(
         checkPlaybackPositionJob?.cancel()
     }
 
+    /**
+     * 仅更新内存中歌曲的状态（如收藏属性），而不触碰播放器实例
+     */
+    fun updateSongMetadata(songId: String, isFavourite: Boolean) {
+        // 1. 更新播放列表中的对应歌曲
+        _playlist.update { currentList ->
+            currentList.map {
+                if (it.id == songId) it.copy(isFavourite = isFavourite) else it
+            }
+        }
+
+        // 2. 如果是当前播放的歌曲，也需要更新
+        if (_currentSong.value?.id == songId) {
+            _currentSong.update { it?.copy(isFavourite = isFavourite) }
+        }
+    }
+
     private fun checkPlaybackPosition() {
         checkPlaybackPositionJob = CoroutineScope(SupervisorJob() + Dispatchers.Main).launch {
             while (isActive) {
