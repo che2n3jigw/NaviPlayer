@@ -23,15 +23,12 @@ package com.che2n3jigw.naviplayer.feature.favourite.impl
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
-import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,26 +38,14 @@ class FavouriteViewModel @Inject constructor(
     naviMediaManager: NaviMediaManager,
     private val subsonicRepository: SubsonicRepository
 ) : SongListViewModel(naviMediaManager) {
-    private val songList = MutableStateFlow<List<Song>?>(null)
 
-    override val songListUiState = songList.map {
-        if (it == null) {
-            SongListUiState.Loading
-        } else {
-            val list = it.map { song -> SelectableItem(song, false) }
-            SongListUiState.Success(list)
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SongListUiState.Loading
-    )
+    private val _songList = MutableStateFlow<List<Song>?>(null)
+
+    override val songList: StateFlow<List<Song>?> = _songList.asStateFlow()
 
     fun loadData() {
         viewModelScope.launch {
-            songList.update {
-                subsonicRepository.getFavouriteList()
-            }
+            _songList.update { subsonicRepository.getFavouriteList() }
         }
     }
 }

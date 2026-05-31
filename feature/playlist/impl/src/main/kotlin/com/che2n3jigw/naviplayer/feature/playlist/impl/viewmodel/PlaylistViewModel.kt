@@ -24,13 +24,14 @@ import android.os.Bundle
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableItem
-import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
+import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -41,21 +42,20 @@ class PlaylistViewModel @Inject constructor(
     naviMediaManager: NaviMediaManager
 ) : SongListViewModel(naviMediaManager) {
 
-    private val _playlistId = MutableStateFlow("")
+    private val _playlistId = MutableStateFlow<String?>(null)
 
-    override val songListUiState = _playlistId.map { id ->
-        if (id.isEmpty()) {
-            SongListUiState.Loading
+    override val songList = _playlistId.flatMapLatest { id ->
+        if (id == null) {
+            flowOf(null)
+        } else if (id.isEmpty()) {
+            flowOf(emptyList<Song>())
         } else {
-            val list = subsonicRepository.getPlaylist(id).map {
-                SelectableItem(it, false)
-            }
-            SongListUiState.Success(list)
+            flow { emit(subsonicRepository.getPlaylist(id)) }
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SongListUiState.Loading
+        initialValue = null
     )
 
     /**

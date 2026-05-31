@@ -23,8 +23,6 @@ package com.che2n3jigw.naviplayer.feature.recent.impl
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableItem
-import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,12 +36,11 @@ class RecentViewModel @Inject constructor(
     userPlaybackRepository: UserPlaybackRepository
 ) : SongListViewModel(naviMediaManager) {
 
-    override val songListUiState = userPlaybackRepository.playbacks.map { playbacks ->
-        val songList = playbacks.map { SelectableItem(it.song, false) }
-        SongListUiState.Success(songList)
+    override val songList = userPlaybackRepository.playbacks.map { playbacks ->
+        playbacks.map { it.song }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SongListUiState.Loading
+        initialValue = null
     )
 }

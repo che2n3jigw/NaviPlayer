@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class RecentFragment : SongListFragment() {
     private val viewModel: RecentViewModel by viewModels()
 
-    override val songListViewModel = viewModel
+    override val songListViewModel get() = viewModel
 
     override fun getTitleRes(): Int = R.string.recent_title
 }

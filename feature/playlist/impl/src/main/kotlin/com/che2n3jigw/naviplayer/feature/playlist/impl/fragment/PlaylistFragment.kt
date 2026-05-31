@@ -34,10 +34,9 @@ class PlaylistFragment : SongListFragment() {
 
     private val viewModel: PlaylistViewModel by viewModels()
 
-    override val songListViewModel = viewModel
+    override val songListViewModel get() = viewModel
 
     override fun getTitleRes() = R.string.playlist_playlist
-
 
     override fun onResume() {
         super.onResume()

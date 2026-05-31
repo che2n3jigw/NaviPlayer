@@ -22,20 +22,46 @@ package com.che2n3jigw.naviplayer.feature.songlist.api
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.media.api.PlayerController
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/**
+ * 歌曲列表ViewModel
+ * 歌曲列表由子类提供
+ */
 abstract class SongListViewModel(
-    protected val playerController: PlayerController
-) : ViewModel(), PlayerController by playerController {
+    protected val naviMediaManager: NaviMediaManager
+) : ViewModel(), PlayerController by naviMediaManager {
 
-    /**
-     * 歌曲列表页面相关UiState
-     */
-    abstract val songListUiState: StateFlow<SongListUiState>
+    abstract val songList: StateFlow<List<Song>?>
+
+    // 整合歌曲列表、播放状态、当前播放歌曲的流
+    internal val songListUiState: StateFlow<SongListUiState> by lazy {
+        combine(
+            songList, naviMediaManager.isPlaying, naviMediaManager.currentSong
+        ) { songList, isPlaying, currentSong ->
+            if (songList == null) {
+                SongListUiState.Loading
+            } else {
+                val list = songList.map {
+                    SelectableItem(data = it, isSelected = it.id == currentSong?.id)
+                }
+                SongListUiState.Success(list, isPlaying, currentSong)
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = SongListUiState.Loading
+        )
+    }
 
     fun onSongClicked(song: Song) {
         viewModelScope.launch {
@@ -44,7 +70,7 @@ abstract class SongListViewModel(
                 val songs = uiState.songList.map { it.data }
                 val index = songs.indexOf(song)
                 if (index != -1) {
-                    playerController.play(songs, index)
+                    naviMediaManager.play(songs, index)
                 }
             }
         }

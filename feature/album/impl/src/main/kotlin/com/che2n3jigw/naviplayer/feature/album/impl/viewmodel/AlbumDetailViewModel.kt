@@ -20,13 +20,14 @@ import android.os.Bundle
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.SelectableItem
-import com.che2n3jigw.naviplayer.feature.songlist.api.SongListUiState
+import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -38,21 +39,22 @@ class AlbumDetailViewModel @Inject constructor(
 ) : SongListViewModel(naviMediaManager) {
 
     // 专辑id
-    private val _albumId = MutableStateFlow("")
+    private val _albumId = MutableStateFlow<String?>(null)
 
-    override val songListUiState = _albumId.map { albumId ->
-        if (albumId.isEmpty()) {
-            SongListUiState.Loading
+    // 默认歌曲列表为空
+    override val songList = _albumId.flatMapLatest { id ->
+        // 专辑id未获取前列表为空
+        if (id == null) {
+            flowOf(null)
+        } else if (id.isEmpty()) {
+            flowOf(emptyList<Song>())
         } else {
-            val songs = subsonicRepository.getAlbumDetail(albumId).map {
-                SelectableItem(it, false)
-            }
-            SongListUiState.Success(songs)
+            flow { emit(subsonicRepository.getAlbumDetail(id)) }
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = SongListUiState.Loading
+        initialValue = null
     )
 
     fun parseBundle(bundle: Bundle?) {
