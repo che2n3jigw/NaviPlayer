@@ -34,6 +34,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
+import com.che2n3jigw.naviplayer.core.ui.databinding.ViewEmptyBinding
+import com.che2n3jigw.naviplayer.core.ui.databinding.ViewErrorBinding
+import com.che2n3jigw.naviplayer.core.ui.databinding.ViewNotLoginBinding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
@@ -50,9 +53,15 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
      */
     private var _binding: VB? = null
     protected val binding get() = _binding!!
+
+    // <editor-fold defaultState="collapsed" desc="StateView">
     private var emptyView: View? = null
     private var errorView: View? = null
     private var notLoginView: View? = null
+    private var emptyBinding: ViewEmptyBinding? = null
+    private var errorBinding: ViewErrorBinding? = null
+    private var notLoginBinding: ViewNotLoginBinding? = null
+    // </editor-fold>
 
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
@@ -84,6 +93,9 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         emptyView = null
         errorView = null
         notLoginView = null
+        emptyBinding = null
+        errorBinding = null
+        notLoginBinding = null
     }
 
     /**
@@ -106,28 +118,51 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     protected fun observePageUiState(flow: Flow<PageUiState>) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                flow.collect {
+                flow.collect { state ->
                     // 内容显示
                     val showContent =
-                        it !is PageUiState.Loading && it !is PageUiState.Empty && it !is PageUiState.Error
-                    getContentView()?.forEach { content ->
-                        content.isVisible = showContent
-                    }
+                        state !is PageUiState.Loading && state !is PageUiState.Empty && state !is PageUiState.Error
+                    getContentView()?.forEach { content -> content.isVisible = showContent }
 
                     // 加载框显示
-                    getLoadingView()?.isVisible = it is PageUiState.Loading
+                    getLoadingView()?.isVisible = state is PageUiState.Loading
 
-                    // 空数据显示
-                    emptyView = emptyView ?: getEmptyView()?.inflate()
-                    emptyView?.isVisible = it is PageUiState.Empty
+                    // 空数据显示 (只在需要显示且未加载时 inflate)
+                    val isEmpty = state is PageUiState.Empty
+                    if (isEmpty && emptyView == null) {
+                        getEmptyView()?.inflate()?.let { view ->
+                            emptyView = view
+                            emptyBinding = ViewEmptyBinding.bind(view).apply {
+                                btRefresh.setOnClickListener { onEmptyRefreshClick().invoke() }
+                            }
+                        }
+                    }
+                    emptyView?.isVisible = isEmpty
 
                     // 加载异常显示
-                    errorView = errorView ?: getErrorView()?.inflate()
-                    errorView?.isVisible = it is PageUiState.Error
+                    val isError = state is PageUiState.Error
+                    if (isError && errorView == null) {
+                        getErrorView()?.inflate()?.let { view ->
+                            errorView = view
+                            errorBinding = ViewErrorBinding.bind(view).apply {
+                                btRefresh.setOnClickListener { onErrorRefreshClick().invoke() }
+                            }
+                        }
+                    }
+                    errorView?.isVisible = isError
 
                     // 未登录显示
-                    notLoginView = notLoginView ?: getNotLoginView()?.inflate()
-                    notLoginView?.isVisible = it is PageUiState.NotLogin
+                    val isNotLogin = state is PageUiState.NotLogin
+                    if (isNotLogin && notLoginView == null) {
+                        getNotLoginView()?.inflate()?.let { view ->
+                            notLoginView = view
+                            notLoginBinding = ViewNotLoginBinding.bind(view).apply {
+                                // 假设 NotLogin 布局有 btLogin
+                                btToLogin.setOnClickListener { onToLoginClick().invoke() }
+                            }
+                        }
+                    }
+                    notLoginView?.isVisible = isNotLogin
                 }
             }
         }
@@ -138,6 +173,9 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     protected open fun getEmptyView(): ViewStub? = null
     protected open fun getErrorView(): ViewStub? = null
     protected open fun getNotLoginView(): ViewStub? = null
+    protected open fun onEmptyRefreshClick() = {}
+    protected open fun onErrorRefreshClick() = {}
+    protected open fun onToLoginClick() = {}
 
     /**
      * 子类必须实现此方法来提供具体的 ViewBinding 实例。
