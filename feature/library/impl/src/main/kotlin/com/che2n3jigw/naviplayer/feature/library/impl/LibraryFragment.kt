@@ -37,16 +37,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
-import com.che2n3jigw.naviplayer.feature.album.api.AlbumCarouselAdapter
-import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
-import com.che2n3jigw.naviplayer.feature.album.api.AlbumNavigator
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
 import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginNavigator
 import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import com.che2n3jigw.naviplayer.feature.search.api.SearchNavigator
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.behavior.HideViewOnScrollBehavior
-import com.google.android.material.carousel.CarouselLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -61,17 +56,11 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     lateinit var searchNavigator: SearchNavigator
 
     @Inject
-    lateinit var albumNavigator: AlbumNavigator
-
-    @Inject
     lateinit var playerNavigator: PlayerNavigator
 
     @Inject
     lateinit var loginNavigator: LoginNavigator
 
-    private var appBarLayoutOffset = 0
-
-    private val albumAdapter = AlbumCarouselAdapter()
     private val songAdapter = SelectableSongAdapter()
 
     private val viewmodel: LibraryViewModel by viewModels()
@@ -79,12 +68,6 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     override fun inflateBinding() = FragmentLibraryBinding.inflate(layoutInflater)
 
     override fun initView() {
-        binding.rvAlbum.apply {
-            layoutManager = CarouselLayoutManager()
-            isNestedScrollingEnabled = false
-            adapter = albumAdapter
-        }
-
         binding.rvSong.apply {
             layoutManager = LinearLayoutManager(requireContext())
             isNestedScrollingEnabled = true
@@ -93,25 +76,8 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     }
 
     override fun initListener() {
-        albumAdapter.itemClickListener = { item, position ->
-            binding.rvAlbum.smoothScrollToPosition(position)
-            if (item is AlbumItem.Content) {
-                albumNavigator.navigateToAlbumDetail(findNavController(), item.id)
-            } else {
-                albumNavigator.navigateToAlbumList(findNavController())
-            }
-        }
         songAdapter.itemClickListener = { song, _ ->
             viewmodel.play(song)
-        }
-        binding.appbar.addOnOffsetChangedListener { _, verticalOffset ->
-            appBarLayoutOffset = verticalOffset
-        }
-
-        binding.appbar.post {
-            val params = binding.appbar.layoutParams as CoordinatorLayout.LayoutParams
-            val behavior = params.behavior as AppBarLayout.Behavior
-            behavior.setTopAndBottomOffset(viewmodel.appBarLayoutOffset)
         }
 
         if (viewmodel.miniPlayerOut) {
@@ -146,7 +112,6 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
                         content.isVisible = success
                     }
                     if (success) {
-                        albumAdapter.submitList(it.albumItems)
                         songAdapter.submitList(it.randomSongs)
                         updateMiniPlayer(it.currentSong, it.isPlaying)
                     }
@@ -165,7 +130,6 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
 
     override fun onPause() {
         super.onPause()
-        viewmodel.appBarLayoutOffset = appBarLayoutOffset
         viewmodel.miniPlayerOut = getMiniPlayerBehavior().isScrolledOut
     }
 

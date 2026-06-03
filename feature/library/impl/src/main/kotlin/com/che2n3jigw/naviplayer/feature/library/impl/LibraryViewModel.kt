@@ -29,14 +29,12 @@ import com.che2n3jigw.naviplayer.core.media.api.PlaybackController
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.PageUiState
-import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,28 +47,26 @@ class LibraryViewModel @Inject constructor(
     var appBarLayoutOffset = 0
     var miniPlayerOut = false
 
-    private val _albumItems = MutableStateFlow<List<AlbumItem>?>(null)
     private val _randomSongs = MutableStateFlow<List<Song>?>(null)
-    private val _playbackState = combine(
-        naviMediaManager.currentSong, naviMediaManager.isPlaying
-    ) { song, isPlaying ->
-        Pair(song, isPlaying)
-    }
+    private val _playbackState =
+        combine(naviMediaManager.currentSong, naviMediaManager.isPlaying) { song, isPlaying ->
+            Pair(song, isPlaying)
+        }
 
-    val uiState: StateFlow<PageUiState> = combine(
-        userRepository.userData, _albumItems, _randomSongs, _playbackState
-    ) { userData, albumItems, randomSongs, playbackState ->
+    val uiState = combine(
+        userRepository.userData, _randomSongs, _playbackState
+    ) { userData, randomSongs, playbackState ->
         // 检查登录状态
         if (!userData.isLoggedIn) {
             return@combine PageUiState.NotLogin
         }
 
         // 请求中
-        if (albumItems == null || randomSongs == null) {
+        if (randomSongs == null) {
             return@combine PageUiState.Loading
         }
         // 请求结束 没有数据
-        if (albumItems.isEmpty() && randomSongs.isEmpty()) {
+        if (randomSongs.isEmpty()) {
             return@combine PageUiState.Empty
         }
 
@@ -79,7 +75,7 @@ class LibraryViewModel @Inject constructor(
         val selectableRandomSongs = randomSongs.map {
             SelectableItem(it, it.id == song?.id)
         }
-        LibraryUiState.Success(albumItems, selectableRandomSongs, song, playbackState.second)
+        LibraryUiState.Success(selectableRandomSongs, song, playbackState.second)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -98,25 +94,7 @@ class LibraryViewModel @Inject constructor(
 
     fun loadData() {
         viewModelScope.launch {
-            val albumsDeferred = async {
-                val albumList = subsonicRepository.getAlbumList(5, 0)
-                buildList {
-                    addAll(albumList.map {
-                        AlbumItem.Content(it.id, it.name, it.imageUrl)
-                    })
-                    if (albumList.size == 5) {
-                        add(AlbumItem.More)
-                    }
-                }
-            }
-
-            val randomDeferred = async {
-                subsonicRepository.getRandomSongs(30)
-            }
-
-            // 等待结果并赋值
-            _albumItems.value = albumsDeferred.await()
-            _randomSongs.value = randomDeferred.await()
+            _randomSongs.update { subsonicRepository.getRandomSongs(30) }
         }
     }
 
@@ -131,13 +109,11 @@ class LibraryViewModel @Inject constructor(
 }
 
 sealed interface LibraryUiState : PageUiState {
-
     /**
      * 加载成功
      */
     data class Success(
-        val albumItems: List<AlbumItem> = emptyList(),
-        val randomSongs: List<SelectableItem<Song>> = emptyList(),
+        val randomSongs: List<SelectableItem<Song>>,
         val currentSong: Song? = null,
         val isPlaying: Boolean = false
     ) : LibraryUiState

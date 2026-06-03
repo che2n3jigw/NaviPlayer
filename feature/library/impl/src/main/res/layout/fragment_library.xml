@@ -30,14 +30,14 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll">
+            app:layout_scrollFlags="noScroll">
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="24dp"
-                android:text="@string/library_album"
+                android:text="@string/library_recommend"
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
             <androidx.appcompat.widget.AppCompatImageButton
@@ -50,24 +50,6 @@
                 android:src="@drawable/library_ic_search" />
 
         </FrameLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_album"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginVertical="16dp"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:paddingBottom="16dp"
-            app:layout_scrollFlags="scroll" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="@string/library_recommend"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
