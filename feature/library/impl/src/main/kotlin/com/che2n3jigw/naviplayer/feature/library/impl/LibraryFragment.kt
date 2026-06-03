@@ -41,6 +41,7 @@ import com.che2n3jigw.naviplayer.feature.album.api.AlbumCarouselAdapter
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumNavigator
 import com.che2n3jigw.naviplayer.feature.library.impl.databinding.FragmentLibraryBinding
+import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginNavigator
 import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import com.che2n3jigw.naviplayer.feature.search.api.SearchNavigator
 import com.google.android.material.appbar.AppBarLayout
@@ -64,6 +65,9 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
 
     @Inject
     lateinit var playerNavigator: PlayerNavigator
+
+    @Inject
+    lateinit var loginNavigator: LoginNavigator
 
     private var appBarLayoutOffset = 0
 
@@ -133,21 +137,18 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
     }
 
     override fun subscribeUI() {
+        observePageUiState(viewmodel.uiState)
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewmodel.uiState.collect {
-                    binding.loading.isVisible = it is LibraryUiState.Loading
-                    binding.appbar.isVisible = it is LibraryUiState.Success
-                    binding.rvSong.isVisible = it is LibraryUiState.Success
-                    binding.miniPlayer.isVisible = it is LibraryUiState.Success
-                    when (it) {
-                        is LibraryUiState.Success -> {
-                            albumAdapter.submitList(it.albumItems)
-                            songAdapter.submitList(it.randomSongs)
-                            updateMiniPlayer(it.currentSong, it.isPlaying)
-                        }
-
-                        else -> {}
+                    val success = it is LibraryUiState.Success
+                    getContentView().forEach { content ->
+                        content.isVisible = success
+                    }
+                    if (success) {
+                        albumAdapter.submitList(it.albumItems)
+                        songAdapter.submitList(it.randomSongs)
+                        updateMiniPlayer(it.currentSong, it.isPlaying)
                     }
                 }
             }
@@ -167,6 +168,16 @@ class LibraryFragment : BaseFragment<FragmentLibraryBinding>() {
         viewmodel.appBarLayoutOffset = appBarLayoutOffset
         viewmodel.miniPlayerOut = getMiniPlayerBehavior().isScrolledOut
     }
+
+    // <editor-fold defaultState="collapsed" desc="PageState相关">
+    override fun getContentView() = listOf(binding.appbar, binding.rvSong, binding.miniPlayer)
+    override fun getLoadingView() = binding.loading
+    override fun getEmptyView() = binding.viewEmpty
+    override fun getNotLoginView() = binding.viewNotLogin
+    override fun onEmptyRefreshClick() = { viewmodel.loadData() }
+    override fun onErrorRefreshClick() = { viewmodel.loadData() }
+    override fun onToLoginClick() = { loginNavigator.navigateToLogin(findNavController()) }
+    // </editor-fold>
 
     private fun getMiniPlayerBehavior(): HideViewOnScrollBehavior<View> {
         val layoutParams = binding.miniPlayer.layoutParams as CoordinatorLayout.LayoutParams

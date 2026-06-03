@@ -19,13 +19,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.loadingindicator.LoadingIndicator
-        android:id="@+id/loading"
-        style="@style/Widget.Material3.LoadingIndicator.Contained"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         style="?attr/appBarLayoutStyle"
@@ -97,5 +90,24 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="12dp"
         app:layout_behavior="com.google.android.material.behavior.HideViewOnScrollBehavior" />
+
+    <com.google.android.material.loadingindicator.LoadingIndicator
+        android:id="@+id/loading"
+        style="@style/Widget.Material3.LoadingIndicator.Contained"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <ViewStub
+        android:id="@+id/view_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/view_empty" />
+
+    <ViewStub
+        android:id="@+id/view_not_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/view_not_login" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -28,6 +28,7 @@ import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.media.api.PlaybackController
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
+import com.che2n3jigw.naviplayer.core.ui.PageUiState
 import com.che2n3jigw.naviplayer.feature.album.api.AlbumItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -56,25 +57,33 @@ class LibraryViewModel @Inject constructor(
         Pair(song, isPlaying)
     }
 
-    val uiState: StateFlow<LibraryUiState> = combine(
+    val uiState: StateFlow<PageUiState> = combine(
         userRepository.userData, _albumItems, _randomSongs, _playbackState
     ) { userData, albumItems, randomSongs, playbackState ->
+        // 检查登录状态
         if (!userData.isLoggedIn) {
-            LibraryUiState.NotLogin
-        } else if (albumItems == null || randomSongs == null) {
-            LibraryUiState.Loading
-        } else {
-            val song = playbackState.first
-            // 随机歌曲列表转换成可选中的随机歌曲列表
-            val selectableRandomSongs = randomSongs.map {
-                SelectableItem(it, it.id == song?.id)
-            }
-            LibraryUiState.Success(albumItems, selectableRandomSongs, song, playbackState.second)
+            return@combine PageUiState.NotLogin
         }
+
+        // 请求中
+        if (albumItems == null || randomSongs == null) {
+            return@combine PageUiState.Loading
+        }
+        // 请求结束 没有数据
+        if (albumItems.isEmpty() && randomSongs.isEmpty()) {
+            return@combine PageUiState.Empty
+        }
+
+        val song = playbackState.first
+        // 随机歌曲列表转换成可选中的随机歌曲列表
+        val selectableRandomSongs = randomSongs.map {
+            SelectableItem(it, it.id == song?.id)
+        }
+        LibraryUiState.Success(albumItems, selectableRandomSongs, song, playbackState.second)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = LibraryUiState.Loading
+        initialValue = PageUiState.Loading
     )
 
     init {
@@ -87,7 +96,7 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
-    private fun loadData() {
+    fun loadData() {
         viewModelScope.launch {
             val albumsDeferred = async {
                 val albumList = subsonicRepository.getAlbumList(5, 0)
@@ -121,16 +130,7 @@ class LibraryViewModel @Inject constructor(
     }
 }
 
-sealed interface LibraryUiState {
-    /**
-     * 加载中
-     */
-    data object Loading : LibraryUiState
-
-    /**
-     * 未登录状态
-     */
-    data object NotLogin : LibraryUiState
+sealed interface LibraryUiState : PageUiState {
 
     /**
      * 加载成功
