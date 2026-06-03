@@ -35,7 +35,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -49,9 +48,6 @@ class MeViewModel @Inject constructor(
     private val timeUtils: TimeUtils,
     userPlaybackRepository: UserPlaybackRepository
 ) : ViewModel(), PlaybackController by naviMediaManager {
-
-    // 头像
-    private val _avatar = MutableStateFlow("")
 
     // 收藏歌曲
     private val _favouriteSongs = MutableStateFlow<List<Song>>(emptyList())
@@ -77,9 +73,8 @@ class MeViewModel @Inject constructor(
     val uiState: StateFlow<MeUiState> = combine(
         userRepository.userData,
         _lists,
-        _avatar,
         _playbackState,
-    ) { userData, lists, avatar, playbackState ->
+    ) { userData, lists, playbackState ->
         val favouriteSongs = lists.first
         val playbacks = lists.second
         val playlists = lists.third
@@ -98,7 +93,6 @@ class MeViewModel @Inject constructor(
 
         MeUiState(
             isLoggedIn = userData.isLoggedIn,
-            avatar = avatar,
             favouriteCover = favouriteSongs.firstOrNull()?.imageUrl ?: "",
             favouriteCount = favouriteSongs.size,
             lastPlaybackTime = lastPlaybackTime,
@@ -125,10 +119,6 @@ class MeViewModel @Inject constructor(
 
     fun refreshLibraryData() {
         viewModelScope.launch {
-            launch {
-                val userName = userRepository.userData.first().username
-                _avatar.value = subsonicRepository.getAvatarUrl(userName)
-            }
             launch { _favouriteSongs.value = subsonicRepository.getFavouriteList() }
             launch { _playlists.value = subsonicRepository.getPlaylistList() }
         }
@@ -147,11 +137,7 @@ data class MeUiState(
     /**
      * 是否登录
      */
-    val isLoggedIn: Boolean = false,
-    /**
-     * 用户头像
-     */
-    val avatar: String = "",
+    val isLoggedIn: Boolean = true,
     /**
      * 收藏歌曲封面
      */
@@ -172,10 +158,6 @@ data class MeUiState(
      * 歌单个数
      */
     val playlistCount: Int = 0,
-    /**
-     * 离线缓存大小
-     */
-    val offlineSize: String = "",
     /**
      * 当前播放的歌曲信息（包含封面、名字、歌手）
      */

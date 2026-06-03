@@ -30,9 +30,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import coil.load
+import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.util.ClickEffectUtil
 import com.che2n3jigw.naviplayer.feature.favourite.api.FavouriteNavigator
+import com.che2n3jigw.naviplayer.feature.login.api.navigation.LoginNavigator
 import com.che2n3jigw.naviplayer.feature.me.impl.databinding.FragmentMeBinding
 import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
@@ -62,9 +64,12 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     @Inject
     lateinit var playerNavigator: PlayerNavigator
 
+    @Inject
+    lateinit var loginNavigator: LoginNavigator
+
     private val snackBar by lazy {
         Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
-            setAnchorView(binding.nsvContent)
+            setAnchorView(binding.miniPlayer)
         }
     }
 
@@ -89,9 +94,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         }
         binding.miniPlayer.onNextClick = {
             viewModel.skipToNext()
-        }
-        binding.miniPlayer.setOnClickListener {
-            // 进入播放详情页
         }
         binding.viewStatPlaylists.setOnClickListener {
             playlistNavigator.navigateToPlaylists(findNavController())
@@ -118,14 +120,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                         .collect { isLoggedIn -> updateLoginStatus(isLoggedIn) }
                 }
 
-                // 只有头像变化时才更新头像
-                launch {
-                    viewModel.uiState
-                        .map { it.avatar }
-                        .distinctUntilChanged()
-                        .collect { updateAvatar(it) }
-                }
-
                 // 只有收藏歌曲变化时更新收藏歌曲区域
                 launch {
                     viewModel.uiState
@@ -145,9 +139,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                 // 只有统计数据变化时才更新统计区域
                 launch {
                     viewModel.uiState
-                        .map { listOf(it.playlistCount, it.offlineSize) }
+                        .map { it.playlistCount }
                         .distinctUntilChanged()
-                        .collect { updateStatsSection(viewModel.uiState.value) }
+                        .collect { playlistCount -> updateStatsSection(playlistCount) }
                 }
 
                 // 只有播放状态变化时刷新迷你播放器
@@ -155,14 +149,14 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
                     viewModel.uiState
                         .map { Pair(it.currentSong, it.isPlaying) }
                         .distinctUntilChanged()
-                        .collect { updateMiniPlayerSection(viewModel.uiState.value) }
+                        .collect { (song, isPlaying) -> updateMiniPlayerSection(song, isPlaying) }
                 }
             }
         }
     }
 
     override fun onApplyWindowInsets(insets: Insets) {
-        binding.ivAvatar.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        binding.flFavoriteSong.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             topMargin = insets.top
         }
     }
@@ -172,26 +166,21 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         snackBar.dismiss()
     }
 
-    private fun updateStatsSection(state: MeUiState) {
+    private fun updateStatsSection(playlistCount: Int) {
         binding.viewStatPlaylists.setData(
             R.drawable.me_ic_lists,
-            state.playlistCount.toString(),
+            playlistCount.toString(),
             getString(R.string.me_lists)
-        )
-        binding.viewStatOffline.setData(
-            R.drawable.me_ic_offline,
-            state.offlineSize,
-            getString(R.string.me_offline)
         )
     }
 
-    private fun updateMiniPlayerSection(state: MeUiState) {
+    private fun updateMiniPlayerSection(song: Song?, isPlaying: Boolean) {
         binding.miniPlayer.updateSongInfo(
-            state.currentSong?.imageUrl ?: "",
-            state.currentSong?.name ?: "",
-            state.currentSong?.singer ?: ""
+            song?.imageUrl ?: "",
+            song?.name ?: "",
+            song?.singer ?: ""
         )
-        binding.miniPlayer.updatePlaying(state.isPlaying)
+        binding.miniPlayer.updatePlaying(isPlaying)
     }
 
     private fun updateLastPlayback(lastPlayTime: String, lastPlaybackCoverUrl: String) {
@@ -214,19 +203,14 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         binding.tvTrackCount.text = getString(R.string.me_library_tracks_count, pair.second)
     }
 
-    private fun updateAvatar(avatar: String) {
-        binding.ivAvatar.load(avatar) {
-            placeholder(R.drawable.me_placeholder_avatar)
-            error(R.drawable.me_placeholder_avatar)
-        }
-    }
-
     private fun updateLoginStatus(isLoggedIn: Boolean) {
         if (isLoggedIn) {
             snackBar.dismiss()
         } else {
             snackBar.setText(R.string.me_not_login)
-            snackBar.setAction(R.string.me_to_login) {}
+            snackBar.setAction(R.string.me_to_login) {
+                loginNavigator.navigateToLogin(findNavController())
+            }
             snackBar.show()
         }
     }
