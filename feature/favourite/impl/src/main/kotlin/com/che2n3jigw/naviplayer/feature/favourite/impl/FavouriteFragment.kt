@@ -35,9 +35,4 @@ class FavouriteFragment() : SongListFragment() {
     override val songListViewModel get() = viewModel
 
     override fun getTitleRes() = R.string.favourite_title
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadData()
-    }
 }

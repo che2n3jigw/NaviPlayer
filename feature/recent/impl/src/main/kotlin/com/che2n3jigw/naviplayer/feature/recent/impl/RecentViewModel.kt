@@ -26,8 +26,10 @@ import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,11 +38,16 @@ class RecentViewModel @Inject constructor(
     userPlaybackRepository: UserPlaybackRepository
 ) : SongListViewModel(naviMediaManager) {
 
-    override val songList = userPlaybackRepository.playbacks.map { playbacks ->
-        playbacks.map { it.song }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
-    )
+    override val songList = refreshTrigger
+        .onStart { emit(Unit) }
+        .transformLatest {
+            emit(null)
+            val playbacks = userPlaybackRepository.playbacks.first()
+            val list = playbacks.map { it.song }
+            emit(list)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = null
+        )
 }

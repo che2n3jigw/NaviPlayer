@@ -20,15 +20,14 @@ import android.os.Bundle
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -41,21 +40,30 @@ class AlbumDetailViewModel @Inject constructor(
     // 专辑id
     private val _albumId = MutableStateFlow<String?>(null)
 
-    // 默认歌曲列表为空
-    override val songList = _albumId.flatMapLatest { id ->
-        // 专辑id未获取前列表为空
-        if (id == null) {
-            flowOf(null)
-        } else if (id.isEmpty()) {
-            flowOf(emptyList<Song>())
-        } else {
-            flow { emit(subsonicRepository.getAlbumDetail(id)) }
+    override val songList = combine(
+        _albumId,
+        refreshTrigger.onStart { emit(Unit) }
+    ) { id, _ ->
+        id
+    }.transformLatest { id ->
+        // 第一步：先发射 null，父类会监听到并显示 Loading
+        emit(null)
+
+        // 第二步：根据 ID 获取数据
+        val result = when {
+            id == null -> null
+            id.isEmpty() -> emptyList()
+            else -> subsonicRepository.getAlbumDetail(id)
         }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
-    )
+
+        // 第三步：发射最终结果
+        emit(result)
+    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = null
+        )
 
     fun parseBundle(bundle: Bundle?) {
         _albumId.update { bundle?.getString("id") ?: "" }

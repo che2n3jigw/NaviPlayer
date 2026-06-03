@@ -23,14 +23,12 @@ package com.che2n3jigw.naviplayer.feature.favourite.impl
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
-import com.che2n3jigw.naviplayer.core.model.Song
 import com.che2n3jigw.naviplayer.feature.songlist.api.SongListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,13 +37,16 @@ class FavouriteViewModel @Inject constructor(
     private val subsonicRepository: SubsonicRepository
 ) : SongListViewModel(naviMediaManager) {
 
-    private val _songList = MutableStateFlow<List<Song>?>(null)
-
-    override val songList: StateFlow<List<Song>?> = _songList.asStateFlow()
-
-    fun loadData() {
-        viewModelScope.launch {
-            _songList.update { subsonicRepository.getFavouriteList() }
-        }
-    }
+    override val songList = refreshTrigger.onStart { emit(Unit) }
+        .transformLatest {
+            // 默认为空，父类会监听到并显示 Loading
+            emit(null)
+            // 获取收藏列表
+            val list = subsonicRepository.getFavouriteList()
+            emit(list)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = null
+        )
 }
