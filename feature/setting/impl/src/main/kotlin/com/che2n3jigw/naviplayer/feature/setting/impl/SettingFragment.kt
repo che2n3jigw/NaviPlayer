@@ -75,9 +75,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
         binding.mbTestConnection.setOnClickListener {
             viewModel.testConnection()
         }
-        binding.mcvDonate.setOnClickListener {
-            binding.mcvDonate.isVisible = false
-        }
         binding.mbClearCache.setOnClickListener {
             viewModel.clearCache()
         }
@@ -95,7 +92,6 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>() {
                     binding.lpiUsed.setProgressCompat(it.used, true)
                     binding.tvUsername.text = it.username
                     binding.tvServer.text = it.server
-                    binding.sivAvatar.load(it.avatar)
                 }
             }
         }
