@@ -87,12 +87,13 @@ abstract class SongListFragment : BaseFragment<FragmentSongListBinding>() {
     }
 
     override fun subscribeUI() {
+        observePageUiState(songListViewModel.songListUiState)
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 songListViewModel.songListUiState.collect {
-                    binding.loading.isVisible = it is SongListUiState.Loading
-                    binding.rvSong.isVisible = it is SongListUiState.Success
-
+                    getContentView().forEach { content ->
+                        content.isVisible = it is SongListUiState.Success
+                    }
                     if (it is SongListUiState.Success) {
                         selectableSongAdapter.submitList(it.songList)
                         updateMiniPlayerSection(it)
@@ -107,6 +108,15 @@ abstract class SongListFragment : BaseFragment<FragmentSongListBinding>() {
             topMargin = insets.top
         }
     }
+
+    // <editor-fold defaultState="collapsed" desc="PageState相关">
+    override fun getContentView() = listOf(binding.appbar, binding.rvSong, binding.miniPlayer)
+    override fun getLoadingView() = binding.loading
+    override fun getEmptyView() = binding.viewEmpty
+    override fun getNotLoginView() = binding.viewNotLogin
+    override fun onEmptyRefreshClick() = { songListViewModel.refresh() }
+    override fun onErrorRefreshClick() = { songListViewModel.refresh() }
+    // </editor-fold>
 
     open fun updateSubTitle(subTitle: Int) {
         binding.toolbar.setSubtitle(subTitle)

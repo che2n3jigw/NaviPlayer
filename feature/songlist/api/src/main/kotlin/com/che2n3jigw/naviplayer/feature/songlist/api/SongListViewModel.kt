@@ -26,6 +26,8 @@ import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.media.api.PlayerController
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
+import com.che2n3jigw.naviplayer.core.ui.PageUiState
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -43,23 +45,27 @@ abstract class SongListViewModel(
 
     abstract val songList: StateFlow<List<Song>?>
 
+    /**
+     * 触发刷新事件,子类监听该事件并刷新数据
+     */
+    protected val refreshTrigger = MutableSharedFlow<Unit>()
+
     // 整合歌曲列表、播放状态、当前播放歌曲的流
-    internal val songListUiState: StateFlow<SongListUiState> by lazy {
+    internal val songListUiState by lazy {
         combine(
             songList, naviMediaManager.isPlaying, naviMediaManager.currentSong
         ) { songList, isPlaying, currentSong ->
-            if (songList == null) {
-                SongListUiState.Loading
-            } else {
-                val list = songList.map {
-                    SelectableItem(data = it, isSelected = it.id == currentSong?.id)
-                }
-                SongListUiState.Success(list, isPlaying, currentSong)
+            if (songList == null) return@combine PageUiState.Loading
+            if (songList.isEmpty()) return@combine PageUiState.Empty
+
+            val list = songList.map {
+                SelectableItem(data = it, isSelected = it.id == currentSong?.id)
             }
+            SongListUiState.Success(list, isPlaying, currentSong)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = SongListUiState.Loading
+            initialValue = PageUiState.Loading
         )
     }
 
@@ -73,6 +79,12 @@ abstract class SongListViewModel(
                     naviMediaManager.play(songs, index)
                 }
             }
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            refreshTrigger.emit(Unit)
         }
     }
 }

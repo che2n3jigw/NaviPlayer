@@ -22,9 +22,9 @@ package com.che2n3jigw.naviplayer.feature.songlist.api
 
 import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
+import com.che2n3jigw.naviplayer.core.ui.PageUiState
 
-sealed interface SongListUiState {
-    data object Loading : SongListUiState
+sealed interface SongListUiState : PageUiState{
     data class Success(
         val songList: List<SelectableItem<Song>>,
         val isPlaying: Boolean = false,
