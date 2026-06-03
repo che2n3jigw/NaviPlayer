@@ -18,4 +18,13 @@
     <string name="content_description_back">返回按钮</string>
     <string name="content_description_delete">删除按钮</string>
     <string name="toolbar_navigation_close_description">关闭</string>
+
+
+    <string name="empty_hint">暂无数据</string>
+    <string name="empty_refresh">刷新</string>
+
+    <string name="error_hint">加载异常</string>
+    <string name="error_refresh">刷新</string>
+
+    <string name="no_login_to_login">去登录</string>
 </resources>
