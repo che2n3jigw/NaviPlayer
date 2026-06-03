@@ -24,11 +24,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 /**
  * 应用程序中所有 Fragment 的基类。
@@ -43,6 +50,8 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
      */
     private var _binding: VB? = null
     protected val binding get() = _binding!!
+    private var emptyView: View? = null
+    private var errorView: View? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
@@ -84,6 +93,41 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         //           topMargin = insets.top
         //       }
     }
+
+
+    /**
+     * 子类调用此方法订阅状态流
+     */
+    protected fun observePageUiState(flow: Flow<PageUiState>) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                flow.collect {
+                    // 内容显示
+                    val showContent =
+                        it !is PageUiState.Loading && it !is PageUiState.Empty && it !is PageUiState.Error
+                    getContentView()?.forEach { content ->
+                        content.isVisible = showContent
+                    }
+
+                    // 加载框显示
+                    getLoadingView()?.isVisible = it is PageUiState.Loading
+
+                    // 空数据显示
+                    emptyView = emptyView ?: getEmptyView()?.inflate()
+                    emptyView?.isVisible = it is PageUiState.Empty
+
+                    // 加载异常显示
+                    errorView = errorView ?: getErrorView()?.inflate()
+                    errorView?.isVisible = it is PageUiState.Error
+                }
+            }
+        }
+    }
+
+    protected open fun getContentView(): List<View>? = null
+    protected open fun getLoadingView(): View? = null
+    protected open fun getEmptyView(): ViewStub? = null
+    protected open fun getErrorView(): ViewStub? = null
 
     /**
      * 子类必须实现此方法来提供具体的 ViewBinding 实例。
