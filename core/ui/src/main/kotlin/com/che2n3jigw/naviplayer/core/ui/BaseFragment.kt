@@ -52,6 +52,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     protected val binding get() = _binding!!
     private var emptyView: View? = null
     private var errorView: View? = null
+    private var notLoginView: View? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, group: ViewGroup?, bundle: Bundle?): View? {
@@ -79,6 +80,10 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        // 必须清空这些缓存的 View 引用，因为它们关联的是旧的视图层级
+        emptyView = null
+        errorView = null
+        notLoginView = null
     }
 
     /**
@@ -119,6 +124,10 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
                     // 加载异常显示
                     errorView = errorView ?: getErrorView()?.inflate()
                     errorView?.isVisible = it is PageUiState.Error
+
+                    // 未登录显示
+                    notLoginView = notLoginView ?: getNotLoginView()?.inflate()
+                    notLoginView?.isVisible = it is PageUiState.NotLogin
                 }
             }
         }
@@ -128,6 +137,7 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     protected open fun getLoadingView(): View? = null
     protected open fun getEmptyView(): ViewStub? = null
     protected open fun getErrorView(): ViewStub? = null
+    protected open fun getNotLoginView(): ViewStub? = null
 
     /**
      * 子类必须实现此方法来提供具体的 ViewBinding 实例。
