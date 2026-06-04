@@ -39,7 +39,7 @@ class MiniPlayerView @JvmOverloads constructor(
     var onNextClick: (() -> Unit)? = null
 
     init {
-        binding.ivCoverPlaying.load(R.drawable.player_mini_player_cover)
+        binding.ivCoverPlaying.load(com.che2n3jigw.naviplayer.core.ui.R.drawable.default_error_cover)
         binding.mbPlay.setOnClickListener {
             onPlayPauseClick?.invoke()
         }
@@ -52,7 +52,9 @@ class MiniPlayerView @JvmOverloads constructor(
     }
 
     fun updateSongInfo(cover: String = "", name: String = "", singer: String = "") {
-        binding.ivCoverPlaying.load(cover) { error(R.drawable.player_mini_player_cover) }
+        binding.ivCoverPlaying.load(cover) {
+            error(com.che2n3jigw.naviplayer.core.ui.R.drawable.default_error_cover)
+        }
         binding.tvSingName.text = name
         binding.tvSinger.text = singer
     }
