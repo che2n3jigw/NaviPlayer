@@ -31,13 +31,11 @@ dependencies {
     implementation(projects.feature.me.impl)
     implementation(projects.feature.setting.impl)
 
-    implementation(projects.feature.loginHistory.impl)
     implementation(projects.feature.login.impl)
     implementation(projects.feature.search.impl)
     implementation(projects.feature.playlist.impl)
     implementation(projects.feature.favourite.impl)
     implementation(projects.feature.recent.impl)
-    implementation(projects.feature.album.impl)
     implementation(projects.feature.player.impl)
 
     implementation(projects.core.ui)
