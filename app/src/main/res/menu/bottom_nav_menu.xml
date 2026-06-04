@@ -16,12 +16,12 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@id/library_graph"
+        android:id="@id/tab_library_graph"
         android:icon="@drawable/tab_library"
         android:title="@string/library_title" />
 
     <item
-        android:id="@id/me_graph"
+        android:id="@id/tab_me_graph"
         android:icon="@drawable/tab_me"
         android:title="@string/me_title" />
 

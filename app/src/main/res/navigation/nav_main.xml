@@ -18,15 +18,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_graph"
     android:label="MainGraph"
-    app:startDestination="@id/library_graph">
-    <include app:graph="@navigation/nav_library" />
-    <include app:graph="@navigation/nav_me" />
+    app:startDestination="@id/tab_library_graph">
+
+    <!--音乐库选项卡页面-->
+    <navigation
+        android:id="@+id/tab_library_graph"
+        android:label="TabLibraryGraph"
+        app:startDestination="@id/library_graph">
+
+        <include app:graph="@navigation/nav_library" />
+
+        <include app:graph="@navigation/nav_search" />
+
+    </navigation>
+
+    <navigation
+        android:id="@+id/tab_me_graph"
+        android:label="TabMeGraph"
+        app:startDestination="@id/me_graph">
+
+        <include app:graph="@navigation/nav_me" />
+
+        <include app:graph="@navigation/nav_favourite" />
+
+        <include app:graph="@navigation/nav_recent" />
+
+        <include app:graph="@navigation/nav_playlist" />
+
+    </navigation>
+
     <include app:graph="@navigation/nav_setting" />
     <include app:graph="@navigation/nav_login" />
-    <include app:graph="@navigation/nav_search" />
-    <include app:graph="@navigation/nav_playlist" />
-    <include app:graph="@navigation/nav_favourite" />
-    <include app:graph="@navigation/nav_recent" />
     <include app:graph="@navigation/nav_player" />
-    <include app:graph="@navigation/nav_album" />
 </navigation>
