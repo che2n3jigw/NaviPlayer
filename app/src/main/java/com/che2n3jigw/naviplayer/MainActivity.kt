@@ -47,10 +47,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun initListener() {
         navController?.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == com.che2n3jigw.naviplayer.feature.player.impl.R.id.player_dest) {
-                binding.bottomNavView.visibility = View.GONE
-            } else {
-                binding.bottomNavView.visibility = View.VISIBLE
+            when (destination.id) {
+                com.che2n3jigw.naviplayer.feature.player.impl.R.id.player_dest,
+                com.che2n3jigw.naviplayer.feature.login.impl.R.id.login_dest -> {
+                    binding.bottomNavView.visibility = View.GONE
+                }
+
+                else -> binding.bottomNavView.visibility = View.VISIBLE
             }
         }
     }
