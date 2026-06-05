@@ -40,7 +40,8 @@ import javax.inject.Inject
  */
 class DefaultUserRepository @Inject constructor(
     private val naviPreferencesDataSource: NaviPreferencesDataSource,
-    private val subsonicSessionManager: SubsonicSessionManager
+    private val subsonicSessionManager: SubsonicSessionManager,
+    private val playListRepository: PlayListRepository
 ) : UserRepository {
 
     /**
@@ -91,6 +92,7 @@ class DefaultUserRepository @Inject constructor(
         _isServerReachable.update { false }
         // 清除持久化数据，触发响应式注销
         naviPreferencesDataSource.logout()
+        playListRepository.clearPlayList()
     }
 
     /**
