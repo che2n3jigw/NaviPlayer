@@ -30,11 +30,12 @@ import com.che2n3jigw.naviplayer.core.database.dao.LoginHistoryDao
 import com.che2n3jigw.naviplayer.core.database.dao.PlayListDao
 import com.che2n3jigw.naviplayer.core.database.dao.PlaybackDao
 import com.che2n3jigw.naviplayer.core.database.model.LoginHistoryEntity
+import com.che2n3jigw.naviplayer.core.database.model.PlayListEntity
 import com.che2n3jigw.naviplayer.core.database.model.PlaybackEntity
 import com.che2n3jigw.naviplayer.core.database.util.InstantConverter
 
 @Database(
-    entities = [LoginHistoryEntity::class, PlaybackEntity::class],
+    entities = [LoginHistoryEntity::class, PlaybackEntity::class, PlayListEntity::class],
     version = 3,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
