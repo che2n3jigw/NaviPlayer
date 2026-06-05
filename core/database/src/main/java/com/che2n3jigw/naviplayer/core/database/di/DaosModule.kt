@@ -24,6 +24,7 @@ package com.che2n3jigw.naviplayer.core.database.di
 
 import com.che2n3jigw.naviplayer.core.database.NaviPlayerDatabase
 import com.che2n3jigw.naviplayer.core.database.dao.LoginHistoryDao
+import com.che2n3jigw.naviplayer.core.database.dao.PlayListDao
 import com.che2n3jigw.naviplayer.core.database.dao.PlaybackDao
 import dagger.Module
 import dagger.Provides
@@ -45,5 +46,10 @@ internal object DaosModule {
     @Provides
     fun providesPlaybackDao(database: NaviPlayerDatabase): PlaybackDao {
         return database.playbackDao()
+    }
+
+    @Provides
+    fun providesPlayListDao(database: NaviPlayerDatabase): PlayListDao {
+        return database.playListDao()
     }
 }
