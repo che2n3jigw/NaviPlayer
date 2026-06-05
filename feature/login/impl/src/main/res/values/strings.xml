@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2026 che2n3jigw.
+  ~
+  ~ Licensed under the MIT License (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ https://opensource.org/licenses/MIT
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string name="login_password_hint">密码</string>
+    <string name="login_password_placeholder">请输入密码</string>
+
+    <string name="login_username_hint">用户名</string>
+    <string name="login_username_placeholder">请输入用户名</string>
+
+    <string name="login_server_hint">服务器</string>
+    <string name="login_server_placeholder">请输入服务器地址</string>
+    <string name="login_server_helper_text">示例: http://192.168.50.247:4533</string>
+
+    <string name="login_button_text">登录</string>
+
+    <string name="login_server_error">服务器地址格式异常</string>
+    <string name="login_login_error">登录失败</string>
+    <string name="login_input_empty_tip">请输入完整信息</string>
+</resources>

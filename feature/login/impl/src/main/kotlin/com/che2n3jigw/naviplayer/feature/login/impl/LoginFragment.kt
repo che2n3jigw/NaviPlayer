@@ -21,14 +21,18 @@
 package com.che2n3jigw.naviplayer.feature.login.impl
 
 
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.che2n3jigw.naviplayer.core.data.repository.UserRepository
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.feature.login.impl.databinding.FragmentLoginBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * 登录页面
@@ -36,23 +40,54 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
-    @Inject
-    lateinit var userRepository: UserRepository
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun inflateBinding() = FragmentLoginBinding.inflate(layoutInflater)
 
     override fun initView() {}
 
     override fun initListener() {
-        binding.btnFakeLogin.setOnClickListener {
-            lifecycleScope.launch {
-                val success = userRepository.login("http://192.168.50.247:4533", "guest", "123456")
-                if (success) {
-                    findNavController().popBackStack()
+        binding.mbLogin.setOnClickListener {
+            val server = binding.tilServer.editText?.text.toString()
+            val username = binding.tilUsername.editText?.text.toString()
+            val password = binding.tilPassword.editText?.text.toString()
+            if (server.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                showTips(R.string.login_input_empty_tip)
+                return@setOnClickListener
+            }
+            viewModel.login(server, username, password)
+        }
+    }
+
+    override fun subscribeUI() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.serverFormateError.collect {
+                        showTips(R.string.login_server_error)
+                    }
+                }
+
+                launch {
+                    viewModel.loading.collect {
+                        binding.loading.isVisible = it
+                        binding.mbLogin.isInvisible = it
+                    }
+                }
+                launch {
+                    viewModel.loginResult.collect {
+                        if (it) {
+                            findNavController().popBackStack()
+                        } else {
+                            showTips(R.string.login_login_error)
+                        }
+                    }
                 }
             }
         }
     }
 
-    override fun subscribeUI() {}
+    private fun showTips(resId: Int) {
+        Snackbar.make(binding.root, resId, Snackbar.LENGTH_SHORT).show()
+    }
 }
