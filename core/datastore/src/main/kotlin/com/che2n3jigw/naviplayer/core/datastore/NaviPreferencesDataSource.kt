@@ -61,4 +61,10 @@ class NaviPreferencesDataSource @Inject constructor(
             )
         }
     }
+
+    suspend fun updateCurrentSongId(songId: String) {
+        userPreferences.updateData {
+            it.copy(currentSongId = songId)
+        }
+    }
 }

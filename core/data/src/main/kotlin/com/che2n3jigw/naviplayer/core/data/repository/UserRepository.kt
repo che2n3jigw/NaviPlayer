@@ -51,4 +51,8 @@ interface UserRepository {
      */
     suspend fun ping(): Boolean
 
+    /**
+     * 更新当前播放歌曲的id
+     */
+    suspend fun updateCurrentSongId(songId: String)
 }

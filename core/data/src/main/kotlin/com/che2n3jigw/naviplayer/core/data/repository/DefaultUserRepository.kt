@@ -106,4 +106,8 @@ class DefaultUserRepository @Inject constructor(
         _isServerReachable.update { success }
         return success
     }
+
+    override suspend fun updateCurrentSongId(songId: String) {
+        naviPreferencesDataSource.updateCurrentSongId(songId)
+    }
 }
