@@ -28,6 +28,7 @@ import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.che2n3jigw.naviplayer.core.common.ApplicationScope
+import com.che2n3jigw.naviplayer.core.data.repository.PlayListStateRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.media.api.PlayerController
 import com.che2n3jigw.naviplayer.core.model.Song
@@ -41,6 +42,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.guava.await
 import kotlinx.coroutines.isActive
@@ -58,7 +60,8 @@ class NaviMediaManager @Inject constructor(
     @param:ApplicationContext private val context: Context,
     @param:ApplicationScope private val scope: CoroutineScope,
     private val sessionToken: SessionToken,
-    private val userPlaybackRepository: UserPlaybackRepository
+    private val userPlaybackRepository: UserPlaybackRepository,
+    private val playListStateRepository: PlayListStateRepository
 ) : PlayerController {
 
     // <editor-fold defaultState="collapsed" desc="Flow">
@@ -93,6 +96,8 @@ class NaviMediaManager @Inject constructor(
                 _playlist.first().find { it.id == mediaItem?.mediaId }?.let { song ->
                     _currentSong.update { song }
                     userPlaybackRepository.upsertPlayback(song)
+                    // 更新列表播放当前播放的歌曲
+                    playListStateRepository.updateCurrentSong(song)
                 }
             }
         }
@@ -115,7 +120,36 @@ class NaviMediaManager @Inject constructor(
                 browser = browserFuture.await()
                 _isPlaying.update { browser.isPlaying }
                 browser.addListener(playListener)
+                recoverPlayList()
             }
+        }
+    }
+
+    /**
+     * 恢复播放列表
+     */
+    private suspend fun recoverPlayList() {
+        // 获取持久化的状态，如果为空则直接返回
+        val state = playListStateRepository.playListState.firstOrNull() ?: return
+        val savedSongs = state.playList
+        if (savedSongs.isEmpty()) return
+
+        // 预处理：计算索引并转换 MediaItem
+        // 优先通过 ID 匹配索引，若找不到则默认为第 0 首
+        val index = savedSongs.indexOfFirst { it.id == state.currentSong?.id }.coerceAtLeast(0)
+        val mediaItems = savedSongs.map { song ->
+            MediaItem.Builder().setUri(song.streamUrl).setMediaId(song.id).build()
+        }
+
+        // 同步更新内存中的 Flow 状态
+        _playlist.update { savedSongs }
+        _currentSong.update { savedSongs[index] }
+
+        // 在主线程操作媒体播放器
+        withContext(Dispatchers.Main) {
+            // 设置播放列表并跳转到对应位置，保持暂停状态（等待用户点击）
+            browser.setMediaItems(mediaItems, index, C.TIME_UNSET)
+            browser.prepare()
         }
     }
 
@@ -228,6 +262,8 @@ class NaviMediaManager @Inject constructor(
             val mediaItems = songs.map {
                 MediaItem.Builder().setUri(it.streamUrl).setMediaId(it.id).build()
             }
+            // 记录当前播放列表
+            playListStateRepository.updatePlayList(songs)
             // 将mediaItem给到媒体播放器
             withContext(Dispatchers.Main) {
                 browser.setMediaItems(mediaItems, index, C.TIME_UNSET)
