@@ -36,7 +36,8 @@ class NaviPreferencesDataSource @Inject constructor(
             domain = it.domain,
             username = it.username,
             password = it.password,
-            isLoggedIn = it.domain.isNotBlank() && it.username.isNotBlank() && it.password.isNotBlank()
+            isLoggedIn = it.domain.isNotBlank() && it.username.isNotBlank() && it.password.isNotBlank(),
+            currentSongId = it.currentSongId
         )
     }
 
@@ -55,9 +56,9 @@ class NaviPreferencesDataSource @Inject constructor(
             it.copy(
                 domain = "",
                 username = "",
-                password = ""
+                password = "",
+                currentSongId = ""
             )
         }
     }
-
 }

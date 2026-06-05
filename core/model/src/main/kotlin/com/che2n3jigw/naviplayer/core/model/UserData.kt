@@ -38,7 +38,11 @@ data class UserData(
     /**
      * 是否已成功登录并连接
      */
-    val isLoggedIn: Boolean = false
+    val isLoggedIn: Boolean = false,
+    /**
+     * 当前用户播放歌曲id
+     */
+    val currentSongId: String = ""
 ) {
 
     /**
@@ -46,6 +50,6 @@ data class UserData(
      * 这样在打印日志时，密码会显示为 ***，防止隐私泄露。
      */
     override fun toString(): String {
-        return "UserData(domain='$domain', username='$username', isLoggedIn=$isLoggedIn, password=[***])"
+        return "UserData(domain='$domain', username='$username', isLoggedIn=$isLoggedIn, password=[***], currentSongId='$currentSongId')"
     }
 }

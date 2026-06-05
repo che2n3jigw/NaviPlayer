@@ -26,5 +26,6 @@ import kotlinx.serialization.Serializable
 data class UserPreferences(
     var domain: String = "",
     var username: String = "",
-    var password: String = ""
+    var password: String = "",
+    var currentSongId: String = ""
 )
