@@ -22,12 +22,16 @@
 // 创建时间： 1/18/26
 package com.che2n3jigw.naviplayer.core.data.di
 
+import com.che2n3jigw.naviplayer.core.data.repository.CompositePlayListStateRepository
 import com.che2n3jigw.naviplayer.core.data.repository.CompositeUserPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultLoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.DefaultPlayListRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultPlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultSubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.DefaultUserRepository
 import com.che2n3jigw.naviplayer.core.data.repository.LoginHistoryRepository
+import com.che2n3jigw.naviplayer.core.data.repository.PlayListRepository
+import com.che2n3jigw.naviplayer.core.data.repository.PlayListStateRepository
 import com.che2n3jigw.naviplayer.core.data.repository.PlaybackRepository
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.data.repository.UserPlaybackRepository
@@ -65,4 +69,14 @@ abstract class DataModule {
     internal abstract fun bindUserPlaybackRepository(
         compositeUserPlaybackRepository: CompositeUserPlaybackRepository
     ): UserPlaybackRepository
+
+    @Binds
+    internal abstract fun bindPlayListRepository(
+        defaultPlayListRepository: DefaultPlayListRepository
+    ): PlayListRepository
+
+    @Binds
+    internal abstract fun bindPlayListStateRepository(
+        compositePlayListStateRepository: CompositePlayListStateRepository
+    ): PlayListStateRepository
 }
