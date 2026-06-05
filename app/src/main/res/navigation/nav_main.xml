@@ -18,7 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_graph"
     android:label="MainGraph"
-    app:startDestination="@id/tab_library_graph">
+    app:startDestination="@id/tab_me_graph">
 
     <!--音乐库选项卡页面-->
     <navigation
