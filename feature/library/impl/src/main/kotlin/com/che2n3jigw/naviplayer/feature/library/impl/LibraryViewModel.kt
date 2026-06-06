@@ -44,7 +44,6 @@ class LibraryViewModel @Inject constructor(
     private val subsonicRepository: SubsonicRepository,
     private val naviMediaManager: NaviMediaManager
 ) : ViewModel(), PlaybackController by naviMediaManager {
-    var appBarLayoutOffset = 0
     var miniPlayerOut = false
 
     private val _randomSongs = MutableStateFlow<List<Song>?>(null)
@@ -84,11 +83,7 @@ class LibraryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            subsonicRepository.activeSession.collect {
-                if (it != null) {
-                    loadData()
-                }
-            }
+            loadData()
         }
     }
 
