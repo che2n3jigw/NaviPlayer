@@ -37,6 +37,7 @@ dependencies {
     implementation(projects.feature.favourite.impl)
     implementation(projects.feature.recent.impl)
     implementation(projects.feature.player.impl)
+    implementation(projects.feature.player.api)
 
     implementation(projects.core.ui)
     implementation(projects.core.navigation)

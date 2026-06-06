@@ -21,10 +21,22 @@
 package com.che2n3jigw.naviplayer
 
 import android.app.PendingIntent
+import android.content.Intent
 import com.che2n3jigw.naviplayer.core.media.BasePlaybackService
 
 class NaviPlaybackService : BasePlaybackService() {
     override fun getSingleTopActivity(): PendingIntent? {
-        return null
+        val intent = Intent(this, MainActivity::class.java).apply {
+            // 设置 Action 方便 MainActivity 识别跳转来源
+            action = MainActivity.ACTION_TO_PLAY_PAGE
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        return PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 }

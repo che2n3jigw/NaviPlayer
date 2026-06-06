@@ -20,22 +20,39 @@
 // 创建时间： 2026/3/30 14:17
 package com.che2n3jigw.naviplayer
 
+import android.content.Intent
 import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.che2n3jigw.naviplayer.core.ui.BaseActivity
 import com.che2n3jigw.naviplayer.databinding.ActivityMainBinding
+import com.che2n3jigw.naviplayer.feature.player.api.widget.PlayerNavigator
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
+
+    companion object {
+        const val ACTION_TO_PLAY_PAGE = "com.che2n3jigw.naviplayer.SHOW_PLAYER"
+    }
+
+    @Inject
+    lateinit var playerNavigator: PlayerNavigator
 
     override fun inflateBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
     }
 
     private var navController: NavController? = null
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
+    }
+
     override fun initView() {
         val host =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -43,6 +60,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         navController?.let {
             binding.bottomNavView.setupWithNavController(it)
         }
+
+        handleIntent(intent)
     }
 
     override fun initListener() {
@@ -59,5 +78,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun subscribeUI() {
+    }
+
+    private fun handleIntent(intent: Intent) {
+        if (intent.action == ACTION_TO_PLAY_PAGE) {
+            navController?.let {
+                playerNavigator.navigateToPlayer(it)
+            }
+        }
     }
 }
