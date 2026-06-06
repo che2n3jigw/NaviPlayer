@@ -20,6 +20,7 @@
 // 创建时间： 2026/5/27 16:52
 package com.che2n3jigw.naviplayer.feature.player.impl
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.Insets
@@ -36,6 +37,7 @@ import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
 import com.che2n3jigw.naviplayer.feature.player.api.R
 import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlayerBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -106,6 +108,26 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
                 viewModel.play()
             }
         }
+
+        BottomSheetBehavior.from(binding.clSongList).addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                        lifecycleScope.launch {
+                            val list = viewModel.playList.value
+                            val index = list.indexOfFirst { it.isSelected }
+                            if (index != -1) {
+                                (binding.rvPlayList.layoutManager as? LinearLayoutManager)
+                                    ?.scrollToPositionWithOffset(index, 0)
+                            }
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            }
+        )
     }
 
     override fun subscribeUI() {
