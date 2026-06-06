@@ -26,6 +26,7 @@ import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.media.NaviMediaManager
 import com.che2n3jigw.naviplayer.core.media.api.PlayerController
+import com.che2n3jigw.naviplayer.core.model.SelectableItem
 import com.che2n3jigw.naviplayer.core.model.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -64,6 +65,19 @@ class PlayerViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = PlayerUiState()
+    )
+
+    val playList = combine(
+        naviMediaManager.playlist,
+        naviMediaManager.currentSong
+    ) { playlist, currentSong ->
+        playlist.map {
+            SelectableItem(it, it == currentSong)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList()
     )
 
     fun starOrUnStar() {

@@ -29,13 +29,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.che2n3jigw.naviplayer.core.common.utils.TimeUtils
 import com.che2n3jigw.naviplayer.core.ui.BaseFragment
+import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
 import com.che2n3jigw.naviplayer.feature.player.api.R
 import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlayerBinding
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -54,6 +57,8 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
 
     private var sliderTouchFlag = false
 
+    private val selectableSongAdapter = SelectableSongAdapter()
+
     private val touchListener = object : Slider.OnSliderTouchListener {
         override fun onStartTrackingTouch(slider: Slider) {
             sliderTouchFlag = true
@@ -70,6 +75,10 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
     override fun initView() {
         binding.slider.setLabelFormatter { value: Float ->
             timeUtils.toTimeText(value.toInt())
+        }
+        binding.rvPlayList.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = selectableSongAdapter
         }
     }
 
@@ -89,6 +98,13 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
         }
         binding.mbBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+        selectableSongAdapter.itemClickListener = { _, index ->
+            lifecycleScope.launch {
+                viewModel.skipToItem(index)
+                delay(200)
+                viewModel.play()
+            }
         }
     }
 
@@ -151,6 +167,12 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
                                 ContextCompat.getDrawable(ctx, R.drawable.ic_music_play)
                             }
                         }
+                }
+
+                launch {
+                    viewModel.playList.collect {
+                        selectableSongAdapter.submitList(it)
+                    }
                 }
             }
         }
