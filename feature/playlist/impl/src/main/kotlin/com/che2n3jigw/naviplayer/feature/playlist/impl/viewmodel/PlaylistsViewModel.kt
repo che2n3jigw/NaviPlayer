@@ -25,11 +25,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
 import com.che2n3jigw.naviplayer.core.model.Playlist
+import com.che2n3jigw.naviplayer.feature.playlist.impl.model.PlaylistItemUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,7 +41,7 @@ class PlaylistsViewModel @Inject constructor(
     private val subsonicRepository: SubsonicRepository
 ) : ViewModel() {
 
-    private val _playlists = MutableStateFlow<List<Playlist>>(emptyList())
+    private val _playlists = MutableStateFlow<List<PlaylistItemUiModel>>(emptyList())
     val playlists = _playlists.asStateFlow()
 
     private val _createFailedEvent = MutableSharedFlow<Unit>()
@@ -48,10 +50,42 @@ class PlaylistsViewModel @Inject constructor(
     private val _deleteFailedEvent = MutableSharedFlow<Unit>()
     val deleteFailedEvent = _deleteFailedEvent.asSharedFlow()
 
+    private val _songId = MutableStateFlow("")
+
     fun queryPlaylists() {
         viewModelScope.launch {
             val lists = subsonicRepository.getPlaylistList()
-            _playlists.update { lists }
+            _playlists.update {
+                lists.map {
+                    val songId = _songId.first()
+                    if (songId.isEmpty()) {
+                        PlaylistItemUiModel(
+                            showAdd = false,
+                            showRemove = false,
+                            showDelete = true,
+                            playlist = it
+                        )
+                    } else {
+                        val hasAdd =
+                            subsonicRepository.getPlaylist(it.id).any { song -> song.id == songId }
+                        if (hasAdd) {
+                            PlaylistItemUiModel(
+                                showAdd = false,
+                                showRemove = true,
+                                showDelete = false,
+                                playlist = it
+                            )
+                        } else {
+                            PlaylistItemUiModel(
+                                showAdd = true,
+                                showRemove = false,
+                                showDelete = false,
+                                playlist = it
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -78,6 +112,6 @@ class PlaylistsViewModel @Inject constructor(
     }
 
     fun parseBundle(bundle: Bundle?) {
-        bundle?.getString("id") ?: ""
+        _songId.update { bundle?.getString("id") ?: "" }
     }
 }

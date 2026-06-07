@@ -119,6 +119,12 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
         playlistsAdapter.onItemClickListener = { playlist ->
             playlistNavigator.navigateToPlaylist(findNavController(), playlist.id)
         }
+        playlistsAdapter.onAddClickListener = { playlist ->
+            // TODO: 歌曲加入歌单 
+        }
+        playlistsAdapter.onRemoveClickListener = { playlist ->
+            // TODO: 歌曲从歌单移除 
+        }
     }
 
     override fun subscribeUI() {

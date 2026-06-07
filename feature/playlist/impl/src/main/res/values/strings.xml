@@ -22,7 +22,9 @@
     <string name="playlist_cancel">取消</string>
     <string name="playlist_create_failed">创建失败</string>
     <string name="playlist_delete_hint">是否确认删除该歌单?</string>
-    <string name="playlist_delete">删除</string>
+    <string name="playlist_delete">删除歌单</string>
+    <string name="playlist_add">加入歌单</string>
+    <string name="playlist_remove">从歌单移除</string>
     <string name="playlist_delete_failed">删除失败</string>
     <string name="playlist_playlist">歌单</string>
 </resources>

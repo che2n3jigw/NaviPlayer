@@ -26,22 +26,33 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.che2n3jigw.naviplayer.core.model.Playlist
+import com.che2n3jigw.naviplayer.feature.playlist.impl.R
 import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.ItemPlaylistsBinding
+import com.che2n3jigw.naviplayer.feature.playlist.impl.model.PlaylistItemUiModel
 
 /**
  * 歌单列表适配器
  */
 class PlaylistsAdapter :
-    ListAdapter<Playlist, PlaylistsViewHolder>(object : DiffUtil.ItemCallback<Playlist>() {
-        override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
-            return oldItem.id == newItem.id
+    ListAdapter<PlaylistItemUiModel, PlaylistsViewHolder>(object :
+        DiffUtil.ItemCallback<PlaylistItemUiModel>() {
+        override fun areItemsTheSame(
+            oldItem: PlaylistItemUiModel,
+            newItem: PlaylistItemUiModel
+        ): Boolean {
+            return oldItem.playlist.id == newItem.playlist.id
         }
 
-        override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+        override fun areContentsTheSame(
+            oldItem: PlaylistItemUiModel,
+            newItem: PlaylistItemUiModel
+        ): Boolean {
             return oldItem == newItem
         }
     }) {
 
+    var onAddClickListener: ((Playlist) -> Unit)? = null
+    var onRemoveClickListener: ((Playlist) -> Unit)? = null
     var onDeleteClickListener: ((Playlist) -> Unit)? = null
     var onItemClickListener: ((Playlist) -> Unit)? = null
 
@@ -53,7 +64,13 @@ class PlaylistsAdapter :
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
         val data = getItem(position)
-        holder.bind(data, onDeleteClickListener, onItemClickListener)
+        holder.bind(
+            data,
+            onAddClickListener,
+            onRemoveClickListener,
+            onDeleteClickListener,
+            onItemClickListener
+        )
     }
 }
 
@@ -61,17 +78,33 @@ class PlaylistsViewHolder(private val binding: ItemPlaylistsBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
-        data: Playlist,
+        data: PlaylistItemUiModel,
+        onAddClickListener: ((Playlist) -> Unit)?,
+        onRemoveClickListener: ((Playlist) -> Unit)?,
         deleteClickListener: ((Playlist) -> Unit)?,
         onItemClickListener: ((Playlist) -> Unit)?
     ) {
-        binding.tvPlaylistName.text = data.name
-        binding.tvPlaylistSongCount.text = data.songCount.toString()
-        binding.btnDelete.setOnClickListener {
-            deleteClickListener?.invoke(data)
+        val playlist = data.playlist
+        binding.tvPlaylistName.text = playlist.name
+        binding.tvPlaylistSongCount.text = playlist.songCount.toString()
+        binding.btnAction.setText(
+            when {
+                data.showAdd -> R.string.playlist_add
+                data.showRemove -> R.string.playlist_remove
+                else -> R.string.playlist_delete
+            }
+        )
+
+
+        binding.btnAction.setOnClickListener {
+            when {
+                data.showAdd -> onAddClickListener?.invoke(playlist)
+                data.showRemove -> onRemoveClickListener?.invoke(playlist)
+                data.showDelete -> deleteClickListener?.invoke(playlist)
+            }
         }
         binding.cvPlaylist.setOnClickListener {
-            onItemClickListener?.invoke(data)
+            onItemClickListener?.invoke(playlist)
         }
     }
 }
