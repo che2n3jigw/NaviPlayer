@@ -21,7 +21,7 @@
 package com.che2n3jigw.naviplayer
 
 import android.content.Intent
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -65,15 +65,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun initListener() {
-        navController?.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                com.che2n3jigw.naviplayer.feature.player.impl.R.id.player_dest,
-                com.che2n3jigw.naviplayer.feature.login.impl.R.id.login_dest -> {
-                    binding.bottomNavView.visibility = View.GONE
-                }
-
-                else -> binding.bottomNavView.visibility = View.VISIBLE
-            }
+        navController?.addOnDestinationChangedListener { _, _, arguments ->
+            val showBottomNav = arguments?.getBoolean("showBottomNav", true) ?: true
+            binding.bottomNavView.isVisible = showBottomNav
         }
     }
 

@@ -28,6 +28,12 @@
         tools:layout="@layout/fragment_player">
 
         <deepLink app:uri="naviplayer://feature/player" />
+
+        <!--隐藏底部导航栏-->
+        <argument
+            android:name="showBottomNav"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
 
 </navigation>

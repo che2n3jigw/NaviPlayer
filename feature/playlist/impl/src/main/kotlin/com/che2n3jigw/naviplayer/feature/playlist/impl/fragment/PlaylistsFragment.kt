@@ -118,7 +118,8 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
                 .show()
         }
         playlistsAdapter.onItemClickListener = { playlist ->
-            playlistNavigator.navigateToPlaylist(findNavController(), playlist.id)
+            val showBottomNav = arguments?.getBoolean("showBottomNav") ?: true
+            playlistNavigator.navigateToPlaylist(findNavController(), playlist.id, showBottomNav)
         }
         playlistsAdapter.onAddClickListener = { playlist ->
             viewModel.addSong(playlist.id)

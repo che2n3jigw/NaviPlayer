@@ -30,14 +30,24 @@ import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
 import javax.inject.Inject
 
 class PlaylistNavigatorImpl @Inject constructor() : PlaylistNavigator {
-    override fun navigateToPlaylist(navController: NavController, playlistId: String) {
+    override fun navigateToPlaylist(
+        navController: NavController,
+        playlistId: String,
+        showBottomNav: Boolean
+    ) {
         val bundle = bundleOf()
         bundle.putString("id", playlistId)
+        bundle.putBoolean("showBottomNav", showBottomNav)
         navController.navigate(R.id.playlist_dest, bundle, CommonNavOptions.slideInOptions)
     }
 
-    override fun navigateToPlaylists(navController: NavController, songId: String) {
+    override fun navigateToPlaylists(
+        navController: NavController,
+        songId: String,
+        showBottomNav: Boolean
+    ) {
         val uriString = PlaylistDeepLink.PLAYLISTS.replace("{id}", songId)
+            .replace("{showBottomNav}", showBottomNav.toString())
         val request = NavDeepLinkRequest.Builder
             .fromUri(uriString.toUri())
             .build()

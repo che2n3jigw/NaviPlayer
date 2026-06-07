@@ -106,7 +106,7 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
             findNavController().popBackStack()
         }
         binding.mbJoinPlaylist.setOnClickListener {
-            playlistNavigator.navigateToPlaylists(findNavController(), viewModel.getSongId())
+            playlistNavigator.navigateToPlaylists(findNavController(), viewModel.getSongId(), false)
         }
 
         selectableSongAdapter.itemClickListener = { _, index ->

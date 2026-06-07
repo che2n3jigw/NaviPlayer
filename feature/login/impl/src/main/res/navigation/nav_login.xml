@@ -29,5 +29,11 @@
 
         <deepLink app:uri="naviplayer://feature/login" />
 
+        <!--隐藏底部导航栏-->
+        <argument
+            android:name="showBottomNav"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
     </fragment>
 </navigation>

@@ -35,12 +35,18 @@
         android:label="PlaylistsFragment"
         tools:layout="@layout/fragment_playlists">
 
-        <deepLink app:uri="naviplayer://feature/playlists?id={id}" />
+        <deepLink app:uri="naviplayer://feature/playlists?id={id}&amp;showBottomNav={showBottomNav}" />
 
         <argument
             android:name="id"
             android:defaultValue=""
             app:argType="string" />
+
+        <!--隐藏底部导航栏-->
+        <argument
+            android:name="showBottomNav"
+            android:defaultValue="true"
+            app:argType="boolean" />
 
     </fragment>
 </navigation>
