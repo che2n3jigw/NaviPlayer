@@ -141,6 +141,24 @@ internal class DefaultSubsonicRepository @Inject constructor(
         return subsonicSessionManager.playlistsDataSource?.deletePlaylist(id) ?: false
     }
 
+    override suspend fun addSongToPlaylist(playlistId: String, songId: String): Boolean {
+        return subsonicSessionManager.playlistsDataSource?.updatePlaylist(
+            playlistId,
+            songIdToAdd = listOf(songId)
+        ) ?: false
+    }
+
+    override suspend fun removeSongFromPlaylist(playlistId: String, songId: String): Boolean {
+        // 先获取歌单列表
+        val playlist = getPlaylist(playlistId)
+        val index = playlist.indexOfFirst { it.id == songId }
+        if (index == -1) return false
+        return subsonicSessionManager.playlistsDataSource?.updatePlaylist(
+            playlistId,
+            songIndexToRemove = listOf(index)
+        ) ?: false
+    }
+
     override suspend fun star(songId: String): Boolean {
         return subsonicSessionManager.mediaAnnotationDataSource?.star(id = listOf(songId)) ?: false
     }

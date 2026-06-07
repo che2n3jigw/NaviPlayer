@@ -90,6 +90,16 @@ interface SubsonicRepository {
     suspend fun deletePlaylist(id: String): Boolean
 
     /**
+     * 将指定歌曲加入歌单
+     */
+    suspend fun addSongToPlaylist(playlistId: String, songId: String): Boolean
+
+    /**
+     * 将歌曲从歌单中移除
+     */
+    suspend fun removeSongFromPlaylist(playlistId: String, songId: String): Boolean
+
+    /**
      * 收藏歌曲
      */
     suspend fun star(songId: String): Boolean
