@@ -21,5 +21,5 @@
 package com.che2n3jigw.naviplayer.feature.playlist.api
 
 object PlaylistDeepLink {
-    const val PLAYLISTS = "naviplayer://feature/playlists"
+    const val PLAYLISTS = "naviplayer://feature/playlists?id={id}"
 }

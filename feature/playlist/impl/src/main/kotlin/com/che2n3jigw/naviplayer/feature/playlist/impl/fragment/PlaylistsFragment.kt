@@ -68,6 +68,7 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.parseBundle(arguments)
         viewModel.queryPlaylists()
     }
 

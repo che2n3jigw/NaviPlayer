@@ -36,9 +36,10 @@ class PlaylistNavigatorImpl @Inject constructor() : PlaylistNavigator {
         navController.navigate(R.id.playlist_dest, bundle, CommonNavOptions.slideInOptions)
     }
 
-    override fun navigateToPlaylists(navController: NavController) {
+    override fun navigateToPlaylists(navController: NavController, songId: String) {
+        val uriString = PlaylistDeepLink.PLAYLISTS.replace("{id}", songId)
         val request = NavDeepLinkRequest.Builder
-            .fromUri(PlaylistDeepLink.PLAYLISTS.toUri())
+            .fromUri(uriString.toUri())
             .build()
         navController.navigate(request, CommonNavOptions.slideInOptions)
     }

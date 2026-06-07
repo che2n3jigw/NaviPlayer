@@ -20,6 +20,7 @@
 // 创建时间： 2026/5/21 15:57
 package com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.che2n3jigw.naviplayer.core.data.repository.SubsonicRepository
@@ -74,5 +75,9 @@ class PlaylistsViewModel @Inject constructor(
                 _deleteFailedEvent.emit(Unit)
             }
         }
+    }
+
+    fun parseBundle(bundle: Bundle?) {
+        bundle?.getString("id") ?: ""
     }
 }
