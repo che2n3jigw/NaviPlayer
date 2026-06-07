@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.core.data)
 
     implementation(projects.feature.player.api)
+    implementation(projects.feature.playlist.api)
 
     implementation(libs.coil.kt)
 

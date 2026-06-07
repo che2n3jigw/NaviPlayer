@@ -37,6 +37,7 @@ import com.che2n3jigw.naviplayer.core.ui.BaseFragment
 import com.che2n3jigw.naviplayer.core.ui.adapter.SelectableSongAdapter
 import com.che2n3jigw.naviplayer.feature.player.api.R
 import com.che2n3jigw.naviplayer.feature.player.impl.databinding.FragmentPlayerBinding
+import com.che2n3jigw.naviplayer.feature.playlist.api.PlaylistNavigator
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.slider.Slider
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,6 +55,9 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
 
     @Inject
     lateinit var timeUtils: TimeUtils
+
+    @Inject
+    lateinit var playlistNavigator: PlaylistNavigator
 
     private val viewModel by viewModels<PlayerViewModel>()
 
@@ -102,7 +106,7 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
             findNavController().popBackStack()
         }
         binding.mbJoinPlaylist.setOnClickListener {
-            // TODO: 进入歌单列表页面
+            playlistNavigator.navigateToPlaylists(findNavController(), viewModel.getSongId())
         }
 
         selectableSongAdapter.itemClickListener = { _, index ->
@@ -175,7 +179,9 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
                         .distinctUntilChanged()
                         .collect { (currentDuration, currentDurationTxt) ->
                             if (!sliderTouchFlag) {
-                                binding.slider.value = currentDuration.toFloat()
+                                if (currentDuration.toFloat() <= binding.slider.valueTo) {
+                                    binding.slider.value = currentDuration.toFloat()
+                                }
                             }
                             binding.tvCurrentTime.text = currentDurationTxt
                         }

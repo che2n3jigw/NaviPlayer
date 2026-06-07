@@ -98,6 +98,10 @@ class PlayerViewModel @Inject constructor(
             }
         }
     }
+
+    fun getSongId(): String {
+        return uiState.value.currentSong?.id ?: ""
+    }
 }
 
 data class PlayerUiState(
