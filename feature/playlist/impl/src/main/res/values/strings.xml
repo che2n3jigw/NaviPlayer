@@ -27,4 +27,5 @@
     <string name="playlist_remove">从歌单移除</string>
     <string name="playlist_delete_failed">删除失败</string>
     <string name="playlist_playlist">歌单</string>
+    <string name="playlist_action_failed">操作失败</string>
 </resources>

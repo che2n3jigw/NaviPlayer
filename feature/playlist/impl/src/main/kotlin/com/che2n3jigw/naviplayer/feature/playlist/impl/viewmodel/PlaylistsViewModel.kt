@@ -51,6 +51,7 @@ class PlaylistsViewModel @Inject constructor(
     val deleteFailedEvent = _deleteFailedEvent.asSharedFlow()
 
     private val _songId = MutableStateFlow("")
+    val actionFailed = MutableSharedFlow<Unit>()
 
     fun queryPlaylists() {
         viewModelScope.launch {
@@ -107,6 +108,28 @@ class PlaylistsViewModel @Inject constructor(
                 queryPlaylists()
             } else {
                 _deleteFailedEvent.emit(Unit)
+            }
+        }
+    }
+
+    fun addSong(playlistId: String) {
+        viewModelScope.launch {
+            val success = subsonicRepository.addSongToPlaylist(playlistId, _songId.first())
+            if (!success) {
+                actionFailed.emit(Unit)
+            } else {
+                queryPlaylists()
+            }
+        }
+    }
+
+    fun removeSong(playlistId: String) {
+        viewModelScope.launch {
+            val success = subsonicRepository.removeSongFromPlaylist(playlistId, _songId.first())
+            if (!success) {
+                actionFailed.emit(Unit)
+            } else {
+                queryPlaylists()
             }
         }
     }

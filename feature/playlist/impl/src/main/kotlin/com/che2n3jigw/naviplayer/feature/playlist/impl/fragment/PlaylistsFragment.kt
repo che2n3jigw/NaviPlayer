@@ -42,6 +42,7 @@ import com.che2n3jigw.naviplayer.feature.playlist.impl.adapter.PlaylistsAdapter
 import com.che2n3jigw.naviplayer.feature.playlist.impl.databinding.FragmentPlaylistsBinding
 import com.che2n3jigw.naviplayer.feature.playlist.impl.viewmodel.PlaylistsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -120,10 +121,10 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
             playlistNavigator.navigateToPlaylist(findNavController(), playlist.id)
         }
         playlistsAdapter.onAddClickListener = { playlist ->
-            // TODO: 歌曲加入歌单 
+            viewModel.addSong(playlist.id)
         }
         playlistsAdapter.onRemoveClickListener = { playlist ->
-            // TODO: 歌曲从歌单移除 
+            viewModel.removeSong(playlist.id)
         }
     }
 
@@ -154,6 +155,18 @@ class PlaylistsFragment : BaseFragment<FragmentPlaylistsBinding>() {
                         requireContext(),
                         R.string.playlist_delete_failed,
                         Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.actionFailed.collect {
+                    Snackbar.make(
+                        binding.root,
+                        R.string.playlist_action_failed,
+                        Snackbar.LENGTH_SHORT
                     ).show()
                 }
             }
