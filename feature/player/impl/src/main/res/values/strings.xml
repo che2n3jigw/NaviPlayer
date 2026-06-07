@@ -16,4 +16,5 @@
 
 <resources>
     <string name="player_play_list">播放列表</string>
+    <string name="player_join_playlist">加入歌单</string>
 </resources>

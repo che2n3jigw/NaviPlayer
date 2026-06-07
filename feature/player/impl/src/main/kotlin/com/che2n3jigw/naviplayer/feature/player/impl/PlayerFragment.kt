@@ -101,6 +101,10 @@ class PlayerFragment : BaseFragment<FragmentPlayerBinding>() {
         binding.mbBack.setOnClickListener {
             findNavController().popBackStack()
         }
+        binding.mbJoinPlaylist.setOnClickListener {
+            // TODO: 进入歌单列表页面
+        }
+
         selectableSongAdapter.itemClickListener = { _, index ->
             lifecycleScope.launch {
                 viewModel.skipToItem(index)
