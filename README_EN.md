@@ -8,6 +8,24 @@ Highly inspired by [nowinandroid](https://github.com/android/nowinandroid), this
 
 NaviPlayer is tailor-made for **Navidrome** servers, aiming to provide the ultimate streaming experience. Since Navidrome perfectly adheres to the **Subsonic/OpenSubsonic API** standards, this project is theoretically compatible with Gonic, Airsonic, and other compatible servers, though it is primarily optimized and tested for Navidrome.
 
+## 📱 Screenshots
+
+| Login | Library | Player |
+| :---: | :---: | :---: |
+| <img src="screenshots/login.png" width="260"> | <img src="screenshots/library.png" width="260"> | <img src="screenshots/player.png" width="260"> |
+
+| Me | Playlists | Playlist Detail |
+| :---: | :---: | :---: |
+| <img src="screenshots/me.png" width="260"> | <img src="screenshots/songlist.png" width="260"> | <img src="screenshots/songlist_detail.png" width="260"> |
+
+| Favorites | Search | Recent |
+| :---: | :---: | :---: |
+| <img src="screenshots/favourite.png" width="260"> | <img src="screenshots/search.png" width="260"> | <img src="screenshots/recent.png" width="260"> |
+
+| Setting |
+| :---: |
+| <img src="screenshots/setting.png" width="260"> |
+
 ## ✨ Features
 
 - **Modern Architecture**: Inspired by nowinandroid, utilizing a Multi-module and **Clean Architecture** approach for clear separation of concerns.
@@ -90,17 +108,10 @@ classDef jvm-library fill:#BDB2FF,stroke:#000,stroke-width:2px,color:#000;
 
 ## 🚀 Quick Start
 
-1. **Clone the project**:
-   ```bash
-   git clone https://github.com/che2n3jigw/NaviPlayer.git
-   ```
-2. **Prerequisites**:
-   - Android Studio Koala or higher.
-   - JDK 17+.
-3. **Configuration**:
-   - Launch the app and enter your Navidrome/Subsonic server URL, username, and password on the login page.
-4. **Build & Run**:
-   - Simply run the `app` module.
+1. **Clone the project**: `git clone https://github.com/che2n3jigw/NaviPlayer.git`
+2. **Prerequisites**: Android Studio Koala+, JDK 17+.
+3. **Configuration**: Launch the app and login with your Navidrome/Subsonic credentials.
+4. **Build & Run**: Run the `app` module.
 
 ## 📄 License
 
