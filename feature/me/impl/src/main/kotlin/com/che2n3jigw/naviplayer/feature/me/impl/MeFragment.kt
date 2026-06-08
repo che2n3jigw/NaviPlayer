@@ -68,7 +68,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     lateinit var loginNavigator: LoginNavigator
 
     private val snackBar by lazy {
-        Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE).apply {
+        Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG).apply {
             setAnchorView(binding.miniPlayer)
         }
     }
