@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId = "com.che2n3jigw.naviplayer"
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
     }
 
     buildTypes {
